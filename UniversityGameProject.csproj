@@ -14,4 +14,13 @@
       <PackageReference Include="SixLabors.ImageSharp" Version="3.1.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Render\Shader\ShaderResources\Texture\shaderTexture.frag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Render\Shader\ShaderResources\Texture\shaderTexture.vert">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
