@@ -1,8 +1,8 @@
 ﻿using Silk.NET.OpenGL;
 
-namespace UniversityGameProject.Core.BufferObject;
+namespace UniversityGameProject.Render.BufferObject;
 
-public class BufferObject<TDataType> : IDisposable 
+public class BufferObject<TDataType> : IDisposable
     where TDataType : unmanaged
 {
     private uint _handle;
@@ -10,8 +10,7 @@ public class BufferObject<TDataType> : IDisposable
     private BufferUsageARB _usageType;
     private GL _gl;
 
-    public unsafe BufferObject(GL gl, Span<TDataType> data, BufferTargetARB bufferType,
-        BufferUsageARB usageType = BufferUsageARB.StaticDraw)
+    public unsafe BufferObject(GL gl, Span<TDataType> data, BufferTargetARB bufferType, BufferUsageARB usageType = BufferUsageARB.StaticDraw)
     {
         _gl = gl;
         _bufferType = bufferType;
@@ -22,7 +21,7 @@ public class BufferObject<TDataType> : IDisposable
 
         fixed (void* d = data)
         {
-            _gl.BufferData(_bufferType, (nuint) (data.Length * sizeof(TDataType)), d, _usageType);
+            _gl.BufferData(bufferType, (nuint)(data.Length * sizeof(TDataType)), d, usageType);
         }
     }
 
@@ -30,10 +29,10 @@ public class BufferObject<TDataType> : IDisposable
     {
         fixed (void* d = data)
         {
-            _gl.BufferData(_bufferType, (nuint) (data.Length * sizeof(TDataType)), d, _usageType);
+            _gl.BufferData(_bufferType, (nuint)(data.Length * sizeof(TDataType)), d, _usageType);
         }
     }
-    
+
     public void Bind()
     {
         _gl.BindBuffer(_bufferType, _handle);

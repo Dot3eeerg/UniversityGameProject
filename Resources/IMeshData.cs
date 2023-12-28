@@ -1,7 +1,8 @@
-﻿namespace UniversityGameProject.Resources;
-
-public interface IMeshData
+﻿namespace UniversityGameProject.Resources
 {
-    public float[] Vertices { get; }
-    public ushort[] Indices { get; }
+    public interface IMeshData
+    {
+        public float[]  Vertices { get; }
+        public ushort[]  Indices { get; }
+    }
 }
