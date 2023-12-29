@@ -30,8 +30,8 @@ public class WindowServer
     {
         var options = WindowOptions.Default;
 
-        options.Title = "Simple Drawer";
-        options.Size = new Vector2D<int>(1280, 720);
+        options.Title = "VS clone";
+        options.Size = new Vector2D<int>(1600, 900);
         options.PreferredDepthBufferBits = 32;
 
 

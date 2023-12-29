@@ -13,7 +13,6 @@ public class StandardMaterial : Material
     {
         _shaderProgram = ShaderLibrary.TextureShader(context);
         _shaderDescriptor = _shaderProgram.GetDescriptor();
-        
     }
 
     internal override void Use(Viewport.Viewport viewport, Matrix4x4 view)
