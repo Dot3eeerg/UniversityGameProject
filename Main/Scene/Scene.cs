@@ -59,7 +59,7 @@ public class Scene : MainLoop
         return false;
     }
 
-    internal void LoadNode(Node node)
+    internal void LoadNode(Node node, string path)
     {
         foreach (var child in node.Childs)
         {
@@ -70,12 +70,12 @@ public class Scene : MainLoop
             }
 
             child.Scene = this;
-            LoadNode(child);
+            LoadNode(child, path);
         }
 
         if (node is IRenderable)
         {
-            _renderServer.Load((IRenderable) node);
+            _renderServer.Load((IRenderable) node, path);
         }
         
         node.AttachInputServer(_inputServer);
@@ -122,10 +122,12 @@ public class Scene : MainLoop
     public void AttachViewport()
     {
         var viewport = new Viewport(_window, new Camera2D("MainCamera"));
+        _viewports.Add(viewport);
     }
     
     public void AttachViewport(ICamera camera)
     {
         var viewport = new Viewport(_window, camera);
+        _viewports.Add(viewport);
     }
 }

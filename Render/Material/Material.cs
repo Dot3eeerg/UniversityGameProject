@@ -14,5 +14,9 @@ public abstract class Material
     
     internal virtual void Use(Viewport.Viewport viewport, Matrix4x4 view) { }
     
+    internal virtual void Use(Viewport.Viewport viewport, Matrix4x4 view, Texture.Texture texture) { }
+    
     public virtual void Attach(ICamera camera) { }
+    
+    public virtual void Attach(Texture.Texture texture) { }
 }

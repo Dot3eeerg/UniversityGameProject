@@ -19,6 +19,17 @@ public class StandardMaterial : Material
     {
         _context.Use(_shaderDescriptor);
         
+        //_context.SetUniform(_shaderDescriptor, "model", view);
+        //_context.SetUniform(_shaderDescriptor, "view", viewport.Camera.View);
+        //_context.SetUniform(_shaderDescriptor, "projection", viewport.GetProjection());
+    }
+    
+    internal override void Use(Viewport.Viewport viewport, Matrix4x4 view, Texture.Texture texture)
+    {
+        _context.Use(_shaderDescriptor);
+        
+        _context.SetUniform(_shaderDescriptor, "uTexture", 0);
+        
         _context.SetUniform(_shaderDescriptor, "model", view);
         _context.SetUniform(_shaderDescriptor, "view", viewport.Camera.View);
         _context.SetUniform(_shaderDescriptor, "projection", viewport.GetProjection());
@@ -32,5 +43,10 @@ public class StandardMaterial : Material
             camera.Position.Y,
             camera.Position.Z
             );
+    }
+
+    public override void Attach(Texture.Texture texture)
+    {
+        //_context.SetUniform();
     }
 }

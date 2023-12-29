@@ -7,7 +7,7 @@ namespace UniversityGameProject.Main._2d;
 
 public class Camera2D : Node2D, ICamera
 {
-    protected Vector3 _cameraPosition = new Vector3(0.0f, 0.0f, 0.0f);
+    protected Vector3 _cameraPosition = new Vector3(0.0f, 0.0f, 1.0f);
     protected Vector3 _cameraFront = new Vector3(0.0f, 0.0f, -1.0f);
     protected Vector3 _cameraUp = Vector3.UnitY;
     protected Vector3 _cameraDirection = Vector3.Zero;
@@ -34,8 +34,8 @@ public class Camera2D : Node2D, ICamera
     public Vector3 Position => Transform.Position;
 
     public Matrix4x4 GetProjection(Vector2 viewportSize) =>
-        Matrix4x4.CreateOrthographicOffCenter(-viewportSize.X / 2f, viewportSize.X / 2f, -viewportSize.Y / 2f,
-            viewportSize.Y / 2f, 0.01f, 100f);
+        Matrix4x4.CreateOrthographicOffCenter( 0, viewportSize.X, 0,
+            viewportSize.Y, MinDistance, MaxDistance);
 
     public override Matrix4x4 View => Matrix4x4.CreateLookAt(GlobalTransform.Position, GlobalTransform.Position + _cameraFront, _cameraUp);
     // Matrix4x4.CreateTranslation(-GlobalTransform.Position) *

@@ -2,11 +2,12 @@
 using UniversityGameProject.Render.BufferObject;
 using UniversityGameProject.Render.Camera;
 using UniversityGameProject.Render.Material;
+using UniversityGameProject.Render.Texture;
 using UniversityGameProject.Render.VertexArrayObject;
 
 namespace UniversityGameProject.Main._2d;
 
-public abstract class VisualInstance3D : Node2D, IRenderable
+public abstract class VisualInstance2D : Node2D, IRenderable
 {
     public VertexArrayObject<float, ushort> Vao { get; private set; }
     public BufferObject<float>? Vbo { get; private set; }
@@ -16,12 +17,14 @@ public abstract class VisualInstance3D : Node2D, IRenderable
 
     public virtual short VisualMask { get; set; } = 1;
     public Material? Material { get; protected set; }
+    public Texture? Texture { get; protected set; }
 
-    public VisualInstance3D(string name) : base(name) { }
+    public VisualInstance2D(string name) : base(name) { }
 
-    public void Initialize(Material material, VertexArrayObject<float, ushort> vao, BufferObject<float> vbo, BufferObject<ushort> ebo)
+    public void Initialize(Material material, Texture texture, VertexArrayObject<float, ushort> vao, BufferObject<float> vbo, BufferObject<ushort> ebo)
     {
         Material = material;
+        Texture = texture;
 
         Vao = vao;
         Vbo = vbo;

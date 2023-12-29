@@ -9,6 +9,9 @@ public class Game
     public Game()
     {
         _scene = new Scene();
+
+        var ground = new Ground("Ground tile", "Textures/kek.jpg");
+        _scene.Root.AddChild(ground, "Textures/kek.jpg");
         
         _scene.AttachViewport();
         

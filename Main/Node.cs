@@ -27,7 +27,7 @@ public class Node
         RootNode = true;
     }
 
-    public virtual void AddChild(Node child)
+    public virtual void AddChild(Node child, string path)
     {
         if (Scene != null)
         {
@@ -38,7 +38,7 @@ public class Node
             }
 
             child.Scene = Scene!;
-            Scene!.LoadNode(child);
+            Scene!.LoadNode(child, path);
         }
 
         Childs.Add(child);

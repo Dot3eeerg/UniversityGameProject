@@ -17,7 +17,7 @@ public class RenderServer
         _shaderContext = new ShaderContext(_gl);
     }
 
-    public void Load(IRenderable renderable)
+    public void Load(IRenderable renderable, string path)
     {
         BufferObject<float> vbo = new BufferObject<float>(_gl, renderable.Vertices, BufferTargetARB.ArrayBuffer,
             BufferUsageARB.DynamicCopy);
@@ -30,8 +30,9 @@ public class RenderServer
         vao.VertexAttributePointer(1, 2, VertexAttribPointerType.Float, 5, 3);
 
         Material.Material material = new StandardMaterial(_shaderContext);
+        Texture.Texture texture = new Texture.Texture(_gl, path);
         
-        renderable.Initialize(material, vao, vbo, ebo);
+        renderable.Initialize(material, texture, vao, vbo, ebo);
     }
 
     public void Render(Viewport.Viewport viewport, IRenderable renderable)
@@ -40,8 +41,10 @@ public class RenderServer
         {
             renderable.Vao!.Bind();
             
+            renderable.Texture.Bind();
             renderable.Material.Use(viewport, renderable.View);
-            renderable.Material.Attach(viewport.Camera);
+            //renderable.Material.Attach(viewport.Camera);
+            
 
             unsafe
             {
