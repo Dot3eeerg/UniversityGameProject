@@ -11,7 +11,7 @@ public class StandardMaterial : Material
 
     public StandardMaterial(ShaderContext context) : base(context)
     {
-        //_shaderProgram = ShaderLibrary.
+        _shaderProgram = ShaderLibrary.TextureShader(context);
         _shaderDescriptor = _shaderProgram.GetDescriptor();
         
     }
