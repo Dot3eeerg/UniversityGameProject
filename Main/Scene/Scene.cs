@@ -123,6 +123,7 @@ public class Scene : MainLoop
                 for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
                 {
                     var viewport = _viewports[viewportID];
+                    _renderServer.ApplyEnvironment(viewport);
                     _renderServer.Render(viewport, (IRenderable)node);
                 }
             }

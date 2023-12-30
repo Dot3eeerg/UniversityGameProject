@@ -17,7 +17,7 @@ public class Player : Node2D
     public sealed class CharacterCamera : Camera2D
     {
         private Camera2D _camera;
-        public float Speed { get; private set; } = 20.0f;
+        public float Speed { get; private set; } = 1.0f;
 
         public CharacterCamera(string name) : base(name)
         {
@@ -29,32 +29,33 @@ public class Player : Node2D
         {
             base.Process(delta);
             
-            Vector3 direction = Vector3.Zero;
+            Vector3 direction = _cameraPosition;
 
             if (InputServer!.IsActionPressed("movement_forward"))
-            {
-                direction.Y += 1.0f;
-            }
-            
-            if (InputServer!.IsActionPressed("movement_backward"))
             {
                 direction.Y -= 1.0f;
             }
             
+            if (InputServer!.IsActionPressed("movement_backward"))
+            {
+                direction.Y += 1.0f;
+            }
+            
             if (InputServer!.IsActionPressed("movement_left"))
             {
-                direction.X -= 1.0f;
+                direction.X += 1.0f;
             }
             
             if (InputServer!.IsActionPressed("movement_right"))
             {
-                direction.X += 1.0f;
+                direction.X -= 1.0f;
             }
 
-            if (direction != Vector3.Zero)
+            if (direction != _cameraPosition)
             {
                 direction = Vector3.Normalize(direction);
-                Translate(direction * delta * Speed);
+                direction = direction * delta * Speed;
+                Translate(direction);
             }
         }
 
