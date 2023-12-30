@@ -47,9 +47,8 @@ public class Node2D : Node
 
    public void Translate(Vector3 offset)
    {
-       var newTransform = Transform;
+       var newTransform = Transform; 
        newTransform.Position += offset;
-
        Transform = newTransform;
    }
 

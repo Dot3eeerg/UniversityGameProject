@@ -1,26 +1,44 @@
 ﻿using System.Numerics;
 using UniversityGameProject.Main._2d;
+using UniversityGameProject.Resources.Primitives;
 
 namespace UniversityGameProject.Game;
 
 public class Player : Node2D
 {
-    private CharacterCamera _camera = new CharacterCamera("Main camera");
+    private Body _body;
+    private CharacterCamera _camera;
+    //public CharacterStats Stats = new CharacterStats();
+    public PlayerStats _stats = new PlayerStats();
 
     public Camera2D Camera => _camera;
 
-    public Player(string name) : base(name)
+    public Player(string name, string path) : base(name)
     {
+        _body = new Body("Player body", path);
+        _body.MeshData = new RectanglePrimitiveTextured();
+        _body.Transform.Scale = new Vector3(0.1f, 0.1f, 1.0f);
+
+        _camera = new CharacterCamera("Main camera", _body);
+        
+        AddChild(_body, path);
         AddChild(_camera);
     }
 
-    public sealed class CharacterCamera : Camera2D
+    private sealed class Body : MeshInstance2D
+    {
+        public Body(string name, string path) : base(name) { }
+    }
+
+    private sealed class CharacterCamera : Camera2D
     {
         private Camera2D _camera;
-        public float Speed { get; private set; } = 1.0f;
+        private MeshInstance2D _body;
+        private float Speed { get; set; } = 1.0f;
 
-        public CharacterCamera(string name) : base(name)
+        public CharacterCamera(string name, MeshInstance2D body) : base(name)
         {
+            _body = body;
             _camera = new Camera2D("Camera");
             AddChild(_camera);
         }
@@ -29,7 +47,7 @@ public class Player : Node2D
         {
             base.Process(delta);
             
-            Vector3 direction = _cameraPosition;
+            Vector3 direction = Vector3.Zero;
 
             if (InputServer!.IsActionPressed("movement_forward"))
             {
@@ -51,11 +69,12 @@ public class Player : Node2D
                 direction.X -= 1.0f;
             }
 
-            if (direction != _cameraPosition)
+            if (direction != Vector3.Zero)
             {
                 direction = Vector3.Normalize(direction);
-                direction = direction * delta * Speed;
+                direction = direction * delta * CharacterStats;
                 Translate(direction);
+                _body.Translate(direction);
             }
         }
 
@@ -63,8 +82,11 @@ public class Player : Node2D
         {
             base.Ready();
         }
-        
-        
     }
-    
+
+    public class PlayerStats : Entity
+    {
+        public override float Speed => 0.5f;
+        public override int HealthPool => 100;
+    }
 }

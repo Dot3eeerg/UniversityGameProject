@@ -112,6 +112,12 @@ public class Scene : MainLoop
         
         _renderServer.ChangeContextSize(_window.WindowSize);
 
+        for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
+        {
+            var viewport = _viewports[viewportID];
+            _renderServer.ApplyEnvironment(viewport);
+        }
+
         for (int nodeID = 0; nodeID < _nodes.Count; nodeID++)
         {
             var node = _nodes[nodeID];
@@ -123,7 +129,6 @@ public class Scene : MainLoop
                 for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
                 {
                     var viewport = _viewports[viewportID];
-                    _renderServer.ApplyEnvironment(viewport);
                     _renderServer.Render(viewport, (IRenderable)node);
                 }
             }

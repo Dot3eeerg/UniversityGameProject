@@ -11,7 +11,7 @@ public class Ground : Node2D
     public Ground(string name, string path) : base(name)
     {
         _tile.MeshData = new RectanglePrimitiveTextured();
-        //_tile.Transform.Scale = new Vector3(0.1f, 0.1f, 1.0f);
+        //_tile.Transform.Scale = new Vector3(0.3f, 0.3f, 1.0f);
         
         AddChild(_tile, path);
     }
