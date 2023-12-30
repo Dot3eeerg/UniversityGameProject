@@ -45,6 +45,24 @@ public class Node
         child.Parent = this;
     }
     
+    public virtual void AddChild(Node child)
+    {
+        if (Scene != null)
+        {
+            if (Scene!.IsInTree(child))
+            {
+                Console.WriteLine($"ERROR: The node {child.Name} is already in the Scene. It will not be added.");
+                return;
+            }
+
+            child.Scene = Scene!;
+            Scene!.LoadNode(child);
+        }
+
+        Childs.Add(child);
+        child.Parent = this;
+    }
+    
     public virtual void Ready() { }
     public virtual void Process(float delta) { }
     public virtual void Input(InputEvent input) { }

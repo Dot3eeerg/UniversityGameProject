@@ -21,10 +21,10 @@ public class RectanglePrimitiveTextured : IPrimitiveTextured
 {
     public float[] Vertices { get; private set; } = new float[20]
     {
-        -1.0f, -1.0f, 0.0f, 0.0f, 1.0f,
-        -1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-        1.0f, -1.0f, 0.0f, 1.0f, 1.0f
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
+        -0.5f, 0.5f, 0.0f, 0.0f, 0.0f,
+        0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.0f, 1.0f, 1.0f
     };
 
     public ushort[] Indices { get; } = new ushort[6]

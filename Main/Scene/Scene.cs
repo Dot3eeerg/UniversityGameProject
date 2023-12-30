@@ -83,6 +83,26 @@ public class Scene : MainLoop
         
         node.Ready();
     }
+    
+    internal void LoadNode(Node node)
+    {
+        foreach (var child in node.Childs)
+        {
+            if (IsInTree(child))
+            {
+                Console.WriteLine($"ERROR: The node {child.Name} is already in the Scene. It will not be added.");
+                return;
+            }
+
+            child.Scene = this;
+            LoadNode(child);
+        }
+
+        node.AttachInputServer(_inputServer);
+        _nodes.Add(node);
+        
+        node.Ready();
+    }
 
     protected override void Process(float delta)
     {

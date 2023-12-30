@@ -20,12 +20,12 @@ public record struct Viewport
         return Camera.GetProjection(_windowServer.WindowSize);
     }
 
-    private float GetRatioXY()
+    public float GetRatioXY()
     {
         return _windowServer.WindowSize.X / _windowServer.WindowSize.Y;
     }
 
-    private float GetRatioYX()
+    public float GetRatioYX()
     {
         return _windowServer.WindowSize.Y / _windowServer.WindowSize.X;
     }

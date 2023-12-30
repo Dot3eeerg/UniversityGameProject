@@ -22,7 +22,7 @@ public class WindowServer
     public event WindowResized? OnWindowResized;
     public event WindowClosed? OnWindowClosed;
 
-    public Vector2 WindowSize { get; private set; } = Vector2.Zero;
+    public Vector2 WindowSize { get; private set; } = new Vector2(1600, 900);
 
     public bool Running { get => !_window.IsClosing; }
 
