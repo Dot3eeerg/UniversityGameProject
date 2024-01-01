@@ -8,6 +8,7 @@ namespace UniversityGameProject.Game;
 public class Ground : Node2D
 {
     private MeshInstance2D _tile = new MeshInstance2D("Ground tile");
+    public float Speed = 1.0f;
     
     public Ground(string name, string path) : base(name)
     {
@@ -16,4 +17,5 @@ public class Ground : Node2D
         
         AddChild(_tile, path, ShaderType.GroundShader);
     }
+    
 }

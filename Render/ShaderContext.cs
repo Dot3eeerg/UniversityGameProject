@@ -85,6 +85,18 @@ public class ShaderContext
 
        _gl.Uniform1(location, value);
    }
+   
+   public void SetUniform(uint program, string name, float x, float y)
+   {
+       int location = _gl.GetUniformLocation(program, name);
+
+       if (location == -1)
+       {
+           throw new Exception($"{name} uniform not found on shader.");
+       }
+
+       _gl.Uniform2(location, x, y);
+   }
 
    public void SetUniform(uint program, string name, float x, float y, float z)
    {

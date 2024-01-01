@@ -15,6 +15,8 @@ public class StandardMaterial : Material
     private ShaderProgram _shaderProgram;
     private uint _shaderDescriptor;
     private ShaderType _type;
+    private Matrix4x4 _groundView = 
+        Matrix4x4.CreateLookAt(Vector3.UnitZ, Vector3.Zero, Vector3.UnitY);
 
     public StandardMaterial(ShaderContext context, ShaderType type) : base(context, type)
     {
@@ -47,8 +49,12 @@ public class StandardMaterial : Material
                 break;
             
             case ShaderType.GroundShader:
-                _context.SetUniform(_shaderDescriptor, "model", view);
-                _context.SetUniform(_shaderDescriptor, "view", viewport.Camera.View);
+                _context.SetUniform(_shaderDescriptor, "offset", -viewport.Camera.Position.X,
+                    viewport.Camera.Position.Y);
+                Console.WriteLine(viewport.Camera.Position);
+            
+                _context.SetUniform(_shaderDescriptor, "model", Matrix4x4.Identity);
+                _context.SetUniform(_shaderDescriptor, "view", _groundView);
                 _context.SetUniform(_shaderDescriptor, "projection", viewport.GetProjection());
                 break;
         }

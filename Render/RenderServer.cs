@@ -44,7 +44,6 @@ public class RenderServer
             renderable.Texture.Bind();
             renderable.Material.Use(viewport, renderable.View);
             //renderable.Material.Attach(viewport.Camera);
-            
 
             unsafe
             {
