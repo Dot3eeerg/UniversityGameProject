@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using UniversityGameProject.Main._2d;
+using UniversityGameProject.Render.Material;
 using UniversityGameProject.Resources.Primitives;
 
 namespace UniversityGameProject.Game;
@@ -8,8 +9,7 @@ public class Player : Node2D
 {
     private Body _body;
     private CharacterCamera _camera;
-    //public CharacterStats Stats = new CharacterStats();
-    public PlayerStats _stats = new PlayerStats();
+    private float Speed { get; } = 0.5f;
 
     public Camera2D Camera => _camera;
 
@@ -19,10 +19,46 @@ public class Player : Node2D
         _body.MeshData = new RectanglePrimitiveTextured();
         _body.Transform.Scale = new Vector3(0.1f, 0.1f, 1.0f);
 
-        _camera = new CharacterCamera("Main camera", _body);
+        _camera = new CharacterCamera("Main camera");
         
-        AddChild(_body, path);
+        AddChild(_body, path, ShaderType.TextureShader);
         AddChild(_camera);
+    }
+
+    public override void Process(float delta)
+    {
+        base.Process(delta);
+        
+        Vector3 direction = Vector3.Zero;
+
+        if (InputServer!.IsActionPressed("movement_forward"))
+        {
+            direction.Y -= 1.0f;
+        }
+        
+        if (InputServer!.IsActionPressed("movement_backward"))
+        {
+            direction.Y += 1.0f;
+        }
+        
+        if (InputServer!.IsActionPressed("movement_left"))
+        {
+            direction.X += 1.0f;
+        }
+        
+        if (InputServer!.IsActionPressed("movement_right"))
+        {
+            direction.X -= 1.0f;
+        }
+
+        if (direction != Vector3.Zero)
+        {
+            direction = Vector3.Normalize(direction);
+            direction = direction * delta * Speed;
+            _camera.Translate(direction);
+            _body.Translate(direction);
+            Translate(direction);
+        }
     }
 
     private sealed class Body : MeshInstance2D
@@ -33,60 +69,11 @@ public class Player : Node2D
     private sealed class CharacterCamera : Camera2D
     {
         private Camera2D _camera;
-        private MeshInstance2D _body;
-        private float Speed { get; set; } = 1.0f;
 
-        public CharacterCamera(string name, MeshInstance2D body) : base(name)
+        public CharacterCamera(string name) : base(name)
         {
-            _body = body;
             _camera = new Camera2D("Camera");
             AddChild(_camera);
         }
-
-        public override void Process(float delta)
-        {
-            base.Process(delta);
-            
-            Vector3 direction = Vector3.Zero;
-
-            if (InputServer!.IsActionPressed("movement_forward"))
-            {
-                direction.Y -= 1.0f;
-            }
-            
-            if (InputServer!.IsActionPressed("movement_backward"))
-            {
-                direction.Y += 1.0f;
-            }
-            
-            if (InputServer!.IsActionPressed("movement_left"))
-            {
-                direction.X += 1.0f;
-            }
-            
-            if (InputServer!.IsActionPressed("movement_right"))
-            {
-                direction.X -= 1.0f;
-            }
-
-            if (direction != Vector3.Zero)
-            {
-                direction = Vector3.Normalize(direction);
-                direction = direction * delta * CharacterStats;
-                Translate(direction);
-                _body.Translate(direction);
-            }
-        }
-
-        public override void Ready()
-        {
-            base.Ready();
-        }
-    }
-
-    public class PlayerStats : Entity
-    {
-        public override float Speed => 0.5f;
-        public override int HealthPool => 100;
     }
 }

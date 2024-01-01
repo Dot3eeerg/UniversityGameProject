@@ -6,6 +6,7 @@ using UniversityGameProject.Render;
 using UniversityGameProject.Render.Camera;
 using UniversityGameProject.Render.Viewport;
 using UniversityGameProject.Window;
+using ShaderType = UniversityGameProject.Render.Material.ShaderType;
 
 namespace UniversityGameProject.Main.Scene;
 
@@ -59,7 +60,7 @@ public class Scene : MainLoop
         return false;
     }
 
-    internal void LoadNode(Node node, string path)
+    internal void LoadNode(Node node, string path, ShaderType type)
     {
         foreach (var child in node.Childs)
         {
@@ -70,12 +71,12 @@ public class Scene : MainLoop
             }
 
             child.Scene = this;
-            LoadNode(child, path);
+            LoadNode(child, path, type);
         }
 
         if (node is IRenderable)
         {
-            _renderServer.Load((IRenderable) node, path);
+            _renderServer.Load((IRenderable) node, path, type);
         }
         
         node.AttachInputServer(_inputServer);

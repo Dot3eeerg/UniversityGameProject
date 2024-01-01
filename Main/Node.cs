@@ -1,4 +1,5 @@
 ﻿using UniversityGameProject.Input;
+using UniversityGameProject.Render.Material;
 
 namespace UniversityGameProject.Main;
 
@@ -27,7 +28,7 @@ public class Node
         RootNode = true;
     }
 
-    public virtual void AddChild(Node child, string path)
+    public virtual void AddChild(Node child, string path, ShaderType type)
     {
         if (Scene != null)
         {
@@ -38,7 +39,7 @@ public class Node
             }
 
             child.Scene = Scene!;
-            Scene!.LoadNode(child, path);
+            Scene!.LoadNode(child, path, type);
         }
 
         Childs.Add(child);

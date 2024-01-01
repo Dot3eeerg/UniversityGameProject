@@ -30,6 +30,12 @@
       <None Update="Textures\ground_tile.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Render\Shader\ShaderResources\Ground\shaderGround.frag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Render\Shader\ShaderResources\Ground\shaderGround.vert">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
