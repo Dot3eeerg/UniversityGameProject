@@ -32,4 +32,19 @@ public class RectanglePrimitiveTextured : IPrimitiveTextured
         0, 1, 2,
         0, 2, 3
     };
+
+    public void ApplyScale(float scaleX, float scaleY)
+    {
+        Vertices[0] *= scaleX;
+        Vertices[1] *= scaleY;
+        
+        Vertices[5] *= scaleX;
+        Vertices[6] *= scaleY;
+        
+        Vertices[10] *= scaleX;
+        Vertices[11] *= scaleY;
+
+        Vertices[15] *= scaleX;
+        Vertices[16] *= scaleY;
+    }
 }

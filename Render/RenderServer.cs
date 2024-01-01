@@ -58,7 +58,7 @@ public class RenderServer
 
     public void ApplyEnvironment(Viewport.Viewport viewport)
     {
-        _gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        _gl.ClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         _gl.Clear((uint)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
         
         _gl.Enable(EnableCap.DepthTest);

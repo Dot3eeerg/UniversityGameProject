@@ -20,14 +20,17 @@ public class Circle : CollisionShape
 
     public bool CheckCollision(Circle circle)
     {
-        float distance = Single.Sqrt(Single.Pow(GlobalTransform.Position.X - circle.GlobalTransform.Position.X, 2) +
-                                     Single.Pow(GlobalTransform.Position.Y - circle.GlobalTransform.Position.Y, 2));
+        float distance =
+            (GlobalTransform.Position.X - circle.GlobalTransform.Position.X) *
+            (GlobalTransform.Position.X - circle.GlobalTransform.Position.X) +
+            (GlobalTransform.Position.Y - circle.GlobalTransform.Position.Y) *
+            (GlobalTransform.Position.Y - circle.GlobalTransform.Position.Y);
 
-        if (distance > Radius + circle.Radius)
+        if (distance < (Radius + circle.Radius) * (Radius + circle.Radius))
         {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

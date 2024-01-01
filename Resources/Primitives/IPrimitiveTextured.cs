@@ -1,3 +1,5 @@
 ﻿namespace UniversityGameProject.Resources.Primitives;
 
-public interface IPrimitiveTextured : IMeshData { }
+public interface IPrimitiveTextured : IMeshData
+{
+}

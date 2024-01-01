@@ -49,10 +49,10 @@ public class StandardMaterial : Material
                 break;
             
             case ShaderType.GroundShader:
-                _context.SetUniform(_shaderDescriptor, "offset", -viewport.Camera.Position.X,
-                    viewport.Camera.Position.Y);
+                _context.SetUniform(_shaderDescriptor, "offset", viewport.Camera.Position.X,
+                    -viewport.Camera.Position.Y);
             
-                _context.SetUniform(_shaderDescriptor, "model", Matrix4x4.Identity);
+                _context.SetUniform(_shaderDescriptor, "model", view);
                 _context.SetUniform(_shaderDescriptor, "view", _groundView);
                 _context.SetUniform(_shaderDescriptor, "projection", viewport.GetProjection());
                 break;

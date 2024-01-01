@@ -17,7 +17,8 @@ public class Player : Node2D
     {
         _body = new Body("Player body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
-        _body.Transform.Scale = new Vector3(0.05f, 0.05f, 1.0f);
+        //_body.Transform.Scale = new Vector3(0.04f, 0.06f, 1.0f);
+        _body.MeshData.ApplyScale(0.04f, 0.06f);
 
         _camera = new CharacterCamera("Main camera");
         
@@ -33,22 +34,22 @@ public class Player : Node2D
 
         if (InputServer!.IsActionPressed("movement_forward"))
         {
-            direction.Y -= 1.0f;
+            direction.Y += 1.0f;
         }
         
         if (InputServer!.IsActionPressed("movement_backward"))
         {
-            direction.Y += 1.0f;
+            direction.Y -= 1.0f;
         }
         
         if (InputServer!.IsActionPressed("movement_left"))
         {
-            direction.X += 1.0f;
+            direction.X -= 1.0f;
         }
         
         if (InputServer!.IsActionPressed("movement_right"))
         {
-            direction.X -= 1.0f;
+            direction.X += 1.0f;
         }
 
         if (direction != Vector3.Zero)
@@ -80,7 +81,7 @@ public class Player : Node2D
 
     private class Stats : Entity
     {
-        public override float Speed { get; } = 0.5f;
-        public override int HealthPool { get; } = 100;
+        public override float Speed { get; set; } = 0.5f;
+        public override int HealthPool { get; set; } = 100;
     }
 }

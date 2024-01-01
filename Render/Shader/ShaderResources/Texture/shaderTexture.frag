@@ -7,5 +7,8 @@ out vec4 out_color;
 uniform sampler2D uTexture;
 
 void main() {
-    out_color = texture(uTexture, frag_texCoords);
+    vec4 kek = texture(uTexture, frag_texCoords);
+    if (kek.a < 0.2)
+            discard;
+    out_color = kek;
 }

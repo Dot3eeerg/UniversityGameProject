@@ -2,6 +2,6 @@
 
 public abstract class Entity
 {
-    public abstract float Speed { get; }
-    public abstract int HealthPool { get; }
+    public abstract float Speed { get; set; }
+    public abstract int HealthPool { get; set; }
 }
