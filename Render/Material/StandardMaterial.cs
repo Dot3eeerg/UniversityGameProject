@@ -51,7 +51,6 @@ public class StandardMaterial : Material
             case ShaderType.GroundShader:
                 _context.SetUniform(_shaderDescriptor, "offset", -viewport.Camera.Position.X,
                     viewport.Camera.Position.Y);
-                Console.WriteLine(viewport.Camera.Position);
             
                 _context.SetUniform(_shaderDescriptor, "model", Matrix4x4.Identity);
                 _context.SetUniform(_shaderDescriptor, "view", _groundView);

@@ -9,15 +9,15 @@ public class Player : Node2D
 {
     private Body _body;
     private CharacterCamera _camera;
-    private float Speed { get; } = 0.5f;
-
+    
+    public Entity PlayerStats = new Stats();
     public Camera2D Camera => _camera;
 
     public Player(string name, string path) : base(name)
     {
         _body = new Body("Player body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
-        _body.Transform.Scale = new Vector3(0.1f, 0.1f, 1.0f);
+        _body.Transform.Scale = new Vector3(0.05f, 0.05f, 1.0f);
 
         _camera = new CharacterCamera("Main camera");
         
@@ -54,7 +54,8 @@ public class Player : Node2D
         if (direction != Vector3.Zero)
         {
             direction = Vector3.Normalize(direction);
-            direction = direction * delta * Speed;
+            direction = direction * delta * PlayerStats.Speed;
+            Console.WriteLine(direction);
             _camera.Translate(direction);
             _body.Translate(direction);
             Translate(direction);
@@ -75,5 +76,11 @@ public class Player : Node2D
             _camera = new Camera2D("Camera");
             AddChild(_camera);
         }
+    }
+
+    private class Stats : Entity
+    {
+        public override float Speed { get; } = 0.5f;
+        public override int HealthPool { get; } = 100;
     }
 }
