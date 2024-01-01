@@ -55,7 +55,7 @@ public class Player : Node2D
         {
             direction = Vector3.Normalize(direction);
             direction = direction * delta * PlayerStats.Speed;
-            Console.WriteLine(direction);
+            
             _camera.Translate(direction);
             _body.Translate(direction);
             Translate(direction);
