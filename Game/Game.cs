@@ -11,20 +11,16 @@ public class Game
     {
         _scene = new Scene();
 
-        //var player = new Player("Player", "Textures/zaika.jpg");
-        //_scene.Root.AddChild(player, "Textures/zaika.jpg", ShaderType.TextureShader);
-        
-        var player = new Player("Player", "Textures/enemy.png");
-        _scene.Root.AddChild(player, "Textures/enemy.png", ShaderType.TextureShader);
+        var player = new Player("Player", "Textures/character.png");
+        _scene.Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
 
-        var enemy = new Enemy("Enemy", "Texture/kek.jpg", player.Camera);
-        _scene.Root.AddChild(enemy, "Textures/kek.jpg", ShaderType.TextureShader);
+        //var enemy = new Enemy("Enemy", "Texture/enemy.png", player.Camera);
+        var enemy = new Enemy("Enemy", "Texture/enemy.png", player.BodyData);
+        _scene.Root.AddChild(enemy, "Textures/enemy.png", ShaderType.TextureShader);
+        enemy.Translate(1.0f, 1.0f, 0.0f);
         
         var ground = new Ground("Ground tile", "Textures/grass_background.png");
         _scene.Root.AddChild(ground, "Textures/grass_background.png", ShaderType.GroundShader);
-        
-        //var ground = new Ground("Ground tile", "Textures/kek.jpg");
-        //_scene.Root.AddChild(ground, "Textures/kek.jpg", ShaderType.GroundShader);
         
         _scene.AttachViewport(player.Camera);
         

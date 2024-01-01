@@ -1,24 +1,25 @@
 ﻿using System.Numerics;
 using UniversityGameProject.Main._2d;
 using UniversityGameProject.Render.Material;
+using UniversityGameProject.Resources;
 using UniversityGameProject.Resources.Primitives;
 
 namespace UniversityGameProject.Game;
 
 public class Player : Node2D
 {
-    private Body _body;
+    private MeshInstance2D _body;
     private CharacterCamera _camera;
     
     public Entity PlayerStats = new Stats();
     public Camera2D Camera => _camera;
+    public MeshInstance2D BodyData => _body;
 
     public Player(string name, string path) : base(name)
     {
         _body = new Body("Player body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
-        //_body.Transform.Scale = new Vector3(0.04f, 0.06f, 1.0f);
-        _body.MeshData.ApplyScale(0.04f, 0.06f);
+        _body.MeshData.ApplyScale(0.02f, 0.08f);
 
         _camera = new CharacterCamera("Main camera");
         
@@ -63,7 +64,7 @@ public class Player : Node2D
         }
     }
 
-    private sealed class Body : MeshInstance2D
+    public sealed class Body : MeshInstance2D
     {
         public Body(string name, string path) : base(name) { }
     }
