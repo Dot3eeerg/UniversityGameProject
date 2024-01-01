@@ -32,7 +32,6 @@ public class Enemy : Node2D
         
         Vector3 kek = new Vector3(_playerPosition.GlobalTransform.Position.X, _playerPosition.GlobalTransform.Position.Y, 0);
         Console.WriteLine(_body.GlobalTransform.Position);
-        //Console.WriteLine(_playerPosition.GlobalTransform.Position);
         Vector3 direction = Vector3.Normalize(kek - _body.GlobalTransform.Position) * EnemyStats.Speed * delta;
         
         Translate(direction);
@@ -45,7 +44,7 @@ public class Enemy : Node2D
     
     private class Stats : Entity
     {
-        public override float Speed { get; set; } = 1f;
+        public override float Speed { get; set; } = 0.1f;
         public override int HealthPool { get; set; } = 10;
     }
 }

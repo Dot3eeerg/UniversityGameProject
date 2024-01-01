@@ -14,13 +14,12 @@ public class Game
         var player = new Player("Player", "Textures/character.png");
         _scene.Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
 
-        //var enemy = new Enemy("Enemy", "Texture/enemy.png", player.Camera);
-        var enemy = new Enemy("Enemy", "Texture/enemy.png", player.BodyData);
-        _scene.Root.AddChild(enemy, "Textures/enemy.png", ShaderType.TextureShader);
+        var enemy = new Enemy("Enemy", "Texture/slime.png", player.BodyData);
+        _scene.Root.AddChild(enemy, "Textures/slime.png", ShaderType.TextureShader);
         enemy.Translate(1.0f, 1.0f, 0.0f);
         
-        var ground = new Ground("Ground tile", "Textures/grass_background.png");
-        _scene.Root.AddChild(ground, "Textures/grass_background.png", ShaderType.GroundShader);
+        var ground = new Ground("Ground tile", "Textures/grass1.png");
+        _scene.Root.AddChild(ground, "Textures/grass1.png", ShaderType.GroundShader);
         
         _scene.AttachViewport(player.Camera);
         

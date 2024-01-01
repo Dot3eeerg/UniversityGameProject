@@ -82,7 +82,7 @@ public class Player : Node2D
 
     private class Stats : Entity
     {
-        public override float Speed { get; set; } = 0.5f;
+        public override float Speed { get; set; } = 0.3f;
         public override int HealthPool { get; set; } = 100;
     }
 }
