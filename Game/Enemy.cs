@@ -12,8 +12,10 @@ public class Enemy : Node2D
     private Body _body;
     private ICamera _camera;
     private MeshInstance2D _playerPosition;
+    private CollisionShape _collision = new Circle("Collision", 0.1f);
 
     public Entity EnemyStats = new Stats();
+    public CollisionShape Circle => _collision;
     
     public Enemy(string name, string path, MeshInstance2D playerPosition) : base(name)
     {
@@ -24,6 +26,7 @@ public class Enemy : Node2D
         _playerPosition = playerPosition;
         
         AddChild(_body, path, ShaderType.TextureShader);
+        AddChild(_collision);
     }
 
     public override void Process(float delta)
@@ -31,10 +34,10 @@ public class Enemy : Node2D
         base.Process(delta);
         
         Vector3 kek = new Vector3(_playerPosition.GlobalTransform.Position.X, _playerPosition.GlobalTransform.Position.Y, 0);
-        Console.WriteLine(_body.GlobalTransform.Position);
         Vector3 direction = Vector3.Normalize(kek - _body.GlobalTransform.Position) * EnemyStats.Speed * delta;
         
         Translate(direction);
+        _collision.Translate(direction);
     }
         
     private sealed class Body : MeshInstance2D

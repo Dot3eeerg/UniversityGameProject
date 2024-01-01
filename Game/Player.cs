@@ -10,10 +10,12 @@ public class Player : Node2D
 {
     private MeshInstance2D _body;
     private CharacterCamera _camera;
+    private Circle _collision = new Circle("Collision", 0.1f);
     
     public Entity PlayerStats = new Stats();
     public Camera2D Camera => _camera;
     public MeshInstance2D BodyData => _body;
+    public Circle Circle => _collision;
 
     public Player(string name, string path) : base(name)
     {
@@ -25,6 +27,7 @@ public class Player : Node2D
         
         AddChild(_body, path, ShaderType.TextureShader);
         AddChild(_camera);
+        AddChild(_collision);
     }
 
     public override void Process(float delta)
@@ -60,6 +63,7 @@ public class Player : Node2D
             
             _camera.Translate(direction);
             _body.Translate(direction);
+            _collision.Translate(direction);
             Translate(direction);
         }
     }

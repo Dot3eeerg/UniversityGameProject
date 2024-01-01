@@ -1,4 +1,4 @@
-﻿using System.Reflection.Metadata;
+﻿using UniversityGameProject.Game;
 using UniversityGameProject.GUI;
 using UniversityGameProject.Input;
 using UniversityGameProject.Main._2d;
@@ -14,6 +14,10 @@ public class Scene : MainLoop
 {
     private List<Node> _nodes = new List<Node>();
     private List<Viewport> _viewports = new List<Viewport>();
+
+    private List<Enemy> _enemies = new List<Enemy>();
+    private List<Rectangle> _colliders = new List<Rectangle>();
+    private Player _mainCollision;
 
     private WindowServer _window;
     private RenderServer _renderServer;
@@ -62,6 +66,16 @@ public class Scene : MainLoop
 
     internal void LoadNode(Node node, string path, ShaderType type)
     {
+        if (node is Enemy)
+        {
+            _enemies.Add((Enemy) node);
+        }
+
+        if (node is Player)
+        {
+            _mainCollision = (Player) node;
+        }
+            
         foreach (var child in node.Childs)
         {
             if (IsInTree(child))
@@ -69,6 +83,7 @@ public class Scene : MainLoop
                 Console.WriteLine($"ERROR: The node {child.Name} is already in the Scene. It will not be added.");
                 return;
             }
+            
 
             child.Scene = this;
             LoadNode(child, path, type);
@@ -97,6 +112,7 @@ public class Scene : MainLoop
 
             child.Scene = this;
             LoadNode(child);
+
         }
 
         node.AttachInputServer(_inputServer);
@@ -113,6 +129,18 @@ public class Scene : MainLoop
         
         _renderServer.ChangeContextSize(_window.WindowSize);
 
+        for (int enemyID = 0; enemyID < _enemies.Count; enemyID++)
+        {
+            if (_mainCollision.Circle.CheckCollision((Circle) _enemies[enemyID].Circle))
+            {
+                Console.WriteLine("Da");
+            }
+            else
+            {
+                Console.WriteLine("NetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNet");
+            }
+        }
+        
         for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
         {
             var viewport = _viewports[viewportID];
