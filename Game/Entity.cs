@@ -3,5 +3,6 @@
 public abstract class Entity
 {
     public abstract float Speed { get; set; }
-    public abstract int HealthPool { get; set; }
+    public abstract int MaxHealth { get; set; }
+    public abstract int CurrentHealth { get; set; }
 }

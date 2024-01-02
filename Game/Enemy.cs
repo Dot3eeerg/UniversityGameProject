@@ -12,7 +12,7 @@ public class Enemy : Node2D
     private Body _body;
     private ICamera _camera;
     private MeshInstance2D _playerPosition;
-    private CollisionShape _collision = new Circle("Collision", 0.1f);
+    private CollisionShape _collision = new Circle("Collision", 0.04f);
 
     public Entity EnemyStats = new Stats();
     public CollisionShape Circle => _collision;
@@ -27,6 +27,10 @@ public class Enemy : Node2D
         
         AddChild(_body, path, ShaderType.TextureShader);
         AddChild(_collision);
+        
+        Console.WriteLine(GlobalTransform.Position);
+        Console.WriteLine(_collision.GlobalTransform.Position);
+        Console.WriteLine();
     }
 
     public override void Process(float delta)
@@ -37,7 +41,7 @@ public class Enemy : Node2D
         Vector3 direction = Vector3.Normalize(kek - _body.GlobalTransform.Position) * EnemyStats.Speed * delta;
         
         Translate(direction);
-        _collision.Translate(direction);
+        _collision.GlobalTransform.Position = GlobalTransform.Position;
     }
         
     private sealed class Body : MeshInstance2D
@@ -48,6 +52,7 @@ public class Enemy : Node2D
     private class Stats : Entity
     {
         public override float Speed { get; set; } = 0.1f;
-        public override int HealthPool { get; set; } = 10;
+        public override int MaxHealth { get; set; } = 10;
+        public override int CurrentHealth { get; set; } = 10;
     }
 }

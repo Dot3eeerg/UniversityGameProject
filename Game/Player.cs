@@ -10,7 +10,7 @@ public class Player : Node2D
 {
     private MeshInstance2D _body;
     private CharacterCamera _camera;
-    private Circle _collision = new Circle("Collision", 0.1f);
+    private Circle _collision = new Circle("Collision", 0.02f);
     
     public Entity PlayerStats = new Stats();
     public Camera2D Camera => _camera;
@@ -61,10 +61,10 @@ public class Player : Node2D
             direction = Vector3.Normalize(direction);
             direction = direction * delta * PlayerStats.Speed;
             
+            Translate(direction);
             _camera.Translate(direction);
             _body.Translate(direction);
             _collision.Translate(direction);
-            Translate(direction);
         }
     }
 
@@ -87,6 +87,7 @@ public class Player : Node2D
     private class Stats : Entity
     {
         public override float Speed { get; set; } = 0.3f;
-        public override int HealthPool { get; set; } = 100;
+        public override int MaxHealth { get; set; } = 100;
+        public override int CurrentHealth { get; set; } = 100;
     }
 }
