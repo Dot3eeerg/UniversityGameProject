@@ -13,7 +13,7 @@ public class Game
         
         var player = new Player("Player", "Textures/character.png");
         _scene.Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
-
+      
         var weapon = new Weapon("Weapon", "Textures/swing1.png", "Textures/swing2.png");
         _scene.Root.AddChild(weapon, "Textures/swing1.png", ShaderType.TextureShader);
 

@@ -2,10 +2,12 @@
 using UniversityGameProject.GUI;
 using UniversityGameProject.Input;
 using UniversityGameProject.Main._2d;
+using UniversityGameProject.Main.Timer;
 using UniversityGameProject.Render;
 using UniversityGameProject.Render.Camera;
 using UniversityGameProject.Render.Viewport;
 using UniversityGameProject.Window;
+using static UniversityGameProject.Game.Player;
 using ShaderType = UniversityGameProject.Render.Material.ShaderType;
 
 namespace UniversityGameProject.Main.Scene;
@@ -19,11 +21,13 @@ public class Scene : MainLoop
     private List<Enemy> _enemies = new List<Enemy>();
     private List<Rectangle> _colliders = new List<Rectangle>();
     private Player _mainCollision;
+    private Enemy _enemy;
 
     private WindowServer _window;
     private RenderServer _renderServer;
     private InputServer _inputServer;
     private GuiServer _guiServer;
+
 
     public Node Root { get; init; }
 
@@ -42,19 +46,47 @@ public class Scene : MainLoop
 
         _window.OnWindowStartsRender += Process;
         _inputServer.OnInputEmited += Input;
+        _timer = new Timer.Timer("Timer");
     }
+
+    private Timer.Timer _timer;
 
     public void Run()
     {
+
+        _timer.Start();
+        int enemies = 0;
         while (_window.Running)
         {
+            SpawnEnemy(_timer.Time, ref enemies);
             _window.Render();
+        }
+    }
+
+    private void SpawnEnemy(long ms, ref int enemies)
+    {
+        if (ms / 5000 > enemies)
+        {
+            var player = (Player)Root.Childs[0];
+            //_enemy = new SlimeEnemy($"SlimeEnemy{enemies}", player.BodyData);
+            //this.Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
+            //_enemy.Translate(-0.2f, 0.0f, 0.0f);
+            _enemy = new HeadEnemy($"HeadEnemy{enemies++}", player.BodyData);
+            this.Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
+            _enemy.Translate(0.0f, 0.2f, 0.0f);
+            _enemy = new SlimeEnemy($"SlimeEnemy{enemies++}", player.BodyData);
+            this.Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
+            _enemy.Translate(0.2f, 0.0f, 0.0f);
+            var ground = new Ground("Ground tile", "Textures/grass1.png");
+            this.Root.AddChild(ground, "Textures/grass1.png", ShaderType.GroundShader);
         }
     }
     
     protected override void Process(float delta)
     {
         base.Process(delta);
+
+        _timer.Update((long)(delta * 1000));
         
         _guiServer.SetupFrame(delta);
         
@@ -231,7 +263,7 @@ public class Scene : MainLoop
         }
         
         node.AttachInputServer(_inputServer);
-        _ground.Add(node);
+        if (_ground.Count < 1) _ground.Add(node);
         
         node.Ready();
     }
@@ -239,6 +271,12 @@ public class Scene : MainLoop
 
     protected void Input(InputEvent input)
     {
+        if (_inputServer!.IsActionPressed("exit"))
+        {
+            _window.Close();
+            return;
+        }
+
         foreach (var node in _nodes)
         {
             node.Input(input);
@@ -253,6 +291,7 @@ public class Scene : MainLoop
     
     public void AttachViewport(ICamera camera)
     {
+        if (_viewports.Count > 0) _viewports.Clear();
         var viewport = new Viewport(_window, camera);
         _viewports.Add(viewport);
     }
