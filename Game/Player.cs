@@ -13,6 +13,7 @@ public class Player : Node2D
     private CharacterCamera _camera;
     private Circle _collision = new Circle("Collision", 0.02f);
     private HitTimer _hitTime;
+    private Weapon _whip;
     
     public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
@@ -24,6 +25,8 @@ public class Player : Node2D
         _body = new Body("Player body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
         _body.MeshData.ApplyScale(0.02f, 0.08f);
+        
+        _whip = new Weapon("Weapon", "Textures/swing1.png", "Textures/swing2.png");
 
         _camera = new CharacterCamera("Main camera");
 
@@ -33,6 +36,7 @@ public class Player : Node2D
         AddChild(_camera);
         AddChild(_collision);
         AddChild(_hitTime);
+        AddChild(_whip);
     }
 
     public override void Process(float delta)
@@ -83,6 +87,7 @@ public class Player : Node2D
             _camera.Translate(direction);
             _body.Translate(direction);
             _collision.Translate(direction);
+            _whip.Translate(direction);
         }
     }
 
