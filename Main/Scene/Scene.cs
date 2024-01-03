@@ -65,7 +65,7 @@ public class Scene : MainLoop
 
     private void SpawnEnemy(long ms, ref int enemies)
     {
-        if (ms / 5000 >= enemies)
+        if (ms / 5000 > enemies)
         {
             var player = (Player)Root.Childs[0];
             //_enemy = new SlimeEnemy($"SlimeEnemy{enemies}", player.BodyData);
@@ -75,10 +75,11 @@ public class Scene : MainLoop
             this.Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
             _enemy.Translate(0.0f, 0.2f, 0.0f);
             _enemy = new SlimeEnemy($"SlimeEnemy{enemies++}", player.BodyData);
-           this.Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
-           _enemy.Translate(0.2f, 0.0f, 0.0f);
+            this.Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
+            _enemy.Translate(0.2f, 0.0f, 0.0f);
+            var ground = new Ground("Ground tile", "Textures/grass1.png");
+            this.Root.AddChild(ground, "Textures/grass1.png", ShaderType.GroundShader);
         }
-
     }
     
     protected override void Process(float delta)
@@ -247,7 +248,7 @@ public class Scene : MainLoop
         }
         
         node.AttachInputServer(_inputServer);
-        _ground.Add(node);
+        if (_ground.Count < 1) _ground.Add(node);
         
         node.Ready();
     }
@@ -275,6 +276,7 @@ public class Scene : MainLoop
     
     public void AttachViewport(ICamera camera)
     {
+        if (_viewports.Count > 0) _viewports.Clear();
         var viewport = new Viewport(_window, camera);
         _viewports.Add(viewport);
     }
