@@ -27,6 +27,11 @@ public class Timer : Node
       _isStopped = true;
    }
 
+   public void Reset()
+   {
+      _timeElapsed = 0;
+   }
+
    public bool IsActive()
    {
       if (!_isStopped)

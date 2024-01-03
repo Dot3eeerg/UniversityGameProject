@@ -81,6 +81,11 @@ public class Scene : MainLoop
         }
     }
 
+    private void CheckWeaponCollision()
+    {
+        
+    }
+
     private void RenderNodes(float delta)
     {
         for (int nodeID = 0; nodeID < _nodes.Count; nodeID++)
@@ -91,6 +96,11 @@ public class Scene : MainLoop
 
             if (node is IRenderable)
             {
+                if (node is MeshInstance2D && node.CanRender == false)
+                {
+                    continue;
+                }
+                
                 for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
                 {
                     var viewport = _viewports[viewportID];
@@ -148,6 +158,11 @@ public class Scene : MainLoop
         if (node is Player)
         {
             _mainCollision = (Player) node;
+        }
+
+        if (node is Weapon)
+        {
+            _colliders = new List<Rectangle>();
         }
             
         foreach (var child in node.Childs)
