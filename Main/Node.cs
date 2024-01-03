@@ -11,7 +11,8 @@ public class Node
     public Node? Parent { get; protected set; }
     public List<Node> Childs { get; protected set; } = new List<Node>();
     public string Name { get; private set; }
-    
+    public bool CanRender { get; set; } = true;
+
     public bool RootNode { get; init; }
 
     public Node(string name)
