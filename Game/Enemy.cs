@@ -27,16 +27,17 @@ public class Enemy : Node2D
         
         AddChild(_body, path, ShaderType.TextureShader);
         AddChild(_collision);
-        
-        Console.WriteLine(GlobalTransform.Position);
-        Console.WriteLine(_collision.GlobalTransform.Position);
-        Console.WriteLine();
     }
 
     public override void Process(float delta)
     {
         base.Process(delta);
         
+        ChasePlayer(delta);
+    }
+
+    private void ChasePlayer(float delta)
+    {
         Vector3 kek = new Vector3(_playerPosition.GlobalTransform.Position.X, _playerPosition.GlobalTransform.Position.Y, 0);
         Vector3 direction = Vector3.Normalize(kek - _body.GlobalTransform.Position) * EnemyStats.Speed * delta;
         
@@ -54,5 +55,7 @@ public class Enemy : Node2D
         public override float Speed { get; set; } = 0.1f;
         public override int MaxHealth { get; set; } = 10;
         public override int CurrentHealth { get; set; } = 10;
+        public override int Damage { get; set; } = 10;
+        public override long InvulTime { get; set; } = 2000;
     }
 }

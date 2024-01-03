@@ -37,10 +37,6 @@ public class Circle : CollisionShape
         float distance = LengthSquared(new Vector2(-GlobalTransform.Position.X + circle.GlobalTransform.Position.X,
             -GlobalTransform.Position.Y + circle.GlobalTransform.Position.Y));
 
-        Console.WriteLine(GlobalTransform.Position);
-        Console.WriteLine(circle.GlobalTransform.Position);
-        Console.WriteLine(Single.Sqrt(distance));
-        Console.WriteLine();
         if (distance < (Radius + circle.Radius) * (Radius + circle.Radius))
         {
             return true;

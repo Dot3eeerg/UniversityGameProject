@@ -1,4 +1,5 @@
-﻿using UniversityGameProject.Input;
+﻿using UniversityGameProject.Game;
+using UniversityGameProject.Input;
 using UniversityGameProject.Render.Material;
 
 namespace UniversityGameProject.Main;
@@ -39,7 +40,15 @@ public class Node
             }
 
             child.Scene = Scene!;
-            Scene!.LoadNode(child, path, type);
+            if (child is Ground)
+            {
+                Scene!.LoadGround(child, path, type);
+            }
+            
+            else
+            {
+                Scene!.LoadNode(child, path, type);
+            }
         }
 
         Childs.Add(child);
@@ -71,5 +80,10 @@ public class Node
     public void AttachInputServer(InputServer server)
     {
         InputServer = server;
+    }
+
+    public virtual void Dispose()
+    {
+        
     }
 }
