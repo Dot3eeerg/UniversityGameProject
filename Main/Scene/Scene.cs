@@ -15,6 +15,7 @@ public class Scene : MainLoop
     private List<Node> _nodes = new List<Node>();
     private List<Viewport> _viewports = new List<Viewport>();
 
+    private List<Node> _ground = new List<Node>();
     private List<Enemy> _enemies = new List<Enemy>();
     private List<Rectangle> _colliders = new List<Rectangle>();
     private Player _mainCollision;
@@ -49,6 +50,68 @@ public class Scene : MainLoop
         {
             _window.Render();
         }
+    }
+    
+    protected override void Process(float delta)
+    {
+        base.Process(delta);
+        
+        _guiServer.SetupFrame(delta);
+        
+        _renderServer.ChangeContextSize(_window.WindowSize);
+
+        for (int enemyID = 0; enemyID < _enemies.Count; enemyID++)
+        {
+            if (_mainCollision.Circle.CheckCollision((Circle) _enemies[enemyID].Circle))
+            {
+                Console.WriteLine("Da");
+                _mainCollision.PlayerStats.CurrentHealth -= _enemies[enemyID].EnemyStats.Damage;
+            }
+            else
+            {
+                Console.WriteLine("NetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNet");
+            }
+        }
+        
+        for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
+        {
+            var viewport = _viewports[viewportID];
+            _renderServer.ApplyEnvironment(viewport);
+        }
+
+        for (int nodeID = 0; nodeID < _nodes.Count; nodeID++)
+        {
+            var node = _nodes[nodeID];
+            
+            node.Process(delta);
+
+            if (node is IRenderable)
+            {
+                for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
+                {
+                    var viewport = _viewports[viewportID];
+                    _renderServer.Render(viewport, (IRenderable)node);
+                }
+            }
+        }
+
+        for (int nodeID = 0; nodeID < _ground.Count; nodeID++)
+        {
+            var node = _ground[nodeID];
+            
+            node.Process(delta);
+
+            if (node is IRenderable)
+            {
+                for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
+                {
+                    var viewport = _viewports[viewportID];
+                    _renderServer.Render(viewport, (IRenderable)node);
+                }
+            }
+        }
+        
+        _guiServer.RenderFrame();
     }
 
     public bool IsInTree(Node node)
@@ -120,51 +183,33 @@ public class Scene : MainLoop
         
         node.Ready();
     }
-
-    protected override void Process(float delta)
+    
+    internal void LoadGround(Node node, string path, ShaderType type)
     {
-        base.Process(delta);
-        
-        _guiServer.SetupFrame(delta);
-        
-        _renderServer.ChangeContextSize(_window.WindowSize);
-
-        for (int enemyID = 0; enemyID < _enemies.Count; enemyID++)
+        foreach (var child in node.Childs)
         {
-            if (_mainCollision.Circle.CheckCollision((Circle) _enemies[enemyID].Circle))
+            if (IsInTree(child))
             {
-                Console.WriteLine("Da");
+                Console.WriteLine($"ERROR: The node {child.Name} is already in the Scene. It will not be added.");
+                return;
             }
-            else
-            {
-                Console.WriteLine("NetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNet");
-            }
-        }
-        
-        for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
-        {
-            var viewport = _viewports[viewportID];
-            _renderServer.ApplyEnvironment(viewport);
-        }
-
-        for (int nodeID = 0; nodeID < _nodes.Count; nodeID++)
-        {
-            var node = _nodes[nodeID];
             
-            node.Process(delta);
 
-            if (node is IRenderable)
-            {
-                for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
-                {
-                    var viewport = _viewports[viewportID];
-                    _renderServer.Render(viewport, (IRenderable)node);
-                }
-            }
+            child.Scene = this;
+            LoadGround(child, path, type);
+        }
+
+        if (node is IRenderable)
+        {
+            _renderServer.Load((IRenderable) node, path, type);
         }
         
-        _guiServer.RenderFrame();
+        node.AttachInputServer(_inputServer);
+        _ground.Add(node);
+        
+        node.Ready();
     }
+
 
     protected void Input(InputEvent input)
     {

@@ -6,7 +6,7 @@ using UniversityGameProject.Resources.Primitives;
 
 namespace UniversityGameProject.Game;
 
-public class Player : Node2D
+public class Player : Node2D, IDisposable
 {
     private MeshInstance2D _body;
     private CharacterCamera _camera;
@@ -33,6 +33,11 @@ public class Player : Node2D
     public override void Process(float delta)
     {
         base.Process(delta);
+
+        if (!IsAlive())
+        {
+            
+        }
         
         Vector3 direction = Vector3.Zero;
 
@@ -61,13 +66,24 @@ public class Player : Node2D
             direction = Vector3.Normalize(direction);
             direction = direction * delta * PlayerStats.Speed;
             
-            //Translate(direction);
+            // You don't need Translate main node, idk why but it works that way
+            // Translate(direction)
             _camera.Translate(direction);
             _body.Translate(direction);
             _collision.Translate(direction);
         }
     }
 
+    private bool IsAlive()
+    {
+        if (PlayerStats.CurrentHealth <= 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    
     public sealed class Body : MeshInstance2D
     {
         public Body(string name, string path) : base(name) { }
@@ -89,5 +105,11 @@ public class Player : Node2D
         public override float Speed { get; set; } = 0.3f;
         public override int MaxHealth { get; set; } = 100;
         public override int CurrentHealth { get; set; } = 100;
+        public override int Damage { get; set; } = 0;
+    }
+
+    public override void Dispose()
+    {
+        _body.Dispose();
     }
 }

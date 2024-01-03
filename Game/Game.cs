@@ -10,7 +10,7 @@ public class Game
     public Game()
     {
         _scene = new Scene();
-
+        
         var player = new Player("Player", "Textures/character.png");
         _scene.Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
 

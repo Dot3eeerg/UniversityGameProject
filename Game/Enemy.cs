@@ -54,5 +54,6 @@ public class Enemy : Node2D
         public override float Speed { get; set; } = 0.1f;
         public override int MaxHealth { get; set; } = 10;
         public override int CurrentHealth { get; set; } = 10;
+        public override int Damage { get; set; } = 10;
     }
 }
