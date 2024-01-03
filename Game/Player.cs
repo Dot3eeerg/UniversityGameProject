@@ -7,14 +7,14 @@ using Timer = UniversityGameProject.Main.Timer.Timer;
 
 namespace UniversityGameProject.Game;
 
-public class Player : Node2D, IDisposable
+public class Player : Node2D
 {
     private MeshInstance2D _body;
     private CharacterCamera _camera;
     private Circle _collision = new Circle("Collision", 0.02f);
     private HitTimer _hitTime;
     
-    public Entity PlayerStats = new Stats();
+    public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
     public MeshInstance2D BodyData => _body;
     public Circle Circle => _collision;
@@ -143,17 +143,11 @@ public class Player : Node2D, IDisposable
         }
     }
 
-    private class Stats : Entity
+    private class Stats : EntityPlayer
     {
         public override float Speed { get; set; } = 0.3f;
         public override int MaxHealth { get; set; } = 100;
         public override int CurrentHealth { get; set; } = 100;
-        public override int Damage { get; set; } = 0;
         public override long InvulTime { get; set; } = 2000;
-    }
-
-    public override void Dispose()
-    {
-        _body.Dispose();
     }
 }

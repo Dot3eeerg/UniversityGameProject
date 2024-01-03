@@ -11,6 +11,7 @@ public enum KeyboardButton
     Space,
     Shift,
     Tab,
+    Escape,
     Unknown,
 }
 
@@ -34,6 +35,7 @@ public class InputEventKey : InputEvent
             Key.Space => KeyboardButton.Space,
             Key.ShiftRight => KeyboardButton.Shift,
             Key.Tab => KeyboardButton.Tab,
+            Key.Escape => KeyboardButton.Escape,
             _ => KeyboardButton.Unknown,
         };
 
