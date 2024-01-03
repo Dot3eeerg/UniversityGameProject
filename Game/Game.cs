@@ -16,10 +16,6 @@ public class Game
       
         var weapon = new Weapon("Weapon", "Textures/swing1.png", "Textures/swing2.png");
         _scene.Root.AddChild(weapon, "Textures/swing1.png", ShaderType.TextureShader);
-
-        var enemy = new Enemy("Enemy", "Texture/slime.png", player.BodyData);
-        _scene.Root.AddChild(enemy, "Textures/slime.png", ShaderType.TextureShader);
-        enemy.Translate(1.0f, 1.0f, 0.0f);
         
         var ground = new Ground("Ground tile", "Textures/grass1.png");
         _scene.Root.AddChild(ground, "Textures/grass1.png", ShaderType.GroundShader);
