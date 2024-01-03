@@ -74,6 +74,15 @@ public class Player : Node2D, IDisposable
         }
     }
 
+    public void InflictDamage(int damage)
+    {
+        PlayerStats.CurrentHealth -= damage;
+        if (PlayerStats.CurrentHealth <= 0)
+        {
+            Console.WriteLine("Player is dead");
+        }
+    }
+
     private bool IsAlive()
     {
         if (PlayerStats.CurrentHealth <= 0)

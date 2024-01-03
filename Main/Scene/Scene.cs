@@ -60,25 +60,32 @@ public class Scene : MainLoop
         
         _renderServer.ChangeContextSize(_window.WindowSize);
 
+        CheckPlayerCollision();
+        
+        ApplyViewports(delta);
+        
+        RenderNodes(delta);
+        
+        _guiServer.RenderFrame();
+    }
+
+    private void CheckPlayerCollision()
+    {
         for (int enemyID = 0; enemyID < _enemies.Count; enemyID++)
         {
             if (_mainCollision.Circle.CheckCollision((Circle) _enemies[enemyID].Circle))
             {
                 Console.WriteLine("Da");
-                _mainCollision.PlayerStats.CurrentHealth -= _enemies[enemyID].EnemyStats.Damage;
+                _mainCollision.InflictDamage(_enemies[enemyID].EnemyStats.Damage);
+                break;
             }
-            else
-            {
-                Console.WriteLine("NetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNet");
-            }
+            
+            Console.WriteLine("NetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNet");
         }
-        
-        for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
-        {
-            var viewport = _viewports[viewportID];
-            _renderServer.ApplyEnvironment(viewport);
-        }
+    }
 
+    private void RenderNodes(float delta)
+    {
         for (int nodeID = 0; nodeID < _nodes.Count; nodeID++)
         {
             var node = _nodes[nodeID];
@@ -110,8 +117,15 @@ public class Scene : MainLoop
                 }
             }
         }
-        
-        _guiServer.RenderFrame();
+    }
+
+    private void ApplyViewports(float delta)
+    {
+        for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
+        {
+            var viewport = _viewports[viewportID];
+            _renderServer.ApplyEnvironment(viewport);
+        }
     }
 
     public bool IsInTree(Node node)
