@@ -3,6 +3,7 @@ using UniversityGameProject.Main._2d;
 using UniversityGameProject.Render.Material;
 using UniversityGameProject.Resources;
 using UniversityGameProject.Resources.Primitives;
+using Timer = UniversityGameProject.Main.Timer.Timer;
 
 namespace UniversityGameProject.Game;
 
@@ -11,6 +12,7 @@ public class Player : Node2D, IDisposable
     private MeshInstance2D _body;
     private CharacterCamera _camera;
     private Circle _collision = new Circle("Collision", 0.02f);
+    private HitTimer _hitTime;
     
     public Entity PlayerStats = new Stats();
     public Camera2D Camera => _camera;
@@ -24,21 +26,31 @@ public class Player : Node2D, IDisposable
         _body.MeshData.ApplyScale(0.02f, 0.08f);
 
         _camera = new CharacterCamera("Main camera");
+
+        _hitTime = new HitTimer("Hit timer");
         
         AddChild(_body, path, ShaderType.TextureShader);
         AddChild(_camera);
         AddChild(_collision);
+        AddChild(_hitTime);
     }
 
     public override void Process(float delta)
     {
         base.Process(delta);
+        
+        _hitTime.Update((long) (delta * 1000));
 
         if (!IsAlive())
         {
             
         }
         
+        InputHandle(delta);
+    }
+
+    private void InputHandle(float delta)
+    {
         Vector3 direction = Vector3.Zero;
 
         if (InputServer!.IsActionPressed("movement_forward"))
@@ -76,11 +88,28 @@ public class Player : Node2D, IDisposable
 
     public void InflictDamage(int damage)
     {
-        PlayerStats.CurrentHealth -= damage;
-        if (PlayerStats.CurrentHealth <= 0)
+        if (!IsInvul())
         {
-            Console.WriteLine("Player is dead");
+            PlayerStats.CurrentHealth -= damage;
+            Console.WriteLine("Damage taken");
+            
+            if (PlayerStats.CurrentHealth <= 0)
+            {
+                Console.WriteLine("Player is dead");
+            }
+            
+            _hitTime.Start();
         }
+    }
+
+    private bool IsInvul()
+    {
+        if (_hitTime.Time < PlayerStats.InvulTime && _hitTime.IsActive())
+        {
+            return true;
+        }
+        
+        return false;
     }
 
     private bool IsAlive()
@@ -96,6 +125,11 @@ public class Player : Node2D, IDisposable
     public sealed class Body : MeshInstance2D
     {
         public Body(string name, string path) : base(name) { }
+    }
+    
+    private sealed class HitTimer : Timer 
+    {
+        public HitTimer(string name) : base(name) { }
     }
 
     private sealed class CharacterCamera : Camera2D
@@ -115,6 +149,7 @@ public class Player : Node2D, IDisposable
         public override int MaxHealth { get; set; } = 100;
         public override int CurrentHealth { get; set; } = 100;
         public override int Damage { get; set; } = 0;
+        public override long InvulTime { get; set; } = 2000;
     }
 
     public override void Dispose()

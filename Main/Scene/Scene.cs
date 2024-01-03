@@ -75,12 +75,9 @@ public class Scene : MainLoop
         {
             if (_mainCollision.Circle.CheckCollision((Circle) _enemies[enemyID].Circle))
             {
-                Console.WriteLine("Da");
                 _mainCollision.InflictDamage(_enemies[enemyID].EnemyStats.Damage);
                 break;
             }
-            
-            Console.WriteLine("NetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNetNet");
         }
     }
 
