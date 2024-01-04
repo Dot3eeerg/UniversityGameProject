@@ -7,7 +7,7 @@ using UniversityGameProject.Render.VertexArrayObject;
 
 namespace UniversityGameProject.Main._2d;
 
-public abstract class VisualInstance2D : Node2D, IRenderable
+public abstract class VisualInstance2D : Node2D, IRenderable, IDisposable
 {
     public VertexArrayObject<float, ushort> Vao { get; private set; }
     public BufferObject<float>? Vbo { get; private set; }
@@ -32,4 +32,12 @@ public abstract class VisualInstance2D : Node2D, IRenderable
     }
 
     public virtual void Draw(ICamera camera) { }
+
+    public void Dispose()
+    {
+        Vao.Dispose();
+        Vbo.Dispose();
+        Ebo.Dispose();
+        Texture.Dispose();
+    }
 }

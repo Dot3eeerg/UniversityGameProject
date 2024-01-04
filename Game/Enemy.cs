@@ -54,7 +54,19 @@ public abstract class Enemy : Node2D
         if (EnemyStats.CurrentHealth <= 0)
         {
             Console.WriteLine("Enemy is dead");
+            // I can't do this, Dispose is killing me and breaking memory usage
+            //Dispose();
         }
+    }
+
+    public bool IsDead()
+    {
+        if (EnemyStats.CurrentHealth <= 0)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public void DoScale()
@@ -67,6 +79,10 @@ public abstract class Enemy : Node2D
         public Body(string name) : base(name) { }
     }
 
+    public void Dispose()
+    {
+        _body.Dispose();
+    }
 }
 
 public class SlimeEnemy : Enemy
