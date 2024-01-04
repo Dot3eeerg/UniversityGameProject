@@ -133,10 +133,17 @@ public class Spawner
         BossEnemy
     }
 
-    private struct SpawnData(int time, int spawnRate, EnemyType type)
+    private struct SpawnData
     {
-        public int Time = time;
-        public int SpawnRate = spawnRate;
-        public EnemyType Type = type;
+        public int Time;
+        public int SpawnRate;
+        public EnemyType Type;
+
+        public SpawnData(int time, int spawnRate, EnemyType type)
+        {
+            Time = time;
+            SpawnRate = spawnRate;
+            Type = type;
+        }
     }
 }
