@@ -12,7 +12,7 @@ public abstract class Enemy : Node2D
     internal Body _body;
     private ICamera _camera;
     private MeshInstance2D _playerPosition;
-    private CollisionShape _collision = new Circle("Collision", 0.04f);
+    internal CollisionShape _collision = new Circle("Collision", 0.04f);
 
     public CollisionShape Circle => _collision;
 
@@ -88,6 +88,8 @@ public abstract class Enemy : Node2D
 public class SlimeEnemy : Enemy
 {
     public SlimeEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) {}
+    
+    private CollisionShape _collision = new Circle("Collision", 0.04f);
 
     internal override EntityEnemy EnemyStats { get; set; } = new Stats();
 
@@ -106,9 +108,11 @@ public class HeadEnemy : Enemy
 {
     public HeadEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
 
+    private CollisionShape _collision = new Circle("Collision", 0.04f);
+    
     internal override EntityEnemy EnemyStats { get; set; } = new Stats();
 
-    public override string TexturePath => "Textures/enemy.png";
+    public override string TexturePath => "Textures/ghost.png";
 
     private class Stats : EntityEnemy
     {
@@ -123,13 +127,15 @@ public class GiantEnemy : Enemy
 {
     public GiantEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
 
+    private CollisionShape _collision = new Circle("Collision", 0.12f);
+    
     internal override EntityEnemy EnemyStats { get; set; } = new Stats();
 
     public override string TexturePath => "Textures/giant.png";
 
     public override void DoScale()
     {
-        _body.MeshData.ApplyScale(0.10f, 0.20f);
+        _body.MeshData.ApplyScale(0.10f, 0.15f);
     }
 
     private class Stats : EntityEnemy
@@ -144,14 +150,16 @@ public class GiantEnemy : Enemy
 public class BossEnemy : Enemy
 {
     public BossEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
+    
+    private CollisionShape _collision = new Circle("Collision", 0.18f);
 
     internal override EntityEnemy EnemyStats { get; set; } = new Stats();
 
-    public override string TexturePath => "Textures/zaika.jpg";
+    public override string TexturePath => "Textures/boss.png";
 
     public override void DoScale()
     {
-        _body.MeshData.ApplyScale(0.14f, 0.28f);
+        _body.MeshData.ApplyScale(0.14f, 0.25f);
     }
 
     private class Stats : EntityEnemy

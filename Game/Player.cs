@@ -13,14 +13,14 @@ public class Player : Node2D
     private CharacterCamera _camera;
     private Circle _collision = new Circle("Collision", 0.02f);
     private HitTimer _hitTime;
-    private Weapon _whip;
+    private List<Weapon> _whip;
     
     public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
     public MeshInstance2D BodyData => _body;
     public Circle Circle => _collision;
 
-    public Player(string name, string path, Weapon weapon) : base(name)
+    public Player(string name, string path, List<Weapon> weapon) : base(name)
     {
         _body = new Body("Player body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
@@ -28,7 +28,10 @@ public class Player : Node2D
         //_body.Transform.Scale = new Vector3(Transform.Scale.X, Transform.Scale.Y + 1.0f, Transform.Scale.Z);
 
         _whip = weapon;
-        _whip.Translate(0.0625f, 0.0f, 0.0f);
+        _whip[0].Translate(0.0625f, 0.0f, 0.0f);
+        _whip[1].Translate(-0.0625f, 0.0f, 0.0f);
+        _whip[2].Translate(0.0f, 0.0625f, 0.0f);
+        _whip[3].Translate(0.0f, -0.0625f, 0.0f);
 
         _camera = new CharacterCamera("Main camera");
 
@@ -88,12 +91,16 @@ public class Player : Node2D
             _camera.Translate(direction);
             _body.Translate(direction);
             _collision.Translate(direction);
-            
 
-            if (_whip.CanRender)
+
+            for (int whipID = 0; whipID < _whip.Count; whipID++)
             {
-                _whip.Translate(direction);
-                _whip.Rectangle.Translate(direction);
+                
+                if (_whip[whipID].CanRender)
+                {
+                    _whip[whipID].Translate(direction);
+                    _whip[whipID].Rectangle.Translate(direction);
+                }
             }
         }
     }

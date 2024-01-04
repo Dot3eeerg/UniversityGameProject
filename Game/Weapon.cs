@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using UniversityGameProject.Main._2d;
+﻿using UniversityGameProject.Main._2d;
 using UniversityGameProject.Resources.Primitives;
 using Timer = UniversityGameProject.Main.Timer.Timer;
 
@@ -15,13 +14,13 @@ public class Weapon : Node2D
     public Stats WeaponStats = new Stats();
     public Rectangle Rectangle => _collision;
     
-    public Weapon(string name, string path1, string path2) : base(name)
+    public Weapon(string name, string path) : base(name)
     {
-        _body = new Body("Weapon body", path1);
+        _body = new Body("Weapon body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
         _body.MeshData.ApplyScale(0.03f, 0.01f);
         _body.CanRender = false;
-
+        
         _attack = new Timer("Alive timer");
         _cooldown = new Timer("Cooldown");
         
@@ -79,7 +78,7 @@ public class Weapon : Node2D
 
         return false;
     }
-    
+
     public sealed class Body : MeshInstance2D
     {
         public Body(string name, string path) : base(name) { }
