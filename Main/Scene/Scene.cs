@@ -27,7 +27,8 @@ public class Scene : MainLoop
     private RenderServer _renderServer;
     private InputServer _inputServer;
     private GuiServer _guiServer;
-
+    
+    private Timer.Timer _timer;
 
     public Node Root { get; init; }
 
@@ -49,11 +50,8 @@ public class Scene : MainLoop
         _timer = new Timer.Timer("Timer");
     }
 
-    private Timer.Timer _timer;
-
     public void Run()
     {
-
         _timer.Start();
         int enemies = 0;
         while (_window.Running)
@@ -67,18 +65,15 @@ public class Scene : MainLoop
     {
         if (ms / 5000 > enemies)
         {
-            var player = (Player)Root.Childs[0];
-            //_enemy = new SlimeEnemy($"SlimeEnemy{enemies}", player.BodyData);
-            //this.Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
-            //_enemy.Translate(-0.2f, 0.0f, 0.0f);
+            var player = (Player)Root.Childs[1];
             _enemy = new HeadEnemy($"HeadEnemy{enemies++}", player.BodyData);
-            this.Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
+            Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
             _enemy.Translate(0.0f, 0.2f, 0.0f);
             _enemy = new SlimeEnemy($"SlimeEnemy{enemies++}", player.BodyData);
-            this.Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
+            Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
             _enemy.Translate(0.2f, 0.0f, 0.0f);
             var ground = new Ground("Ground tile", "Textures/grass1.png");
-            this.Root.AddChild(ground, "Textures/grass1.png", ShaderType.GroundShader);
+            Root.AddChild(ground, "Textures/grass1.png", ShaderType.GroundShader);
         }
     }
     

@@ -1,4 +1,5 @@
-﻿using UniversityGameProject.Main._2d;
+﻿using System.Numerics;
+using UniversityGameProject.Main._2d;
 using UniversityGameProject.Resources.Primitives;
 using Timer = UniversityGameProject.Main.Timer.Timer;
 
@@ -17,7 +18,7 @@ public class Weapon : Node2D
     {
         _body = new Body("Weapon body", path1);
         _body.MeshData = new RectanglePrimitiveTextured();
-        _body.MeshData.ApplyScale(0.08f, 0.04f);
+        _body.MeshData.ApplyScale(0.03f, 0.01f);
         _body.CanRender = false;
 
         _attack = new Timer("Alive timer");
@@ -43,6 +44,7 @@ public class Weapon : Node2D
         else
         {
             _attack.Update((long) (delta * 1000));
+            _body.Transform.Scale = _body.Transform.Scale with { X = _body.Transform.Scale.X + delta * 12, Y = _body.Transform.Scale.Y + delta * 10 };
         }
 
         if (_cooldown.Time > WeaponStats.TimeCooldown)
@@ -51,6 +53,7 @@ public class Weapon : Node2D
             _cooldown.Stop();
             _cooldown.Reset();
             _attack.Start();
+            _body.Transform.Scale = _body.Transform.Scale with { X = 1.0f, Y = 1.0f };
             
             Console.WriteLine("Start attack");
         }
@@ -64,6 +67,11 @@ public class Weapon : Node2D
             
             Console.WriteLine("Stop attack");
         }
+    }
+
+    public void ChangeSize(float scaleX, float scaleY)
+    {
+        
     }
 
     public bool IsAttacking()
@@ -84,7 +92,7 @@ public class Weapon : Node2D
     public sealed class Stats
     {
         public int Damage { get; set; } = 5;
-        public long TimeAttack { get; set; } = 5000;
-        public long TimeCooldown { get; set; } = 1000;
+        public long TimeAttack { get; set; } = 250;
+        public long TimeCooldown { get; set; } = 1250;
     }
 }

@@ -10,7 +10,7 @@ public class BufferObject<TDataType> : IDisposable
     private BufferUsageARB _usageType;
     private GL _gl;
 
-    public unsafe BufferObject(GL gl, Span<TDataType> data, BufferTargetARB bufferType, BufferUsageARB usageType = BufferUsageARB.StaticDraw)
+    public unsafe BufferObject(GL gl, Span<TDataType> data, BufferTargetARB bufferType, BufferUsageARB usageType = BufferUsageARB.DynamicDraw)
     {
         _gl = gl;
         _bufferType = bufferType;

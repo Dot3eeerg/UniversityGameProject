@@ -20,9 +20,9 @@ public class RenderServer
     public void Load(IRenderable renderable, string path, Material.ShaderType type)
     {
         BufferObject<float> vbo = new BufferObject<float>(_gl, renderable.Vertices, BufferTargetARB.ArrayBuffer,
-            BufferUsageARB.DynamicCopy);
+            BufferUsageARB.DynamicDraw);
         BufferObject<ushort> ebo = new BufferObject<ushort>(_gl, renderable.Indices, BufferTargetARB.ElementArrayBuffer,
-            BufferUsageARB.DynamicCopy);
+            BufferUsageARB.DynamicDraw);
 
         VertexArrayObject<float, ushort> vao = new VertexArrayObject<float, ushort>(_gl, vbo, ebo);
         
