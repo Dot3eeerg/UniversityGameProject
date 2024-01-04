@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System.Collections.Generic;
+using System.Numerics;
+using System.Xml.Linq;
 using UniversityGameProject.Game;
 using UniversityGameProject.GUI;
 using UniversityGameProject.Input;
@@ -62,6 +64,8 @@ public class Scene : MainLoop
 
     public long TotalTime => _timer.Time;
 
+    public long SpawnTimer = 0;
+
     public void Run()
     {
         _spawner = new Spawner(this);
@@ -78,7 +82,9 @@ public class Scene : MainLoop
         base.Process(delta);
 
         _timer.Update((long)(delta * 1000));
-        
+
+        SpawnTimer += (long)(delta * 1000);
+
         _guiServer.SetupFrame(delta);
         
         _renderServer.ChangeContextSize(_window.WindowSize);

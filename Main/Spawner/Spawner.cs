@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UniversityGameProject.Game;
 using UniversityGameProject.Main._2d;
@@ -20,6 +21,8 @@ public class Spawner
 
     private Player _player;
 
+    private bool _bossSpawned = false;
+
     public Spawner(Scene.Scene scene)
     {
         _scene = scene;
@@ -28,20 +31,34 @@ public class Spawner
 
     private int _enemyID = 0;
 
+
     private SpawnData[] _spawnRates =
     {
-        new (0, EnemyType.HeadEnemy),
-        new (10, EnemyType.SlimeEnemy),
-        new (20, EnemyType.GiantEnemy),
-        new (30, EnemyType.BossEnemy)
+        new (0, 500, EnemyType.HeadEnemy),
+        new (10, 1000, EnemyType.SlimeEnemy),
+        new (20, 2000, EnemyType.GiantEnemy),
+        new (30, 500, EnemyType.BossEnemy)
     };
+
+    private int spawnRate = 1;
 
 
     public void SpawnEnemy()
     {
-        if (_scene.TotalTime / 500 >= _scene.NumAliveEnemies && _scene.NumAliveEnemies < _scene.MaxAliveEnemies)
+        bool spawned = false;
+        var spawnRateType = getSpawnRateIdx();
+
+        if (!_bossSpawned && spawnRateType == EnemyType.BossEnemy)
         {
-            var spawnRateIdx = getSpawnRateIdx();
+            SpawnBoss();
+        }
+
+        while (_scene.SpawnTimer > spawnRate)
+        {
+            if (_scene.NumAliveEnemies >= _scene.MaxAliveEnemies)
+            {
+                break;
+            }
 
             float randomAngle = _random.NextSingle() * 2.0f * 3.14f;
             var pos = _player.BodyData.GlobalTransform.Position + _screenDist * new Vector3((float)System.Math.Cos(randomAngle), (float)System.Math.Sin(randomAngle), 0);
@@ -49,8 +66,8 @@ public class Spawner
             var name = $"Enemy{_enemyID++}";
 
             Enemy enemy;
-            
-            switch (spawnRateIdx)
+
+            switch (spawnRateType)
             {
                 case EnemyType.HeadEnemy:
                     enemy = new HeadEnemy(name, _player.BodyData);
@@ -61,23 +78,36 @@ public class Spawner
                 case EnemyType.GiantEnemy:
                     enemy = new GiantEnemy(name, _player.BodyData);
                     break;
-                case EnemyType.BossEnemy:
-                    enemy = new BossEnemy(name, _player.BodyData);
-                    break;
                 default:
                     enemy = new HeadEnemy(name, _player.BodyData);
                     break;
             }
 
 
-
             _scene.Root.AddChild(enemy, enemy.TexturePath, ShaderType.TextureShader);
             enemy.Translate(pos);
+            _scene.NumAliveEnemies++;
 
+            _scene.SpawnTimer -= spawnRate;
+            spawned = true;
+        }
+
+        if (spawned)
+        {
             var ground = new Ground("Ground tile", "Textures/grass1.png");
             _scene.Root.AddChild(ground, "Textures/grass1.png", ShaderType.GroundShader);
-            _scene.NumAliveEnemies++;
         }
+    }
+
+    private void SpawnBoss()
+    {
+        var enemy = new BossEnemy("BossEnemy", _player.BodyData);
+        float randomAngle = _random.NextSingle() * 2.0f * 3.14f;
+        var pos = _player.BodyData.GlobalTransform.Position + _screenDist * new Vector3((float)System.Math.Cos(randomAngle), (float)System.Math.Sin(randomAngle), 0);
+
+        _scene.Root.AddChild(enemy, enemy.TexturePath, ShaderType.TextureShader);
+        enemy.Translate(pos);
+        _bossSpawned = true;
     }
 
     private EnemyType getSpawnRateIdx()
@@ -86,9 +116,12 @@ public class Spawner
         {
             if (_spawnRates[i].Time > _scene.TotalTime / 1000)
             {
+                spawnRate = _spawnRates[i - 1].SpawnRate;
                 return _spawnRates[i - 1].Type;
             }
         }
+
+        spawnRate = _spawnRates[^1].SpawnRate;
         return _spawnRates[^1].Type;
     }
 
@@ -100,9 +133,10 @@ public class Spawner
         BossEnemy
     }
 
-    private struct SpawnData(int time, EnemyType type)
+    private struct SpawnData(int time, int spawnRate, EnemyType type)
     {
         public int Time = time;
+        public int SpawnRate = spawnRate;
         public EnemyType Type = type;
     }
 }
