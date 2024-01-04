@@ -47,6 +47,16 @@ public abstract class Enemy : Node2D
         _collision.GlobalTransform.Position = GlobalTransform.Position;
     }
 
+    public void InflictDamage(int damage)
+    {
+        EnemyStats.CurrentHealth -= damage;
+
+        if (EnemyStats.CurrentHealth <= 0)
+        {
+            Console.WriteLine("Enemy is dead");
+        }
+    }
+
     public void DoScale()
     {
         _body.MeshData.ApplyScale(0.04f, 0.08f);
