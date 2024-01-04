@@ -10,7 +10,7 @@ public enum ShaderType
     GroundShader,
 }
 
-public class StandardMaterial : Material
+public class StandardMaterial : Material, IDisposable
 {
     private ShaderProgram _shaderProgram;
     private uint _shaderDescriptor;
@@ -68,5 +68,10 @@ public class StandardMaterial : Material
             camera.Position.Y,
             camera.Position.Z
             );
+    }
+
+    public void Dispose()
+    {
+        _shaderProgram.Dispose();
     }
 }

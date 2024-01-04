@@ -20,13 +20,15 @@ public class Player : Node2D
     public MeshInstance2D BodyData => _body;
     public Circle Circle => _collision;
 
-    public Player(string name, string path) : base(name)
+    public Player(string name, string path, Weapon weapon) : base(name)
     {
         _body = new Body("Player body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
         _body.MeshData.ApplyScale(0.02f, 0.08f);
-        
-        _whip = new Weapon("Weapon", "Textures/swing1.png", "Textures/swing2.png");
+        //_body.Transform.Scale = new Vector3(Transform.Scale.X, Transform.Scale.Y + 1.0f, Transform.Scale.Z);
+
+        _whip = weapon;
+        _whip.Translate(0.0625f, 0.0f, 0.0f);
 
         _camera = new CharacterCamera("Main camera");
 
@@ -36,7 +38,6 @@ public class Player : Node2D
         AddChild(_camera);
         AddChild(_collision);
         AddChild(_hitTime);
-        AddChild(_whip);
     }
 
     public override void Process(float delta)
@@ -87,7 +88,13 @@ public class Player : Node2D
             _camera.Translate(direction);
             _body.Translate(direction);
             _collision.Translate(direction);
-            _whip.Translate(direction);
+            
+
+            if (_whip.CanRender)
+            {
+                _whip.Translate(direction);
+                _whip.Rectangle.Translate(direction);
+            }
         }
     }
 
