@@ -19,7 +19,7 @@ public class Game
         
         var ground = new Ground("Ground tile", "Textures/grass1.png");
         _scene.Root.AddChild(ground, "Textures/grass1.png", ShaderType.GroundShader);
-        
+
         _scene.AttachViewport(player.Camera);
         
         _scene.Run();

@@ -1,4 +1,5 @@
-﻿using UniversityGameProject.Game;
+﻿using System.Numerics;
+using UniversityGameProject.Game;
 using UniversityGameProject.GUI;
 using UniversityGameProject.Input;
 using UniversityGameProject.Main._2d;
@@ -21,12 +22,20 @@ public class Scene : MainLoop
     private List<Enemy> _enemies = new List<Enemy>();
     private List<Rectangle> _colliders = new List<Rectangle>();
     private Player _mainCollision;
-    private Enemy _enemy;
+    private Spawner _spawner;
 
     private WindowServer _window;
     private RenderServer _renderServer;
     private InputServer _inputServer;
     private GuiServer _guiServer;
+
+    private int _numAliveEnemies = 0;
+    public int NumAliveEnemies
+    {
+        get => _numAliveEnemies; 
+        set => _numAliveEnemies = value;
+    }
+    public int MaxAliveEnemies { get => 100; }
 
 
     public Node Root { get; init; }
@@ -51,34 +60,16 @@ public class Scene : MainLoop
 
     private Timer.Timer _timer;
 
+    public long TotalTime => _timer.Time;
+
     public void Run()
     {
-
+        _spawner = new Spawner(this);
         _timer.Start();
-        int enemies = 0;
         while (_window.Running)
         {
-            SpawnEnemy(_timer.Time, ref enemies);
+            _spawner.SpawnEnemy();
             _window.Render();
-        }
-    }
-
-    private void SpawnEnemy(long ms, ref int enemies)
-    {
-        if (ms / 5000 > enemies)
-        {
-            var player = (Player)Root.Childs[0];
-            //_enemy = new SlimeEnemy($"SlimeEnemy{enemies}", player.BodyData);
-            //this.Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
-            //_enemy.Translate(-0.2f, 0.0f, 0.0f);
-            _enemy = new HeadEnemy($"HeadEnemy{enemies++}", player.BodyData);
-            this.Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
-            _enemy.Translate(0.0f, 0.2f, 0.0f);
-            _enemy = new SlimeEnemy($"SlimeEnemy{enemies++}", player.BodyData);
-            this.Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
-            _enemy.Translate(0.2f, 0.0f, 0.0f);
-            var ground = new Ground("Ground tile", "Textures/grass1.png");
-            this.Root.AddChild(ground, "Textures/grass1.png", ShaderType.GroundShader);
         }
     }
     
