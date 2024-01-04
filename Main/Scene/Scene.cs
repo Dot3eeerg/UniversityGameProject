@@ -138,6 +138,7 @@ public class Scene : MainLoop
                             }
 
                             _nodes.Remove(_enemies[enemyID]);
+                            _numAliveEnemies--;
                         }
                     }
                 }
