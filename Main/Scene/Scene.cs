@@ -19,7 +19,8 @@ public class Scene : MainLoop
 
     private List<Node> _ground = new List<Node>();
     private List<Enemy> _enemies = new List<Enemy>();
-    private List<Rectangle> _colliders = new List<Rectangle>();
+    private List<Weapon> _colliders = new List<Weapon>();
+    private List<HashSet<int>>_hittedEnemy = new List<HashSet<int>>();
     private Player _mainCollision;
     private Enemy _enemy;
 
@@ -88,6 +89,7 @@ public class Scene : MainLoop
         _renderServer.ChangeContextSize(_window.WindowSize);
 
         CheckPlayerCollision();
+        CheckWeaponCollision();
         
         ApplyViewports(delta);
         
@@ -110,7 +112,31 @@ public class Scene : MainLoop
 
     private void CheckWeaponCollision()
     {
-        
+        for (int weaponID = 0; weaponID < _colliders.Count; weaponID++)
+        {
+            if (_colliders[weaponID].IsAttacking())
+            {
+                for (int enemyID = 0; enemyID < _enemies.Count; enemyID++)
+                {
+                    if (_hittedEnemy[weaponID].Contains(enemyID))
+                    {
+                        continue;
+                    }
+                    
+                    if (_colliders[weaponID].Rectangle.CheckCollision((Circle) _enemies[enemyID].Circle))
+                    {
+                        Console.WriteLine("Collision inflicted");
+                        _hittedEnemy[weaponID].Add(enemyID);
+                        _enemies[enemyID].InflictDamage(_colliders[weaponID].WeaponStats.Damage);
+                    }
+                }
+            }
+            
+            else if (!_colliders[weaponID].IsAttacking() && _hittedEnemy[weaponID].Count > 0)
+            {
+                _hittedEnemy[weaponID].Clear();
+            }
+        }
     }
 
     private void RenderNodes(float delta)
@@ -189,7 +215,8 @@ public class Scene : MainLoop
 
         if (node is Weapon)
         {
-            _colliders = new List<Rectangle>();
+            _colliders.Add((Weapon) node);
+            _hittedEnemy.Add(new HashSet<int>());
         }
             
         foreach (var child in node.Childs)
@@ -200,7 +227,6 @@ public class Scene : MainLoop
                 return;
             }
             
-
             child.Scene = this;
             LoadNode(child, path, type);
         }
@@ -228,7 +254,6 @@ public class Scene : MainLoop
 
             child.Scene = this;
             LoadNode(child);
-
         }
 
         node.AttachInputServer(_inputServer);
