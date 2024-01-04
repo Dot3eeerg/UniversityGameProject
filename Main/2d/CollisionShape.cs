@@ -70,8 +70,8 @@ public class Rectangle: CollisionShape
         Vector2 topRight = new Vector2(GlobalTransform.Position.X + Width / 2, GlobalTransform.Position.Y + Height / 2);
 
         Vector2 projectedPos = new Vector2(0.0f);
-        projectedPos.X = Single.Clamp(circle.GlobalTransform.Position.Y, topLeft.Y, bottomRight.Y);
-        projectedPos.Y = Single.Clamp(circle.GlobalTransform.Position.X, topLeft.X, bottomRight.X);
+        projectedPos.Y = Single.Clamp(circle.GlobalTransform.Position.Y, bottomRight.Y, topLeft.Y);
+        projectedPos.X = Single.Clamp(circle.GlobalTransform.Position.X, topLeft.X, bottomRight.X);
 
         if (PointInCircle(projectedPos, circle))
         {

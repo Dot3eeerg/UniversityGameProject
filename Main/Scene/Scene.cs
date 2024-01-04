@@ -14,12 +14,13 @@ namespace UniversityGameProject.Main.Scene;
 
 public class Scene : MainLoop
 {
-    private List<Node> _nodes = new List<Node>();
+    private HashSet<Node> _nodes = new HashSet<Node>();
     private List<Viewport> _viewports = new List<Viewport>();
 
     private List<Node> _ground = new List<Node>();
     private List<Enemy> _enemies = new List<Enemy>();
-    private List<Rectangle> _colliders = new List<Rectangle>();
+    private List<Weapon> _colliders = new List<Weapon>();
+    private List<HashSet<int>>_hittedEnemy = new List<HashSet<int>>();
     private Player _mainCollision;
     private Enemy _enemy;
 
@@ -88,6 +89,7 @@ public class Scene : MainLoop
         _renderServer.ChangeContextSize(_window.WindowSize);
 
         CheckPlayerCollision();
+        CheckWeaponCollision();
         
         ApplyViewports(delta);
         
@@ -110,15 +112,47 @@ public class Scene : MainLoop
 
     private void CheckWeaponCollision()
     {
-        
+        for (int weaponID = 0; weaponID < _colliders.Count; weaponID++)
+        {
+            if (_colliders[weaponID].IsAttacking())
+            {
+                for (int enemyID = 0; enemyID < _enemies.Count; enemyID++)
+                {
+                    if (_hittedEnemy[weaponID].Contains(enemyID))
+                    {
+                        continue;
+                    }
+                    
+                    if (_colliders[weaponID].Rectangle.CheckCollision((Circle) _enemies[enemyID].Circle))
+                    {
+                        Console.WriteLine("Collision inflicted");
+                        _hittedEnemy[weaponID].Add(enemyID);
+                        _enemies[enemyID].InflictDamage(_colliders[weaponID].WeaponStats.Damage);
+                        Console.WriteLine(_enemies[enemyID].IsDead());
+                        if (_enemies[enemyID].IsDead())
+                        {
+                            foreach (var node in _enemies[enemyID].Childs)
+                            {
+                                _nodes.Remove(node);
+                            }
+
+                            _nodes.Remove(_enemies[enemyID]);
+                        }
+                    }
+                }
+            }
+            
+            else if (!_colliders[weaponID].IsAttacking() && _hittedEnemy[weaponID].Count > 0)
+            {
+                _hittedEnemy[weaponID].Clear();
+            }
+        }
     }
 
     private void RenderNodes(float delta)
     {
-        for (int nodeID = 0; nodeID < _nodes.Count; nodeID++)
+        foreach (var node in _nodes)
         {
-            var node = _nodes[nodeID];
-            
             node.Process(delta);
 
             if (node is IRenderable)
@@ -131,15 +165,13 @@ public class Scene : MainLoop
                 for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
                 {
                     var viewport = _viewports[viewportID];
-                    _renderServer.Render(viewport, (IRenderable)node);
+                    _renderServer.Render(viewport, (IRenderable) node);
                 }
             }
         }
 
-        for (int nodeID = 0; nodeID < _ground.Count; nodeID++)
+        foreach (var node in _ground)
         {
-            var node = _ground[nodeID];
-            
             node.Process(delta);
 
             if (node is IRenderable)
@@ -147,7 +179,7 @@ public class Scene : MainLoop
                 for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
                 {
                     var viewport = _viewports[viewportID];
-                    _renderServer.Render(viewport, (IRenderable)node);
+                    _renderServer.Render(viewport, (IRenderable) node);
                 }
             }
         }
@@ -189,7 +221,8 @@ public class Scene : MainLoop
 
         if (node is Weapon)
         {
-            _colliders = new List<Rectangle>();
+            _colliders.Add((Weapon) node);
+            _hittedEnemy.Add(new HashSet<int>());
         }
             
         foreach (var child in node.Childs)
@@ -200,7 +233,6 @@ public class Scene : MainLoop
                 return;
             }
             
-
             child.Scene = this;
             LoadNode(child, path, type);
         }
@@ -228,7 +260,6 @@ public class Scene : MainLoop
 
             child.Scene = this;
             LoadNode(child);
-
         }
 
         node.AttachInputServer(_inputServer);

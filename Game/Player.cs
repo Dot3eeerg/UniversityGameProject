@@ -93,6 +93,7 @@ public class Player : Node2D
             if (_whip.CanRender)
             {
                 _whip.Translate(direction);
+                _whip.Rectangle.Translate(direction);
             }
         }
     }

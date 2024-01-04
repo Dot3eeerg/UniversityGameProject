@@ -8,11 +8,12 @@ namespace UniversityGameProject.Game;
 public class Weapon : Node2D
 {
     private MeshInstance2D _body;
-    private Rectangle _collision = new Rectangle("Collision", 0.1f, 0.04f);
+    private Rectangle _collision = new Rectangle("Collision", 0.2f, 0.04f);
     private Timer _attack;
     private Timer _cooldown;
 
     public Stats WeaponStats = new Stats();
+    public Rectangle Rectangle => _collision;
     
     public Weapon(string name, string path1, string path2) : base(name)
     {
@@ -55,7 +56,7 @@ public class Weapon : Node2D
             _attack.Start();
             _body.Transform.Scale = _body.Transform.Scale with { X = 1.0f, Y = 1.0f };
             
-            Console.WriteLine("Start attack");
+            //Console.WriteLine("Start attack");
         }
 
         else if (_attack.Time > WeaponStats.TimeAttack)
@@ -65,13 +66,8 @@ public class Weapon : Node2D
             _attack.Reset();
             _cooldown.Start();
             
-            Console.WriteLine("Stop attack");
+            //Console.WriteLine("Stop attack");
         }
-    }
-
-    public void ChangeSize(float scaleX, float scaleY)
-    {
-        
     }
 
     public bool IsAttacking()
