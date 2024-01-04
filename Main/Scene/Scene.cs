@@ -1,4 +1,4 @@
-﻿using UniversityGameProject.Game;
+using UniversityGameProject.Game;
 using UniversityGameProject.GUI;
 using UniversityGameProject.Input;
 using UniversityGameProject.Main._2d;
@@ -23,6 +23,7 @@ public class Scene : MainLoop
     private List<HashSet<int>>_hittedEnemy = new List<HashSet<int>>();
     private Player _mainCollision;
     private Enemy _enemy;
+    private Spawner _spawner;
 
     private WindowServer _window;
     private RenderServer _renderServer;
@@ -30,6 +31,14 @@ public class Scene : MainLoop
     private GuiServer _guiServer;
     
     private Timer.Timer _timer;
+    
+    private int _numAliveEnemies = 0;
+    public int NumAliveEnemies
+    {
+        get => _numAliveEnemies; 
+        set => _numAliveEnemies = value;
+    }
+    public int MaxAliveEnemies { get => 100; }
 
     public Node Root { get; init; }
 
@@ -50,31 +59,19 @@ public class Scene : MainLoop
         _inputServer.OnInputEmited += Input;
         _timer = new Timer.Timer("Timer");
     }
+    
+    public long TotalTime => _timer.Time;
+
+    public long SpawnTimer = 0;
 
     public void Run()
     {
+        _spawner = new Spawner(this);
         _timer.Start();
-        int enemies = 0;
         while (_window.Running)
         {
-            SpawnEnemy(_timer.Time, ref enemies);
+            _spawner.SpawnEnemy();
             _window.Render();
-        }
-    }
-
-    private void SpawnEnemy(long ms, ref int enemies)
-    {
-        if (ms / 5000 > enemies)
-        {
-            var player = (Player)Root.Childs[1];
-            _enemy = new HeadEnemy($"HeadEnemy{enemies++}", player.BodyData);
-            Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
-            _enemy.Translate(0.0f, 0.2f, 0.0f);
-            _enemy = new SlimeEnemy($"SlimeEnemy{enemies++}", player.BodyData);
-            Root.AddChild(_enemy, _enemy.TexturePath, ShaderType.TextureShader);
-            _enemy.Translate(0.2f, 0.0f, 0.0f);
-            var ground = new Ground("Ground tile", "Textures/grass1.png");
-            Root.AddChild(ground, "Textures/grass1.png", ShaderType.GroundShader);
         }
     }
     
@@ -83,6 +80,8 @@ public class Scene : MainLoop
         base.Process(delta);
 
         _timer.Update((long)(delta * 1000));
+        
+        SpawnTimer += (long)(delta * 1000);
         
         _guiServer.SetupFrame(delta);
         
@@ -97,6 +96,8 @@ public class Scene : MainLoop
         
         _guiServer.RenderFrame();
     }
+    
+    
 
     private void CheckPlayerCollision()
     {

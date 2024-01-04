@@ -9,7 +9,7 @@ namespace UniversityGameProject.Game;
 
 public abstract class Enemy : Node2D
 {
-    private Body _body;
+    internal Body _body;
     private ICamera _camera;
     private MeshInstance2D _playerPosition;
     private CollisionShape _collision = new Circle("Collision", 0.04f);
@@ -22,7 +22,7 @@ public abstract class Enemy : Node2D
     {
         _body = new Body("Enemy body");
         _body.MeshData = new RectanglePrimitiveTextured();
-        _body.MeshData.ApplyScale(0.04f, 0.08f);
+        DoScale();
 
         _playerPosition = playerPosition;
         
@@ -69,12 +69,12 @@ public abstract class Enemy : Node2D
         return false;
     }
 
-    public void DoScale()
+    public virtual void DoScale()
     {
         _body.MeshData.ApplyScale(0.04f, 0.08f);
     }
         
-    private sealed class Body : MeshInstance2D
+    internal sealed class Body : MeshInstance2D
     {
         public Body(string name) : base(name) { }
     }
@@ -89,11 +89,11 @@ public class SlimeEnemy : Enemy
 {
     public SlimeEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) {}
 
-    internal override EntityEnemy EnemyStats { get; set; } = new SlimeStats();
+    internal override EntityEnemy EnemyStats { get; set; } = new Stats();
 
     public override string TexturePath => "Textures/slime.png";
 
-    private class SlimeStats : EntityEnemy
+    private class Stats : EntityEnemy
     {
         public override float Speed { get; set; } = 0.1f;
         public override int CurrentHealth { get; set; } = 10;
@@ -106,15 +106,59 @@ public class HeadEnemy : Enemy
 {
     public HeadEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
 
-    internal override EntityEnemy EnemyStats { get; set; } = new SlimeStats();
+    internal override EntityEnemy EnemyStats { get; set; } = new Stats();
 
     public override string TexturePath => "Textures/enemy.png";
 
-    private class SlimeStats : EntityEnemy
+    private class Stats : EntityEnemy
     {
         public override float Speed { get; set; } = 0.07f;
         public override int CurrentHealth { get; set; } = 10;
         public override int MaxHealth { get; set; } = 10;
         public override int Damage { get; set; } = 10;
+    }
+}
+
+public class GiantEnemy : Enemy
+{
+    public GiantEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
+
+    internal override EntityEnemy EnemyStats { get; set; } = new Stats();
+
+    public override string TexturePath => "Textures/giant.png";
+
+    public override void DoScale()
+    {
+        _body.MeshData.ApplyScale(0.10f, 0.20f);
+    }
+
+    private class Stats : EntityEnemy
+    {
+        public override float Speed { get; set; } = 0.06f;
+        public override int CurrentHealth { get; set; } = 200;
+        public override int MaxHealth { get; set; } = 200;
+        public override int Damage { get; set; } = 20;
+    }
+}
+
+public class BossEnemy : Enemy
+{
+    public BossEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
+
+    internal override EntityEnemy EnemyStats { get; set; } = new Stats();
+
+    public override string TexturePath => "Textures/zaika.jpg";
+
+    public override void DoScale()
+    {
+        _body.MeshData.ApplyScale(0.14f, 0.28f);
+    }
+
+    private class Stats : EntityEnemy
+    {
+        public override float Speed { get; set; } = 0.06f;
+        public override int CurrentHealth { get; set; } = 200;
+        public override int MaxHealth { get; set; } = 200;
+        public override int Damage { get; set; } = 20;
     }
 }
