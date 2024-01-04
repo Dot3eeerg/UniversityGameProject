@@ -16,7 +16,7 @@ public class Game
         
         var player = new Player("Player", "Textures/character.png", weapon);
         _scene.Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
-        
+      
         var ground = new Ground("Ground tile", "Textures/grass1.png");
         _scene.Root.AddChild(ground, "Textures/grass1.png", ShaderType.GroundShader);
         
