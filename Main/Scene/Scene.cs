@@ -22,7 +22,6 @@ public class Scene : MainLoop
     private List<Weapon> _colliders = new List<Weapon>();
     private List<HashSet<int>>_hittedEnemy = new List<HashSet<int>>();
     private Player _mainCollision;
-    private Enemy _enemy;
     private Spawner _spawner;
 
     private WindowServer _window;
@@ -65,32 +64,53 @@ public class Scene : MainLoop
         _window.OnWindowStartsRender += Process;
         _inputServer.OnInputEmited += Input;
         _timer = new Timer.Timer("Timer");
+
+        Start();
     }
    
+    private void Start()
+    {
+        var weaponList = new List<Weapon>();
+
+        var weapon1 = new Weapon("Weapon", "Textures/swing2.png");
+       this.Root.AddChild(weapon1, "Textures/swing2.png", ShaderType.TextureShader);
+
+        var weapon2 = new Weapon("Weapon", "Textures/swing2_left.png");
+        this.Root.AddChild(weapon2, "Textures/swing2_left.png", ShaderType.TextureShader);
+
+        var weapon3 = new Weapon("Weapon", "Textures/swing2.png");
+        this.Root.AddChild(weapon3, "Textures/swing2.png", ShaderType.TextureShader);
+
+        var weapon4 = new Weapon("Weapon", "Textures/swing2_left.png");
+        this.Root.AddChild(weapon4, "Textures/swing2_left.png", ShaderType.TextureShader);
+
+        weaponList.Add(weapon1);
+        weaponList.Add(weapon2);
+        weaponList.Add(weapon3);
+        weaponList.Add(weapon4);
+
+        var player = new Player("Player", "Textures/character.png", weaponList);
+        this.Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
+
+        var ground = new Ground("Ground tile", "Textures/grass3.png");
+        this.Root.AddChild(ground, "Textures/grass3.png", ShaderType.GroundShader);
+
+
+        this.AttachViewport(player.Camera);
+        _spawner = new Spawner(this);
+    }
+
     public void Run()
     {
-        _spawner = new Spawner(this);
+
         _timer.Start();
         while (_window.Running)
         {
-            if (_mainCollision.PlayerStats.CurrentHealth > 0)
+            if (_mainCollision.IsAlive())
                 _spawner.SpawnEnemy();
             else if (IsPlayerAlive)
             {
-                foreach (var enemy in _enemies)
-                {
-                    if (enemy != null)
-                    {
-                        foreach (var child in enemy.Childs)
-                        {
-                            _nodes.Remove(child);
-                        }
-                        _nodes.Remove(enemy);
-                    }
-                }
-
-                _enemies.Clear();
-                IsPlayerAlive = false;
+                PlayerDied();
             }
             _window.Render();
         }
@@ -98,7 +118,7 @@ public class Scene : MainLoop
     
     protected override void Process(float delta)
     {
-        if (!_isPaused)
+        if (!_isPaused && IsPlayerAlive)
         {
             base.Process(delta);
 
@@ -111,7 +131,7 @@ public class Scene : MainLoop
         
         _renderServer.ChangeContextSize(_window.WindowSize);
 
-        if (!_isPaused)
+        if (!_isPaused && IsPlayerAlive)
         {
             CheckPlayerCollision();
             CheckWeaponCollision();
@@ -340,10 +360,54 @@ public class Scene : MainLoop
             Console.WriteLine((_isPaused ? "" : "un") + "pause");
         }
 
+        if (!IsPlayerAlive)
+        {
+            if (_inputServer!.IsActionPressed("restart"))
+            {
+                Restart();
+            }
+        }
+
         foreach (var node in _nodes)
         {
             node.Input(input);
         }
+    }
+
+    private void Restart()
+    {
+        Root.Childs.Clear();
+        _ground.Clear();
+        _nodes.Clear();
+        _enemies.Clear();
+        _hittedEnemy.Clear();
+        _colliders.Clear();
+        _timer.Start();
+        Start();
+        NumAliveEnemies = 0;
+        IsPlayerAlive = true;
+    }
+
+    private void PlayerDied()
+    {
+        _timer.Stop();
+        foreach (var enemy in _enemies)
+        {
+            if (enemy != null)
+            {
+                foreach (var child in enemy.Childs)
+                {
+                    _nodes.Remove(child);
+                }
+                _nodes.Remove(enemy);
+            }
+        }
+        _nodes.Clear();
+        _enemies.Clear();
+
+        IsPlayerAlive = false;
+        
+        LoadNode(_mainCollision.BodyData, "Textures/death.png", ShaderType.TextureShader);
     }
 
     public void AttachViewport()

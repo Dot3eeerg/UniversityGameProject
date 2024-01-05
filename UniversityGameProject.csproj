@@ -21,6 +21,9 @@
       <None Update="Render\Shader\ShaderResources\Texture\shaderTexture.vert">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Textures\blood.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Textures\zaika.jpg">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -79,6 +82,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Textures\swing2_left.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Textures\death.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
