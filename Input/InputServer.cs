@@ -30,7 +30,7 @@ public class InputServer
         Actions["movement_backward"] = new InputEventKey(this, KeyboardButton.S);
         Actions["movement_left"] = new InputEventKey(this, KeyboardButton.A);
         Actions["movement_right"] = new InputEventKey(this, KeyboardButton.D);
-        Actions["movement_upward"] = new InputEventKey(this, KeyboardButton.Space);
+        Actions["pause"] = new InputEventKey(this, KeyboardButton.Space);
         Actions["movement_down"] = new InputEventKey(this, KeyboardButton.Shift);
         Actions["info"] = new InputEventKey(this, KeyboardButton.Tab);
         Actions["exit"] = new InputEventKey(this, KeyboardButton.Escape);

@@ -43,6 +43,8 @@ public class Scene : MainLoop
 
     public bool IsPlayerAlive { get; set; } = true;
 
+    private bool _isPaused = false;
+
     public int MaxAliveEnemies { get => 100; }
 
     public Node Root { get; init; }
@@ -96,19 +98,25 @@ public class Scene : MainLoop
     
     protected override void Process(float delta)
     {
-        base.Process(delta);
+        if (!_isPaused)
+        {
+            base.Process(delta);
 
-        _timer.Update((long)(delta * 1000));
-        
-        SpawnTimer += (long)(delta * 1000);
+            _timer.Update((long)(delta * 1000));
+
+            SpawnTimer += (long)(delta * 1000);
+        }
         
         _guiServer.SetupFrame(delta);
         
         _renderServer.ChangeContextSize(_window.WindowSize);
 
-        CheckPlayerCollision();
-        CheckWeaponCollision();
-        
+        if (!_isPaused)
+        {
+            CheckPlayerCollision();
+            CheckWeaponCollision();
+        }
+
         ApplyViewports(delta);
         
         RenderNodes(delta);
@@ -174,7 +182,8 @@ public class Scene : MainLoop
     {
         foreach (var node in _nodes)
         {
-            node.Process(delta);
+            if (!_isPaused)
+                node.Process(delta);
 
             if (node is IRenderable)
             {
@@ -193,7 +202,8 @@ public class Scene : MainLoop
 
         foreach (var node in _ground)
         {
-            node.Process(delta);
+            if (!_isPaused)
+                node.Process(delta);
 
             if (node is IRenderable)
             {
@@ -322,6 +332,12 @@ public class Scene : MainLoop
         {
             _window.Close();
             return;
+        }
+
+        if (_inputServer!.IsActionPressed("pause"))
+        {
+            _isPaused = !_isPaused;
+            Console.WriteLine((_isPaused ? "" : "un") + "pause");
         }
 
         foreach (var node in _nodes)
