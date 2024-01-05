@@ -61,7 +61,9 @@ public class Spawner
             }
 
             float randomAngle = _random.NextSingle() * 2.0f * 3.14f;
-            var pos = _player.BodyData.GlobalTransform.Position + _screenDist * new Vector3((float)System.Math.Cos(randomAngle), (float)System.Math.Sin(randomAngle), 0);
+            float distX = _screenDist * (float)System.Math.Cos(randomAngle);
+            float distY = _screenDist * (float)System.Math.Sin(randomAngle);
+            var pos = _player.BodyData.GlobalTransform.Position + new Vector3(distX > 0.55f ? 0.55f : distX, distY > 0.55f ? 0.55f : distY, 0);
 
             var name = $"Enemy{_enemyID++}";
 

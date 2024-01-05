@@ -31,13 +31,18 @@ public class Scene : MainLoop
     private GuiServer _guiServer;
     
     private Timer.Timer _timer;
-    
+    public long TotalTime => _timer.Time;
+    public long SpawnTimer = 2000;
+
     private int _numAliveEnemies = 0;
     public int NumAliveEnemies
     {
         get => _numAliveEnemies; 
         set => _numAliveEnemies = value;
     }
+
+    public bool IsPlayerAlive { get; set; } = true;
+
     public int MaxAliveEnemies { get => 100; }
 
     public Node Root { get; init; }
@@ -59,18 +64,32 @@ public class Scene : MainLoop
         _inputServer.OnInputEmited += Input;
         _timer = new Timer.Timer("Timer");
     }
-    
-    public long TotalTime => _timer.Time;
-
-    public long SpawnTimer = 0;
-
+   
     public void Run()
     {
         _spawner = new Spawner(this);
         _timer.Start();
         while (_window.Running)
         {
-            _spawner.SpawnEnemy();
+            if (_mainCollision.PlayerStats.CurrentHealth > 0)
+                _spawner.SpawnEnemy();
+            else if (IsPlayerAlive)
+            {
+                foreach (var enemy in _enemies)
+                {
+                    if (enemy != null)
+                    {
+                        foreach (var child in enemy.Childs)
+                        {
+                            _nodes.Remove(child);
+                        }
+                        _nodes.Remove(enemy);
+                    }
+                }
+
+                _enemies.Clear();
+                IsPlayerAlive = false;
+            }
             _window.Render();
         }
     }
