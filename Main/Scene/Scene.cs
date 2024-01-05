@@ -406,6 +406,8 @@ public class Scene : MainLoop
         _enemies.Clear();
 
         IsPlayerAlive = false;
+        
+        LoadNode(_mainCollision.BodyData, "Textures/death.png", ShaderType.TextureShader);
     }
 
     public void AttachViewport()

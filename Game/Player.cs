@@ -11,7 +11,7 @@ public class Player : Node2D
 {
     private MeshInstance2D _body;
     private CharacterCamera _camera;
-    private Circle _collision = new Circle("Collision", 0.02f);
+    private Circle _collision = new Circle("Collision", 0.045f);
     private HitTimer _hitTime;
     private List<Weapon> _whip;
     
@@ -24,7 +24,7 @@ public class Player : Node2D
     {
         _body = new Body("Player body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
-        _body.MeshData.ApplyScale(0.02f, 0.08f);
+        _body.MeshData.ApplyScale(0.045f, 0.08f);
         //_body.Transform.Scale = new Vector3(Transform.Scale.X, Transform.Scale.Y + 1.0f, Transform.Scale.Z);
 
         _whip = weapon;
