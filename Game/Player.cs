@@ -49,7 +49,7 @@ public class Player : Node2D
 
         if (!IsAlive())
         {
-            
+            return;
         }
         
         InputHandle(delta);
@@ -129,7 +129,7 @@ public class Player : Node2D
         return false;
     }
 
-    private bool IsAlive()
+    public bool IsAlive()
     {
         if (PlayerStats.CurrentHealth <= 0)
         {
