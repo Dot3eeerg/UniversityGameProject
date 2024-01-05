@@ -79,6 +79,31 @@ public class Weapon : Node2D
         return false;
     }
 
+    public void SetPosition(WeaponPositionType type)
+    {
+        switch (type)
+        {
+            case WeaponPositionType.Right:
+                Translate(0.0625f, 0.0f, 0.0f);
+                _collision.Translate(0.0625f, 0.0f, 0.0f);
+                break;
+            case WeaponPositionType.Left:
+                Translate(-0.0625f, 0.0f, 0.0f);
+                _collision.Translate(-0.0625f, 0.0f, 0.0f);
+                break;
+            case WeaponPositionType.Top:
+                Translate(0.0f, 0.0625f, 0.0f);
+                _collision.Translate(0.0f, 0.0625f, 0.0f);
+                break;
+            case WeaponPositionType.Bottom:
+                Translate(0.0f, -0.0625f, 0.0f);
+                _collision.Translate(0.0f, -0.0625f, 0.0f);
+                break;
+            default:
+                break;
+        }
+    }
+
     public sealed class Body : MeshInstance2D
     {
         public Body(string name, string path) : base(name) { }
@@ -89,5 +114,10 @@ public class Weapon : Node2D
         public int Damage { get; set; } = 5;
         public long TimeAttack { get; set; } = 250;
         public long TimeCooldown { get; set; } = 1250;
+    }
+
+    public enum WeaponPositionType
+    {
+        Center = 0, Right, Left, Top, Bottom
     }
 }

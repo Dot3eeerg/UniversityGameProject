@@ -28,10 +28,8 @@ public class Player : Node2D
         //_body.Transform.Scale = new Vector3(Transform.Scale.X, Transform.Scale.Y + 1.0f, Transform.Scale.Z);
 
         _whip = weapon;
-        _whip[0].Translate(0.0625f, 0.0f, 0.0f);
-        _whip[1].Translate(-0.0625f, 0.0f, 0.0f);
-        _whip[2].Translate(0.0f, 0.0625f, 0.0f);
-        _whip[3].Translate(0.0f, -0.0625f, 0.0f);
+        for (int i = 0; i < weapon.Count; i++)
+            _whip[i].SetPosition((Weapon.WeaponPositionType)(i % 4 + 1));
 
         _camera = new CharacterCamera("Main camera");
 

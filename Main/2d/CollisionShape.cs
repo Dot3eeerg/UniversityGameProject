@@ -61,23 +61,18 @@ public class Rectangle: CollisionShape
 
     public bool CheckCollision(Circle circle)
     {
-        Vector2 bottomLeft =
+        //Vector2 bottomLeft =
             new Vector2(GlobalTransform.Position.X - Width / 2, GlobalTransform.Position.Y - Height / 2);
         Vector2 topLeft = new Vector2(GlobalTransform.Position.X - Width / 2, GlobalTransform.Position.Y + Height / 2);
 
         Vector2 bottomRight =
             new Vector2(GlobalTransform.Position.X + Width / 2, GlobalTransform.Position.Y - Height / 2);
-        Vector2 topRight = new Vector2(GlobalTransform.Position.X + Width / 2, GlobalTransform.Position.Y + Height / 2);
+        //Vector2 topRight = new Vector2(GlobalTransform.Position.X + Width / 2, GlobalTransform.Position.Y + Height / 2);
 
         Vector2 projectedPos = new Vector2(0.0f);
         projectedPos.Y = Single.Clamp(circle.GlobalTransform.Position.Y, bottomRight.Y, topLeft.Y);
         projectedPos.X = Single.Clamp(circle.GlobalTransform.Position.X, topLeft.X, bottomRight.X);
 
-        if (PointInCircle(projectedPos, circle))
-        {
-            return true;
-        }
-
-        return false;
+        return PointInCircle(projectedPos, circle);
     }
 }
