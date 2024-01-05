@@ -26,7 +26,7 @@ public class Spawner
     public Spawner(Scene.Scene scene)
     {
         _scene = scene;
-        _player = (Player)_scene.Root.Childs[4];
+        _player = (Player)_scene.Root.Childs[5];
     }
 
     private int _enemyID = 0;
