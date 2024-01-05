@@ -34,9 +34,8 @@ public class InputServer
         Actions["movement_down"] = new InputEventKey(this, KeyboardButton.Shift);
         Actions["info"] = new InputEventKey(this, KeyboardButton.Tab);
         Actions["exit"] = new InputEventKey(this, KeyboardButton.Escape);
-        Actions["restart"] = new InputEventKey(this, KeyboardButton.Enter);
 
-        _mouse.Cursor.CursorMode = CursorMode.Disabled;
+         _mouse.Cursor.CursorMode = CursorMode.Disabled;
     }
 
     public void SetCursorMode(CursorMode mode)
