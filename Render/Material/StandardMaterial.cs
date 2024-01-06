@@ -8,6 +8,7 @@ public enum ShaderType
 {
     TextureShader,
     GroundShader,
+    HealthBarShader,
 }
 
 public class StandardMaterial : Material, IDisposable
@@ -30,6 +31,10 @@ public class StandardMaterial : Material, IDisposable
             
             case ShaderType.GroundShader:
                 _shaderProgram = ShaderLibrary.GroundShader(context);
+                break;
+            
+            case ShaderType.HealthBarShader:
+                _shaderProgram = ShaderLibrary.HealthBarShader(context);
                 break;
         }
         
@@ -54,6 +59,31 @@ public class StandardMaterial : Material, IDisposable
             
                 _context.SetUniform(_shaderDescriptor, "model", view);
                 _context.SetUniform(_shaderDescriptor, "view", _groundView);
+                _context.SetUniform(_shaderDescriptor, "projection", viewport.GetProjection());
+                break;
+            
+            case ShaderType.HealthBarShader:
+                _context.SetUniform(_shaderDescriptor, "uFilled", 0.8f);
+                
+                _context.SetUniform(_shaderDescriptor, "model", view);
+                _context.SetUniform(_shaderDescriptor, "view", viewport.Camera.View);
+                _context.SetUniform(_shaderDescriptor, "projection", viewport.GetProjection());
+                break;
+        }
+        
+    }
+    
+    internal override void Use(Viewport.Viewport viewport, Matrix4x4 view, float offset)
+    {
+        _context.Use(_shaderDescriptor);
+        
+        switch (_type)
+        {  
+            case ShaderType.HealthBarShader:
+                _context.SetUniform(_shaderDescriptor, "uFilled", offset);
+                
+                _context.SetUniform(_shaderDescriptor, "model", view);
+                _context.SetUniform(_shaderDescriptor, "view", viewport.Camera.View);
                 _context.SetUniform(_shaderDescriptor, "projection", viewport.GetProjection());
                 break;
         }
