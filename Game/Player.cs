@@ -14,22 +14,18 @@ public class Player : Node2D
     private Circle _collision = new Circle("Collision", 0.02f);
     private HitTimer _hitTime;
     private List<Weapon> _whip;
+    private Fireball _fireball;
     
     public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
     public MeshInstance2D BodyData => _body;
     public Circle Circle => _collision;
 
-    public Player(string name, string path, List<Weapon> weapon) : base(name)
+    public Player(string name, string path) : base(name)
     {
         _body = new Body("Player body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
         _body.MeshData.ApplyScale(0.02f, 0.08f);
-        //_body.Transform.Scale = new Vector3(Transform.Scale.X, Transform.Scale.Y + 1.0f, Transform.Scale.Z);
-
-        _whip = weapon;
-        for (int i = 0; i < weapon.Count; i++)
-            _whip[i].SetPosition((Weapon.WeaponPositionType)(i % 4 + 1));
 
         _camera = new CharacterCamera("Main camera");
 
@@ -93,12 +89,8 @@ public class Player : Node2D
 
             for (int whipID = 0; whipID < _whip.Count; whipID++)
             {
-                
-                if (_whip[whipID].CanRender)
-                {
-                    _whip[whipID].Translate(direction);
-                    _whip[whipID].Rectangle.Translate(direction);
-                }
+                _whip[whipID].Translate(direction);
+                _whip[whipID].Rectangle.Translate(direction);
             }
         }
     }
@@ -137,6 +129,15 @@ public class Player : Node2D
         }
 
         return true;
+    }
+
+    public void LoadWeapons(List<Weapon> weapon, Fireball fireball)
+    {
+        _whip = weapon;
+        for (int i = 0; i < weapon.Count; i++)
+            _whip[i].SetPosition((Weapon.WeaponPositionType)(i % 4 + 1));
+
+        _fireball = fireball;
     }
     
     public sealed class Body : MeshInstance2D

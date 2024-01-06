@@ -30,7 +30,13 @@ public class Game
         weaponList.Add(weapon3);
         weaponList.Add(weapon4);
         
-        var player = new Player("Player", "Textures/character.png", weaponList);
+        var player = new Player("Player", "Textures/character.png");
+
+        var fireball = new Fireball("Fireball", "Textures/fireball.png", player.BodyData);
+        _scene.Root.AddChild(fireball, "Textures/fireball.png", ShaderType.TextureShader);
+        
+        player.LoadWeapons(weaponList, fireball);
+
         _scene.Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
       
         var ground = new Ground("Ground tile", "Textures/grass3.png");

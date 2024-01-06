@@ -24,6 +24,10 @@ public class Scene : MainLoop
     private Player _mainCollision;
     private Enemy _enemy;
     private Spawner _spawner;
+    private Fireball _fireball;
+    private HashSet<int> _fireballHitted = new HashSet<int>();
+
+    private Random _randomGenerator = new Random();
 
     private WindowServer _window;
     private RenderServer _renderServer;
@@ -140,6 +144,45 @@ public class Scene : MainLoop
 
     private void CheckWeaponCollision()
     {
+        if (_fireball.IsAttacking())
+        {
+            if (!_fireball.DirectionPicked)
+            {
+                _fireball.GiveDirection(_enemies[_randomGenerator.Next(0, _enemies.Count)].GlobalTransform.Position);
+            }
+            
+            for (int enemyID = 0; enemyID < _enemies.Count; enemyID++)
+            {
+                if (_fireballHitted.Contains(enemyID))
+                {
+                    continue;
+                }
+
+                if (_fireball.Circle.CheckCollision((Circle)_enemies[enemyID].Circle))
+                {
+                    _fireballHitted.Add(enemyID);
+                    _enemies[enemyID].InflictDamage(_fireball.WeaponStats.Damage);
+                    _fireball.PiercedEnemy();
+
+                    if (_enemies[enemyID].IsDead())
+                    {
+                        foreach (var node in _enemies[enemyID].Childs)
+                        {
+                            _nodes.Remove(node);
+                        }
+
+                        _nodes.Remove(_enemies[enemyID]);
+                        _numAliveEnemies--;
+                    }
+                }
+            }
+        }
+        
+        else if (!_fireball.IsAttacking() && _fireballHitted.Count > 0)
+        {
+            _fireballHitted.Clear();
+        }
+        
         for (int weaponID = 0; weaponID < _colliders.Count; weaponID++)
         {
             if (_colliders[weaponID].IsAttacking())
@@ -254,6 +297,11 @@ public class Scene : MainLoop
         {
             _colliders.Add((Weapon) node);
             _hittedEnemy.Add(new HashSet<int>());
+        }
+
+        if (node is Fireball)
+        {
+            _fireball = (Fireball) node;
         }
             
         foreach (var child in node.Childs)

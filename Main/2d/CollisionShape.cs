@@ -62,7 +62,7 @@ public class Rectangle: CollisionShape
     public bool CheckCollision(Circle circle)
     {
         //Vector2 bottomLeft =
-            new Vector2(GlobalTransform.Position.X - Width / 2, GlobalTransform.Position.Y - Height / 2);
+        //    new Vector2(GlobalTransform.Position.X - Width / 2, GlobalTransform.Position.Y - Height / 2);
         Vector2 topLeft = new Vector2(GlobalTransform.Position.X - Width / 2, GlobalTransform.Position.Y + Height / 2);
 
         Vector2 bottomRight =

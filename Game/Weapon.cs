@@ -23,7 +23,7 @@ public class Weapon : Node2D
         
         _attack = new Timer("Alive timer");
         _cooldown = new Timer("Cooldown");
-        
+
         _cooldown.Start();
         AddChild(_body);
     }
