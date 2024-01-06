@@ -105,6 +105,7 @@ public class Scene : MainLoop
 
                 _enemies.Clear();
                 IsPlayerAlive = false;
+                _mediaPlayer.Stop();
             }
             _window.Render();
         }
