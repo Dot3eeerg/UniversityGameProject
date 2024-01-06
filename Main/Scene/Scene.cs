@@ -1,3 +1,4 @@
+using System.Numerics;
 using UniversityGameProject.Game;
 using UniversityGameProject.GUI;
 using UniversityGameProject.Input;
@@ -119,6 +120,7 @@ public class Scene : MainLoop
         {
             CheckPlayerCollision();
             CheckWeaponCollision();
+            HandleCollidingEnemies(delta);
         }
 
         ApplyViewports(delta);
@@ -127,8 +129,21 @@ public class Scene : MainLoop
         
         _guiServer.RenderFrame();
     }
-    
-    
+
+    private void HandleCollidingEnemies(float delta)
+    {
+        foreach (var enemy1 in _enemies)
+        {
+            foreach (var enemy2 in _enemies.Where(_ => _ != enemy1))
+            {
+                if (enemy1.Circle.CheckCollision(enemy2.Circle))
+                {
+                    Vector3 kek = -Vector3.Normalize(enemy2.GlobalTransform.Position - enemy1.GlobalTransform.Position);
+                    enemy1.ChangePosition(kek, delta);
+                }
+            }
+        }
+    }
 
     private void CheckPlayerCollision()
     {
