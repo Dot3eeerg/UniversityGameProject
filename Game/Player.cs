@@ -15,6 +15,8 @@ public class Player : Node2D
     private HitTimer _hitTime;
     private List<Weapon> _whip;
     private Fireball _fireball;
+    private UIElement _ui;
+    private UIElement _uiEmpty;
     
     public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
@@ -30,7 +32,8 @@ public class Player : Node2D
         _camera = new CharacterCamera("Main camera");
 
         _hitTime = new HitTimer("Hit timer");
-        
+
+
         AddChild(_body, path, ShaderType.TextureShader);
         AddChild(_camera);
         AddChild(_collision);
@@ -139,7 +142,14 @@ public class Player : Node2D
 
         _fireball = fireball;
     }
-    
+
+    public void LoadHPBar(UIElement kek, UIElement kek2)
+    {
+        _ui = kek;
+        _uiEmpty = kek2;
+        _uiEmpty.Transform.Scale = new Vector3(2.0f, 2.0f, 2.0f);
+    }
+
     public sealed class Body : MeshInstance2D
     {
         public Body(string name, string path) : base(name) { }
@@ -149,7 +159,7 @@ public class Player : Node2D
     {
         public HitTimer(string name) : base(name) { }
     }
-
+    
     private sealed class CharacterCamera : Camera2D
     {
         private Camera2D _camera;

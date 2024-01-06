@@ -31,4 +31,20 @@ static class ShaderLibrary
 
         return program;
     }
+
+    public static ShaderProgram HealthBarShader(ShaderContext context)
+    {
+        
+        string fragTextureSource = File.ReadAllText("Render/Shader/ShaderResources/HealthBar/shaderBar.frag");
+        string vertTextureSource = File.ReadAllText("Render/Shader/ShaderResources/HealthBar/shaderBar.vert");
+
+        Shader frag = new Shader(context, ShaderType.FragmentShader, fragTextureSource);
+        Shader vert = new Shader(context, ShaderType.VertexShader, vertTextureSource);
+
+        ShaderProgram program = new ShaderProgram(context);
+        program.AttachShader(frag);
+        program.AttachShader(vert);
+
+        return program;
+    }
 }
