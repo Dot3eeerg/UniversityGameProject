@@ -24,6 +24,9 @@
       <None Update="Sounds\death.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Sounds\death_fart.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Sounds\farting.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

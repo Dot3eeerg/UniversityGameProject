@@ -136,7 +136,7 @@ public class Player : Node2D
         {
             if (!_isSoundPlayed)
             {
-                _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/death.wav")));
+                _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/death_fart.wav")));
                 _mediaPlayer.Play();
                 _isSoundPlayed = true;
             }
