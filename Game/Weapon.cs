@@ -1,4 +1,6 @@
-﻿using UniversityGameProject.Main._2d;
+﻿using System.Media;
+using System.Windows.Media;
+using UniversityGameProject.Main._2d;
 using UniversityGameProject.Resources.Primitives;
 using Timer = UniversityGameProject.Main.Timer.Timer;
 
@@ -11,16 +13,19 @@ public class Weapon : Node2D
     private Timer _attack;
     private Timer _cooldown;
 
+    private MediaPlayer _mediaPlayer = new MediaPlayer();
+
     public Stats WeaponStats = new Stats();
     public Rectangle Rectangle => _collision;
     
     public Weapon(string name, string path) : base(name)
     {
+        
+
         _body = new Body("Weapon body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
         _body.MeshData.ApplyScale(0.03f, 0.01f);
         _body.CanRender = false;
-        
         _attack = new Timer("Alive timer");
         _cooldown = new Timer("Cooldown");
 
@@ -49,6 +54,9 @@ public class Weapon : Node2D
 
         if (_cooldown.Time > WeaponStats.TimeCooldown)
         {
+
+            _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/whip.wav")));
+            _mediaPlayer.Play();
             _body.CanRender = true;
             _cooldown.Stop();
             _cooldown.Reset();

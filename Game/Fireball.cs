@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System.Media;
+using System.Numerics;
+using System.Windows.Media;
 using UniversityGameProject.Main._2d;
 using UniversityGameProject.Resources.Primitives;
 using Timer = UniversityGameProject.Main.Timer.Timer;
@@ -15,16 +17,20 @@ public class Fireball : Node2D
     private MeshInstance2D _playerPosition;
     private Vector3 _direction;
 
+    private MediaPlayer _mediaPlayer = new MediaPlayer();
+
     public Stats WeaponStats = new Stats();
     public Circle Circle => _collision;
     public bool DirectionPicked = false;
     
     public Fireball(string name, string path, MeshInstance2D playerPosition) : base(name)
     {
+
         _body = new Body(name, path);
         _body.MeshData = new RectanglePrimitiveTextured();
         _body.MeshData.ApplyScale(0.08f, 0.1f);
         _body.CanRender = false;
+
 
         _playerPosition = playerPosition;
 
@@ -72,6 +78,9 @@ public class Fireball : Node2D
 
         if (_cooldown.Time > WeaponStats.TimeCooldown)
         {
+
+            _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/fireball.wav")));
+            _mediaPlayer.Play();
             StartAttack();
         }
         

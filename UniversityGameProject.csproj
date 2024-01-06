@@ -21,6 +21,18 @@
       <None Update="Render\Shader\ShaderResources\Texture\shaderTexture.vert">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Sounds\death.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Sounds\farting.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Sounds\fireball.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Sounds\whip.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Textures\zaika.jpg">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -102,6 +114,10 @@
       <None Update="Textures\health2.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
     </ItemGroup>
 
 </Project>
