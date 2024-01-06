@@ -11,6 +11,9 @@ public class UIElement : Node2D
     {
         _body = new Body("UI hp", path);
         _body.MeshData = new RectanglePrimitiveTextured();
+        _body.MeshData.ApplyScale(0.2f, 0.1f);
+        
+        AddChild(_body);
     }
     
     public sealed class Body : MeshInstance2D

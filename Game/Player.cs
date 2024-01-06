@@ -95,6 +95,9 @@ public class Player : Node2D
                 _whip[whipID].Translate(direction);
                 _whip[whipID].Rectangle.Translate(direction);
             }
+            
+            _ui.Translate(direction);
+            _uiEmpty.Translate(direction);
         }
     }
 
@@ -147,7 +150,8 @@ public class Player : Node2D
     {
         _ui = kek;
         _uiEmpty = kek2;
-        _uiEmpty.Transform.Scale = new Vector3(2.0f, 2.0f, 2.0f);
+        _ui.Transform.Position = GlobalTransform.Position + new Vector3(-0.4f, 0.4f, 0.0f);
+        _uiEmpty.Transform.Position = GlobalTransform.Position + new Vector3(-0.4f, 0.4f, 0.0f);
     }
 
     public sealed class Body : MeshInstance2D
