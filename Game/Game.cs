@@ -36,6 +36,7 @@ public class Game
         _scene.Root.AddChild(fireball, "Textures/fireball.png", ShaderType.TextureShader);
         
         player.LoadWeapons(weaponList, fireball);
+
         _scene.Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
       
         var ground = new Ground("Ground tile", "Textures/grass3.png");
