@@ -1,4 +1,6 @@
+using System.Media;
 using System.Numerics;
+using System.Windows.Media;
 using UniversityGameProject.Game;
 using UniversityGameProject.GUI;
 using UniversityGameProject.Input;
@@ -30,6 +32,8 @@ public class Scene : MainLoop
     private List<int> _toDelete = new List<int>();
 
     private Random _randomGenerator = new Random();
+
+    private MediaPlayer _mediaPlayer = new MediaPlayer();
 
     private WindowServer _window;
     private RenderServer _renderServer;
@@ -75,6 +79,9 @@ public class Scene : MainLoop
    
     public void Run()
     {
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/farting.wav")));
+        mediaPlayer.Play();
         _spawner = new Spawner(this);
         _timer.Start();
         while (_window.Running)
@@ -446,4 +453,5 @@ public class Scene : MainLoop
         var viewport = new Viewport(_window, camera);
         _viewports.Add(viewport);
     }
+
 }
