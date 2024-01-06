@@ -63,7 +63,24 @@ public class StandardMaterial : Material, IDisposable
                 break;
             
             case ShaderType.HealthBarShader:
-                _context.SetUniform(_shaderDescriptor, "uFilled", 1.0f);
+                _context.SetUniform(_shaderDescriptor, "uFilled", 0.8f);
+                
+                _context.SetUniform(_shaderDescriptor, "model", view);
+                _context.SetUniform(_shaderDescriptor, "view", viewport.Camera.View);
+                _context.SetUniform(_shaderDescriptor, "projection", viewport.GetProjection());
+                break;
+        }
+        
+    }
+    
+    internal override void Use(Viewport.Viewport viewport, Matrix4x4 view, float offset)
+    {
+        _context.Use(_shaderDescriptor);
+        
+        switch (_type)
+        {  
+            case ShaderType.HealthBarShader:
+                _context.SetUniform(_shaderDescriptor, "uFilled", offset);
                 
                 _context.SetUniform(_shaderDescriptor, "model", view);
                 _context.SetUniform(_shaderDescriptor, "view", viewport.Camera.View);

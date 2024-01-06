@@ -36,14 +36,11 @@ public class Game
         var fireball = new Fireball("Fireball", "Textures/fireball.png", player.BodyData);
         _scene.Root.AddChild(fireball, "Textures/fireball.png", ShaderType.TextureShader);
         
-        var ui = new UIElement("PlayerHPBar", "Textures/health_bar.png");
-        _scene.Root.AddChild(ui,"Textures/health_bar.png", ShaderType.HealthBarShader);
-        
-        var uiEmpty = new UIElement("EmptyPlayerHPBar", "Textures/empty_bar.png");
-        _scene.Root.AddChild(uiEmpty,"Textures/empty_bar.png", ShaderType.TextureShader);
+        var ui = new UIElement("PlayerHPBar", "Textures/health.png");
+        _scene.Root.AddChild(ui,"Textures/health.png", ShaderType.HealthBarShader);
         
         player.LoadWeapons(weaponList, fireball);
-        player.LoadHPBar(ui, uiEmpty);
+        player.LoadHPBar(ui);
 
         _scene.Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
       

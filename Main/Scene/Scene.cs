@@ -279,7 +279,15 @@ public class Scene : MainLoop
                 for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
                 {
                     var viewport = _viewports[viewportID];
-                    _renderServer.Render(viewport, (IRenderable) node);
+                    
+                    if (node is UIElement.Body)
+                    {
+                        _renderServer.Render(viewport, (IRenderable) node, (float) _mainCollision.PlayerStats.CurrentHealth / 100);
+                    }
+                    else
+                    {
+                        _renderServer.Render(viewport, (IRenderable) node);
+                    }
                 }
             }
         }

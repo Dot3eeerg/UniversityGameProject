@@ -16,7 +16,6 @@ public class Player : Node2D
     private List<Weapon> _whip;
     private Fireball _fireball;
     private UIElement _ui;
-    private UIElement _uiEmpty;
     
     public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
@@ -88,7 +87,7 @@ public class Player : Node2D
             _camera.Translate(direction);
             _body.Translate(direction);
             _collision.Translate(direction);
-
+            _ui.Translate(direction);
 
             for (int whipID = 0; whipID < _whip.Count; whipID++)
             {
@@ -96,8 +95,6 @@ public class Player : Node2D
                 _whip[whipID].Rectangle.Translate(direction);
             }
             
-            _ui.Translate(direction);
-            _uiEmpty.Translate(direction);
         }
     }
 
@@ -110,6 +107,7 @@ public class Player : Node2D
             
             if (PlayerStats.CurrentHealth <= 0)
             {
+                PlayerStats.CurrentHealth = 0;
                 Console.WriteLine("Player is dead");
             }
             
@@ -146,12 +144,10 @@ public class Player : Node2D
         _fireball = fireball;
     }
 
-    public void LoadHPBar(UIElement kek, UIElement kek2)
+    public void LoadHPBar(UIElement kek)
     {
         _ui = kek;
-        _uiEmpty = kek2;
-        _ui.Transform.Position = GlobalTransform.Position + new Vector3(-0.4f, 0.4f, 0.0f);
-        _uiEmpty.Transform.Position = GlobalTransform.Position + new Vector3(-0.4f, 0.4f, 0.0f);
+        _ui.Transform.Position = GlobalTransform.Position + new Vector3(-0.38f, 0.4f, 0.0f);
     }
 
     public sealed class Body : MeshInstance2D
