@@ -1,4 +1,5 @@
-﻿using UniversityGameProject.Main._2d;
+﻿using System.Media;
+using UniversityGameProject.Main._2d;
 using UniversityGameProject.Resources.Primitives;
 using Timer = UniversityGameProject.Main.Timer.Timer;
 
@@ -11,6 +12,8 @@ public class Weapon : Node2D
     private Timer _attack;
     private Timer _cooldown;
 
+    private SoundPlayer _soundPlayer;
+
     public Stats WeaponStats = new Stats();
     public Rectangle Rectangle => _collision;
     
@@ -20,6 +23,9 @@ public class Weapon : Node2D
         _body.MeshData = new RectanglePrimitiveTextured();
         _body.MeshData.ApplyScale(0.03f, 0.01f);
         _body.CanRender = false;
+
+        _soundPlayer = new SoundPlayer();
+        _soundPlayer.SoundLocation = "C:\\Users\\Kirill\\Documents\\7sem\\UniversityGameProject\\Sounds\\whip.wav";
         
         _attack = new Timer("Alive timer");
         _cooldown = new Timer("Cooldown");
@@ -49,6 +55,7 @@ public class Weapon : Node2D
 
         if (_cooldown.Time > WeaponStats.TimeCooldown)
         {
+            _soundPlayer.Play();
             _body.CanRender = true;
             _cooldown.Stop();
             _cooldown.Reset();
