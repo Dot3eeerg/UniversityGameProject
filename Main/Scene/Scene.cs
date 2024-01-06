@@ -50,7 +50,7 @@ public class Scene : MainLoop
 
     private bool _isPaused = false;
 
-    public int MaxAliveEnemies { get => 100; }
+    public int MaxAliveEnemies => 100;
 
     public Node Root { get; init; }
 
@@ -123,7 +123,7 @@ public class Scene : MainLoop
             HandleCollidingEnemies(delta);
         }
 
-        ApplyViewports(delta);
+        ApplyViewports();
         
         RenderNodes(delta);
         
@@ -211,10 +211,8 @@ public class Scene : MainLoop
                     
                     if (_colliders[weaponID].Rectangle.CheckCollision((Circle) _enemies[enemyID].Circle))
                     {
-                        Console.WriteLine("Collision inflicted");
                         _hittedEnemy[weaponID].Add(enemyID);
                         _enemies[enemyID].InflictDamage(_colliders[weaponID].WeaponStats.Damage);
-                        Console.WriteLine(_enemies[enemyID].IsDead());
                         if (_enemies[enemyID].IsDead())
                         {
                             foreach (var node in _enemies[enemyID].Childs)
@@ -274,7 +272,7 @@ public class Scene : MainLoop
         }
     }
 
-    private void ApplyViewports(float delta)
+    private void ApplyViewports()
     {
         for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
         {
