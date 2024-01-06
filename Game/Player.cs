@@ -6,6 +6,7 @@ using UniversityGameProject.Resources;
 using UniversityGameProject.Resources.Primitives;
 using Timer = UniversityGameProject.Main.Timer.Timer;
 using Microsoft.VisualBasic.ApplicationServices;
+using System.Windows.Media;
 
 namespace UniversityGameProject.Game;
 
@@ -18,7 +19,7 @@ public class Player : Node2D
     private List<Weapon> _whip;
     private Fireball _fireball;
 
-    private SoundPlayer _soundPlayer;
+    private MediaPlayer _mediaPlayer = new MediaPlayer();
     private bool _isSoundPlayed;
 
     public EntityPlayer PlayerStats = new Stats();
@@ -36,7 +37,6 @@ public class Player : Node2D
 
         _hitTime = new HitTimer("Hit timer");
 
-        _soundPlayer = new SoundPlayer();
         _isSoundPlayed = false;
         
         AddChild(_body, path, ShaderType.TextureShader);
@@ -135,8 +135,8 @@ public class Player : Node2D
         {
             if (!_isSoundPlayed)
             {
-                _soundPlayer.SoundLocation = "C:\\Users\\Kirill\\Documents\\7sem\\UniversityGameProject\\Sounds\\death.wav";
-                _soundPlayer.Play();
+                _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/death.wav")));
+                _mediaPlayer.Play();
                 _isSoundPlayed = true;
             }
             return false;
