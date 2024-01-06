@@ -27,6 +27,8 @@ public class Scene : MainLoop
     private Fireball _fireball;
     private HashSet<int> _fireballHitted = new HashSet<int>();
 
+    private Random _randomGenerator = new Random();
+
     private WindowServer _window;
     private RenderServer _renderServer;
     private InputServer _inputServer;
@@ -144,6 +146,11 @@ public class Scene : MainLoop
     {
         if (_fireball.IsAttacking())
         {
+            if (!_fireball.DirectionPicked)
+            {
+                _fireball.GiveDirection(_enemies[_randomGenerator.Next(0, _enemies.Count)].GlobalTransform.Position);
+            }
+            
             for (int enemyID = 0; enemyID < _enemies.Count; enemyID++)
             {
                 if (_fireballHitted.Contains(enemyID))

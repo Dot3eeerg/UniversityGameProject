@@ -89,12 +89,8 @@ public class Player : Node2D
 
             for (int whipID = 0; whipID < _whip.Count; whipID++)
             {
-                
-                if (_whip[whipID].CanRender)
-                {
-                    _whip[whipID].Translate(direction);
-                    _whip[whipID].Rectangle.Translate(direction);
-                }
+                _whip[whipID].Translate(direction);
+                _whip[whipID].Rectangle.Translate(direction);
             }
         }
     }
