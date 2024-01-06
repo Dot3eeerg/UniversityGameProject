@@ -53,7 +53,7 @@ public abstract class Enemy : Node2D
 
         if (EnemyStats.CurrentHealth <= 0)
         {
-            Console.WriteLine("Enemy is dead");
+            Console.Write("Enemy is dead ");
             // I can't do this, Dispose is killing me and breaking memory usage
             //Dispose();
         }
