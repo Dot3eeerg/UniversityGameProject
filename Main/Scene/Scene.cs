@@ -146,7 +146,7 @@ public class Scene : MainLoop
     {
         if (_fireball.IsAttacking())
         {
-            if (!_fireball.DirectionPicked)
+            if (!_fireball.DirectionPicked && _enemies.Count > 0)
             {
                 _fireball.GiveDirection(_enemies[_randomGenerator.Next(0, _enemies.Count)].GlobalTransform.Position);
             }
