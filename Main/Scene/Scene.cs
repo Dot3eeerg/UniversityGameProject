@@ -75,13 +75,14 @@ public class Scene : MainLoop
         _window.OnWindowStartsRender += Process;
         _inputServer.OnInputEmited += Input;
         _timer = new Timer.Timer("Timer");
+
+        _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/farting.wav")));
+        _mediaPlayer.MediaEnded += new EventHandler(Repeat);
     }
    
     public void Run()
     {
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/farting.wav")));
-        mediaPlayer.Play();
+        _mediaPlayer.Play();
         _spawner = new Spawner(this);
         _timer.Start();
         while (_window.Running)
@@ -452,6 +453,12 @@ public class Scene : MainLoop
         if (_viewports.Count > 0) _viewports.Clear();
         var viewport = new Viewport(_window, camera);
         _viewports.Add(viewport);
+    }
+
+    private void Repeat(object sender, EventArgs e)
+    {
+        _mediaPlayer.Position = TimeSpan.Zero;
+        _mediaPlayer.Play();
     }
 
 }
