@@ -1,6 +1,7 @@
 using System.Media;
 using System.Numerics;
 using System.Windows.Media;
+using Silk.NET.Input;
 using UniversityGameProject.Game;
 using UniversityGameProject.Game.Gui;
 using UniversityGameProject.GUI;
@@ -163,9 +164,9 @@ public class Scene : MainLoop
 
         _renderServer.ChangeContextSize(_window.WindowSize);
 
+        HandleLevelUp();
         if (!_isPaused && IsPlayerAlive)
         {
-            HandleLevelUp();
             CheckPlayerCollision();
             CheckWeaponCollision();
             CheckFireballCollision();
@@ -198,6 +199,8 @@ public class Scene : MainLoop
     private void HandleLevelUp()
     {
         _mainCollision.CheckLevelUp();
+        _inputServer.SetCursorMode(!_mainCollision.LevelUpIsHandled ? CursorMode.Normal : CursorMode.Disabled);
+        _isPaused = !_mainCollision.LevelUpIsHandled;
     }
 
     private void CheckPlayerCollision()
@@ -320,7 +323,7 @@ public class Scene : MainLoop
     {
         foreach (var node in _nodes)
         {
-            if (!_isPaused)
+            if (!_isPaused && _mainCollision.LevelUpIsHandled)
             {
                 node.Process(delta);
             }

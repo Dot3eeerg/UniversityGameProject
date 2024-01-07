@@ -17,7 +17,7 @@ public enum AppState
 public class Ui : VisualInstanceControl
 {
     private ImGuiWindowFlags _windowFlags =
-        ImGuiWindowFlags.NoDecoration |
+        ImGuiWindowFlags.NoCollapse |
         ImGuiWindowFlags.AlwaysAutoResize |
         ImGuiWindowFlags.NoNav |
         ImGuiWindowFlags.NoSavedSettings |
@@ -47,6 +47,9 @@ public class Ui : VisualInstanceControl
         {
             _state = AppState.Restart;
         }
+
+        _state = !_player.LevelUpIsHandled ? AppState.LevelUp : AppState.Active;
+
         switch (_state)
         {
             case AppState.Paused:
@@ -57,11 +60,71 @@ public class Ui : VisualInstanceControl
                 break;
             
             case AppState.LevelUp:
+                LevelUpMenu();
                 break;
             
             case AppState.Restart:
                 RestartMenu();
                 break;
+        }
+    }
+
+    private void LevelUpMenu()
+    {
+        var text = "Choose your upgrade";
+        ImGui.SetNextWindowBgAlpha(0.45f);
+        ImGui.SetNextWindowPos(Vector2.Zero);
+        ImGui.SetNextWindowSize(_window.WindowSize);
+        
+        var calc = ImGui.CalcTextSize(text);
+        var kekX = _window.WindowSize.X - calc.X;
+        var kekY = _window.WindowSize.Y - calc.Y;
+
+        ImGui.Begin("Message", _windowFlags | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoInputs);
+        {
+            ImGui.SetWindowFontScale(2.0f);
+            ImGui.SetCursorPosX((_window.WindowSize.X - calc.X) * 0.45f);
+            ImGui.SetCursorPosY((_window.WindowSize.Y - calc.Y) * 0.13f);
+            ImGui.Text(text);
+        }
+
+        ImGui.SetNextWindowBgAlpha(0.8f);
+        ImGui.SetNextWindowPos(new Vector2(_window.WindowSize.X * 0.1f, _window.WindowSize.Y * 0.25f));
+        ImGui.SetNextWindowSize(new Vector2(_window.WindowSize.X * 0.2f, _window.WindowSize.Y * 0.4f));
+        ImGui.Begin("LevelUp1", _windowFlags);
+        {
+            ImGui.SetWindowFontScale(2.0f);
+            
+            ImGui.Text("Upgrade1");
+            ImGui.Text("kek");
+        }
+        
+        ImGui.SetNextWindowBgAlpha(0.8f);
+        ImGui.SetNextWindowPos(new Vector2(_window.WindowSize.X * 0.4f, _window.WindowSize.Y * 0.25f));
+        ImGui.SetNextWindowSize(new Vector2(_window.WindowSize.X * 0.2f, _window.WindowSize.Y * 0.4f));
+        ImGui.Begin("LevelUp2", _windowFlags);
+        {
+            ImGui.SetWindowFontScale(2.0f);
+            
+            ImGui.Text("Upgrade2");
+            ImGui.Text("kek");
+        }
+        
+        ImGui.SetNextWindowBgAlpha(0.8f);
+        ImGui.SetNextWindowPos(new Vector2(_window.WindowSize.X * 0.7f, _window.WindowSize.Y * 0.25f));
+        ImGui.SetNextWindowSize(new Vector2(_window.WindowSize.X * 0.2f, _window.WindowSize.Y * 0.4f));
+        ImGui.Begin("LevelUp3", _windowFlags);
+        {
+            ImGui.GetStyle().WindowTitleAlign = new Vector2(0.5f, 0.5f);
+            ImGui.SetWindowFontScale(2.0f);
+            
+            ImGui.Text("Upgrade3");
+            ImGui.Text("kek");
+
+            if (ImGui.Button("Kek2"))
+            {
+                _player.LevelUpIsHandled = true;
+            }
         }
     }
     
@@ -72,7 +135,7 @@ public class Ui : VisualInstanceControl
         ImGui.SetNextWindowPos(Vector2.Zero);
         ImGui.SetNextWindowSize(_window.WindowSize);
 
-        ImGui.Begin("Text", _windowFlags);
+        ImGui.Begin("Text", _windowFlags| ImGuiWindowFlags.NoDecoration);
         {
             ImGui.SetWindowFontScale(2.0f);
             var calc = ImGui.CalcTextSize(text);
@@ -88,7 +151,7 @@ public class Ui : VisualInstanceControl
         ImGui.SetNextWindowPos(Vector2.Zero);
         ImGui.SetNextWindowSize(_window.WindowSize);
 
-        ImGui.Begin("Text", _windowFlags);
+        ImGui.Begin("Text", _windowFlags| ImGuiWindowFlags.NoDecoration);
         {
             ImGui.SetWindowFontScale(2.0f);
             var calc = ImGui.CalcTextSize(text);

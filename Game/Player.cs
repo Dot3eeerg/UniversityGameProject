@@ -27,7 +27,8 @@ public class Player : Node2D
         "Sounds/damage_1_sean.wav"
     };
     private bool _isSoundPlayed;
-    
+
+    public bool LevelUpIsHandled = true;
     public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
     public MeshInstance2D BodyData => _body;
@@ -71,6 +72,7 @@ public class Player : Node2D
         {
             PlayerStats.CurrentExp -= PlayerStats.ExpToLevel;
             PlayerStats.ExpToLevel += 500;
+            LevelUpIsHandled = false;
             return true;
         }
 
@@ -226,7 +228,7 @@ public class Player : Node2D
         public override int MaxHealth { get; set; } = 100;
         public override int CurrentHealth { get; set; } = 100;
         public override long InvulTime { get; set; } = 2000;
-        public override uint ExpToLevel { get; set; } = 2000;
+        public override uint ExpToLevel { get; set; } = 200;
         public override uint CurrentExp { get; set; } = 0;
         public override float DamageReduction { get; set; } = 0.0f;
     }
