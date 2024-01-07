@@ -14,7 +14,7 @@ public class Player : Node2D
 {
     private MeshInstance2D _body;
     private CharacterCamera _camera;
-    private Circle _collision = new Circle("Collision", 0.02f);
+    private Rectangle _collision = new Rectangle("Collision", 0.01f, 0.08f);
     private HitTimer _hitTime;
     private List<Weapon> _whip;
     private Fireball _fireball;
@@ -31,7 +31,7 @@ public class Player : Node2D
     public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
     public MeshInstance2D BodyData => _body;
-    public Circle Circle => _collision;
+    public Rectangle Rect => _collision;
 
     public Player(string name, string path) : base(name)
     {
@@ -212,7 +212,7 @@ public class Player : Node2D
 
     private class Stats : EntityPlayer
     {
-        public override float Speed { get; set; } = 0.3f;
+        public override float Speed { get; set; } = 0.1f;
         public override int MaxHealth { get; set; } = 100;
         public override int CurrentHealth { get; set; } = 100;
         public override long InvulTime { get; set; } = 2000;

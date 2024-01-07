@@ -72,7 +72,7 @@ public class Spawner
             switch (spawnRateType)
             {
                 case EnemyType.HeadEnemy:
-                    enemy = new HeadEnemy(name, _player.BodyData);
+                    enemy = new GhostEnemy(name, _player.BodyData);
                     break;
                 case EnemyType.SlimeEnemy:
                     enemy = new SlimeEnemy(name, _player.BodyData);
@@ -81,7 +81,7 @@ public class Spawner
                     enemy = new GiantEnemy(name, _player.BodyData);
                     break;
                 default:
-                    enemy = new HeadEnemy(name, _player.BodyData);
+                    enemy = new GhostEnemy(name, _player.BodyData);
                     break;
             }
 

@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Silk.NET.Maths;
+using Silk.NET.Vulkan;
 
 namespace UniversityGameProject.Main._2d;
 
@@ -14,6 +15,9 @@ public abstract class CollisionShape : Node2D
         float lengthSquared = LengthSquared(pointToOrigin);
         return lengthSquared <= circle.Radius * circle.Radius;
     }
+
+    abstract public bool CheckCollision(Circle circle);
+    abstract public bool CheckCollision(Rectangle rectangle);
 
     protected static float LengthSquared(Vector2 v)
     {
@@ -32,7 +36,7 @@ public class Circle : CollisionShape
         Radius = radius;
     }
 
-    public bool CheckCollision(Circle circle)
+    public override bool CheckCollision(Circle circle)
     {
         float distance = LengthSquared(new Vector2(-GlobalTransform.Position.X + circle.GlobalTransform.Position.X,
             -GlobalTransform.Position.Y + circle.GlobalTransform.Position.Y));
@@ -43,6 +47,11 @@ public class Circle : CollisionShape
         }
 
         return false;
+    }
+
+    public override bool CheckCollision(Rectangle rectangle)
+    {
+        throw new NotImplementedException();
     }
 }
 
@@ -59,7 +68,7 @@ public class Rectangle: CollisionShape
         Height = height;
     }
 
-    public bool CheckCollision(Circle circle)
+    public override bool CheckCollision(Circle circle)
     {
         //Vector2 bottomLeft =
         //    new Vector2(GlobalTransform.Position.X - Width / 2, GlobalTransform.Position.Y - Height / 2);
@@ -74,5 +83,29 @@ public class Rectangle: CollisionShape
         projectedPos.X = Single.Clamp(circle.GlobalTransform.Position.X, topLeft.X, bottomRight.X);
 
         return PointInCircle(projectedPos, circle);
+    }
+
+    public override bool CheckCollision(Rectangle rectangle)
+    {
+        Vector2 topLeftOwn = new Vector2(GlobalTransform.Position.X - Width / 2, GlobalTransform.Position.Y + Height / 2);
+
+        Vector2 bottomRightOwn =
+            new Vector2(GlobalTransform.Position.X + Width / 2, GlobalTransform.Position.Y - Height / 2);
+
+        Vector2 topLeftRect = new Vector2(rectangle.GlobalTransform.Position.X - rectangle.Width / 2, rectangle.GlobalTransform.Position.Y + rectangle.Height / 2);
+
+        Vector2 bottomRightRect =
+            new Vector2(rectangle.GlobalTransform.Position.X + rectangle.Width / 2, rectangle.GlobalTransform.Position.Y - rectangle.Height / 2);
+
+        if (topLeftOwn.X > bottomRightRect.X) return false;  // правее
+
+        else if (bottomRightOwn.X < topLeftRect.X) return false; // левее 
+
+        else if (topLeftOwn.Y < bottomRightRect.Y) return false; // ниже
+
+        else if (bottomRightOwn.Y >  topLeftRect.Y) return false; // выше
+
+
+        return true;
     }
 }

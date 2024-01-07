@@ -41,7 +41,7 @@ public class Scene : MainLoop
     
     private Timer.Timer _timer;
     public long TotalTime => _timer.Time;
-    public long SpawnTimer = 2000;
+    public long SpawnTimer;
 
     private int _numAliveEnemies = 0;
     public int NumAliveEnemies
@@ -123,6 +123,7 @@ public class Scene : MainLoop
 
         this.AttachViewport(player.Camera);
         _spawner = new Spawner(this);
+        SpawnTimer = 0;
         _mediaPlayer.Play();
     }
    
@@ -198,7 +199,7 @@ public class Scene : MainLoop
     {
         for (int enemyID = 0; enemyID < _enemies.Count; enemyID++)
         {
-            if (_mainCollision.Circle.CheckCollision((Circle) _enemies[enemyID].Circle))
+            if (_mainCollision.Rect.CheckCollision( _enemies[enemyID].Circle))
             {
                 _mainCollision.InflictDamage(_enemies[enemyID].EnemyStats.Damage);
                 break;
