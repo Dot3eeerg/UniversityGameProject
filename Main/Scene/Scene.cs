@@ -84,7 +84,6 @@ public class Scene : MainLoop
     private void Start()
     {
         var weaponList = new List<Weapon>();
-
         var weapon1 = new Weapon("Weapon", "Textures/swing2.png");
         this.Root.AddChild(weapon1, "Textures/swing2.png", ShaderType.TextureShader);
 
@@ -107,11 +106,15 @@ public class Scene : MainLoop
         var fireball = new Fireball("Fireball", "Textures/fireball.png", player.BodyData);
         this.Root.AddChild(fireball, "Textures/fireball.png", ShaderType.TextureShader);
 
-        var ui = new UIElement("PlayerHPBar", "Textures/health.png");
-        this.Root.AddChild(ui, "Textures/health.png", ShaderType.HealthBarShader);
+        var ui = new UIElement("PlayerHPBar", "Textures/health_new.png");
+        this.Root.AddChild(ui, "Textures/health_new.png", ShaderType.HealthBarShader);
+
+        var xp = new UIElement("PlayerEXPBar", "Textures/xp.png");
+        this.Root.AddChild(xp, "Textures/xp.png", ShaderType.ExpBarShader);
 
         player.LoadWeapons(weaponList, fireball);
         player.LoadHPBar(ui);
+        player.LoadEXPBar(xp);
 
         this.Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
 
