@@ -21,10 +21,10 @@ public class Player : Node2D
     private UIElement _ui;
     private MediaPlayer _mediaPlayer = new MediaPlayer();
     private Random _random = new Random();
-    private List<string> _damageSounds = [
+    private List<string> _damageSounds = new List<string> {
         "Sounds/grunting_5_ian.wav",
         "Sounds/damage_1_sean.wav"
-    ];
+    };
     private bool _isSoundPlayed;
     public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
