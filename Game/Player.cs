@@ -129,7 +129,7 @@ public class Player : Node2D
             string damageSound = _damageSounds[_random.Next(0, _damageSounds.Count)];
             _mediaPlayer.Open(new Uri(Path.GetFullPath(damageSound)));
             _mediaPlayer.Play();
-            PlayerStats.CurrentHealth -= (int) (damage * PlayerStats.DamageReduction / 100);
+            PlayerStats.CurrentHealth -= (int) (damage * (100 - PlayerStats.DamageReduction) / 100);
             Console.WriteLine("Damage taken");
             
             if (PlayerStats.CurrentHealth <= 0)
