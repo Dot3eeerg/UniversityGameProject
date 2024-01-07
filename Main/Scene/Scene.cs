@@ -200,7 +200,14 @@ public class Scene : MainLoop
     {
         _mainCollision.CheckLevelUp();
         _inputServer.SetCursorMode(!_mainCollision.LevelUpIsHandled ? CursorMode.Normal : CursorMode.Disabled);
-        _isPaused = !_mainCollision.LevelUpIsHandled;
+        if (!_isPaused)
+        {
+            _isPaused = !_mainCollision.LevelUpIsHandled;
+        }
+        else if (_mainCollision.LevelUpIsHandled)
+        {
+            _isPaused = false;
+        }
     }
 
     private void CheckPlayerCollision()
@@ -285,7 +292,6 @@ public class Scene : MainLoop
                     {
                         _hittedEnemy.Add(enemyID);
                         _enemies[enemyID].InflictDamage(_colliders[weaponID].WeaponStats.Damage);
-                        Console.WriteLine(enemyID);
                         if (_enemies[enemyID].IsDead())
                         {
                             foreach (var node in _enemies[enemyID].Childs)

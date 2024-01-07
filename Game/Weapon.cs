@@ -9,7 +9,7 @@ namespace UniversityGameProject.Game;
 public class Weapon : Node2D
 {
     private MeshInstance2D _body;
-    private Rectangle _collision = new Rectangle("Collision", 0.2f, 0.04f);
+    private Rectangle _collision = new Rectangle("Collision", 0.03f, 0.01f);
     private Timer _attack;
     private Timer _cooldown;
 
@@ -17,11 +17,10 @@ public class Weapon : Node2D
 
     public Stats WeaponStats = new Stats();
     public Rectangle Rectangle => _collision;
+    public bool IsActive = false;
     
     public Weapon(string name, string path) : base(name)
     {
-        
-
         _body = new Body("Weapon body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
         _body.MeshData.ApplyScale(0.03f, 0.01f);
@@ -37,7 +36,10 @@ public class Weapon : Node2D
     {
         base.Process(delta);
 
-        HandleCooldown(delta);
+        if (IsActive)
+        {
+            HandleCooldown(delta);
+        }
     }
 
     private void HandleCooldown(float delta)
@@ -50,6 +52,7 @@ public class Weapon : Node2D
         {
             _attack.Update((long) (delta * 1000));
             _body.Transform.Scale = _body.Transform.Scale with { X = _body.Transform.Scale.X + delta * 12, Y = _body.Transform.Scale.Y + delta * 10 };
+            _collision.Transform.Scale = _body.Transform.Scale with { X = _body.Transform.Scale.X + delta * 12, Y = _body.Transform.Scale.Y + delta * 10 };
         }
 
         if (_cooldown.Time > WeaponStats.TimeCooldown)

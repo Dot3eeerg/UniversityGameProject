@@ -48,7 +48,10 @@ public class Ui : VisualInstanceControl
             _state = AppState.Restart;
         }
 
-        _state = !_player.LevelUpIsHandled ? AppState.LevelUp : AppState.Active;
+        if (_state != AppState.Paused)
+        {
+            _state = !_player.LevelUpIsHandled ? AppState.LevelUp : AppState.Active;
+        }
 
         switch (_state)
         {
@@ -91,12 +94,17 @@ public class Ui : VisualInstanceControl
         ImGui.SetNextWindowBgAlpha(0.8f);
         ImGui.SetNextWindowPos(new Vector2(_window.WindowSize.X * 0.1f, _window.WindowSize.Y * 0.25f));
         ImGui.SetNextWindowSize(new Vector2(_window.WindowSize.X * 0.2f, _window.WindowSize.Y * 0.4f));
-        ImGui.Begin("LevelUp1", _windowFlags);
+        ImGui.Begin("Whip upgrade", _windowFlags);
         {
             ImGui.SetWindowFontScale(2.0f);
             
-            ImGui.Text("Upgrade1");
-            ImGui.Text("kek");
+            ImGui.TextWrapped("Add 1 more hit direction of whip");
+            
+            if (ImGui.Button("Select"))
+            {
+                _player.ActivateWeapon();
+                _player.LevelUpIsHandled = true;
+            }
         }
         
         ImGui.SetNextWindowBgAlpha(0.8f);
@@ -121,7 +129,7 @@ public class Ui : VisualInstanceControl
             ImGui.Text("Upgrade3");
             ImGui.Text("kek");
 
-            if (ImGui.Button("Kek2"))
+            if (ImGui.Button("Select"))
             {
                 _player.LevelUpIsHandled = true;
             }

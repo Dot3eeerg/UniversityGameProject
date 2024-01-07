@@ -185,8 +185,21 @@ public class Player : Node2D
         _whip = weapon;
         for (int i = 0; i < weapon.Count; i++)
             _whip[i].SetPosition((Weapon.WeaponPositionType)(i % 4 + 1));
+        _whip[0].IsActive = true;
 
         _fireball = fireball;
+    }
+
+    public void ActivateWeapon()
+    {
+        for (int whipID = 1; whipID < _whip.Count; whipID++)
+        {
+            if (!_whip[whipID].IsActive)
+            {
+                _whip[whipID].IsActive = true;
+                return;
+            }
+        }
     }
 
     public void LoadHPBar(UIElement kek)
