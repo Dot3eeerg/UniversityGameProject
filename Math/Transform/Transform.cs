@@ -15,4 +15,11 @@ public class Transform
         Matrix4x4.CreateScale(Scale) *
         Matrix4x4.CreateFromQuaternion(Rotation) *
         Matrix4x4.CreateTranslation(Position);
+
+    public void Revert()
+    {
+        Position = Position with { X = 0, Y = 0, Z = 0 };
+        Scale = Scale with { X = 1.0f, Y = 1.0f, Z = 1.0f };
+        Rotation = Quaternion.Identity;
+    }
 } 

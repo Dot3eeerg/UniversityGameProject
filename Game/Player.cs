@@ -104,7 +104,6 @@ public class Player : Node2D
                 _whip[whipID].Translate(direction);
                 _whip[whipID].Rectangle.Translate(direction);
             }
-            
         }
     }
 
@@ -196,5 +195,7 @@ public class Player : Node2D
         public override int MaxHealth { get; set; } = 100;
         public override int CurrentHealth { get; set; } = 100;
         public override long InvulTime { get; set; } = 2000;
+        public override uint ExpToLevel { get; set; } = 2000;
+        public override uint CurrentExp { get; set; } = 0;
     }
 }

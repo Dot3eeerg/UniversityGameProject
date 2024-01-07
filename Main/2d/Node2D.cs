@@ -1,32 +1,37 @@
 ﻿using System.Numerics;
+using System.Text.RegularExpressions;
+using System.Windows.Media;
 using ReMath = UniversityGameProject.Math;
 
 namespace UniversityGameProject.Main._2d;
 
 public class Node2D : Node
 {
+    private ReMath.Transform _global = new ReMath.Transform();
+    private ReMath.Transform _parent = new ReMath.Transform();
+    
    public ReMath.Transform Transform { get; set; } = new ReMath.Transform();
 
    public ReMath.Transform GlobalTransform
    {
        get
        {
-           var global = new ReMath.Transform();
-
-           global.Position += Transform.Position;
-           global.Scale *= Transform.Scale;
-           global.Rotation = Quaternion.Concatenate(global.Rotation, Transform.Rotation);
+           _global.Revert();
+           
+           _global.Position += Transform.Position;
+           _global.Scale *= Transform.Scale;
+           _global.Rotation = Quaternion.Concatenate(_global.Rotation, Transform.Rotation);
 
            if (Parent is Node2D)
            {
-               var parent = ((Node2D)Parent).GlobalTransform;
+               _parent = ((Node2D) Parent).GlobalTransform;
 
-               global.Position = parent.Position + parent.Scale * Vector3.Transform(global.Position, parent.Rotation);
-               global.Scale *= parent.Scale;
-               global.Rotation = Quaternion.Concatenate(global.Rotation, parent.Rotation);
+               _global.Position = _parent.Position + _parent.Scale * Vector3.Transform(_global.Position, _parent.Rotation);
+               _global.Scale *= _parent.Scale;
+               _global.Rotation = Quaternion.Concatenate(_global.Rotation, _parent.Rotation);
            }
 
-           return global;
+           return _global;
        }
    }
    
