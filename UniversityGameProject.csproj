@@ -42,6 +42,9 @@
       <None Update="Sounds\whip.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Textures\death.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Textures\zaika.jpg">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
