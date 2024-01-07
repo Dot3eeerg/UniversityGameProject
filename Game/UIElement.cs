@@ -9,7 +9,7 @@ public class UIElement : Node2D
     
     public UIElement(string name, string path) : base(name)
     {
-        _body = new Body("UI hp", path);
+        _body = new Body("UI element", path);
         _body.MeshData = new RectanglePrimitiveTextured();
         _body.MeshData.ApplyScale(0.2f, 0.08f);
         

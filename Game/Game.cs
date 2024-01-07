@@ -11,8 +11,6 @@ public class Game
     public Game()
     {
         _scene = new Scene();
-
-
         
         _scene.Run();
     }
