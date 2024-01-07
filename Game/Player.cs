@@ -168,6 +168,16 @@ public class Player : Node2D
         return true;
     }
 
+    public bool IsPlayerAlive()
+    {
+        if (PlayerStats.CurrentHealth <= 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public void LoadWeapons(List<Weapon> weapon, Fireball fireball)
     {
         _whip = weapon;
@@ -214,7 +224,7 @@ public class Player : Node2D
     {
         public override float Speed { get; set; } = 0.3f;
         public override int MaxHealth { get; set; } = 100;
-        public override int CurrentHealth { get; set; } = 100;
+        public override int CurrentHealth { get; set; } = 1;
         public override long InvulTime { get; set; } = 2000;
         public override uint ExpToLevel { get; set; } = 2000;
         public override uint CurrentExp { get; set; } = 0;
