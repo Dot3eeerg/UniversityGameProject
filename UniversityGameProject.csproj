@@ -138,9 +138,6 @@
       <None Update="Render\Shader\ShaderResources\ExpBar\shaderBar.vert">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Gui\Fonts\AnonymousPro-Regular.ttf">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
 
     <ItemGroup>

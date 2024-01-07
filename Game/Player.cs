@@ -129,7 +129,7 @@ public class Player : Node2D
             string damageSound = _damageSounds[_random.Next(0, _damageSounds.Count)];
             _mediaPlayer.Open(new Uri(Path.GetFullPath(damageSound)));
             _mediaPlayer.Play();
-            PlayerStats.CurrentHealth -= damage;
+            PlayerStats.CurrentHealth -= (int) (damage * PlayerStats.DamageReduction / 100);
             Console.WriteLine("Damage taken");
             
             if (PlayerStats.CurrentHealth <= 0)
@@ -224,9 +224,10 @@ public class Player : Node2D
     {
         public override float Speed { get; set; } = 0.3f;
         public override int MaxHealth { get; set; } = 100;
-        public override int CurrentHealth { get; set; } = 1;
+        public override int CurrentHealth { get; set; } = 100;
         public override long InvulTime { get; set; } = 2000;
         public override uint ExpToLevel { get; set; } = 2000;
         public override uint CurrentExp { get; set; } = 0;
+        public override float DamageReduction { get; set; } = 0.0f;
     }
 }

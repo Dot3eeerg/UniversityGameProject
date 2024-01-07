@@ -12,6 +12,7 @@ public abstract class EntityPlayer : Entity
     public abstract long InvulTime { get; set; }
     public abstract uint ExpToLevel { get; set; }
     public abstract uint CurrentExp { get; set; }
+    public abstract float DamageReduction { get; set; }
 }
 
 public abstract class EntityEnemy : Entity
