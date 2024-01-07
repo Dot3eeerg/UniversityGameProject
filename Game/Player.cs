@@ -20,6 +20,11 @@ public class Player : Node2D
     private Fireball _fireball;
     private UIElement _ui;
     private MediaPlayer _mediaPlayer = new MediaPlayer();
+    private Random _random = new Random();
+    private List<string> _damageSounds = [
+        "Sounds/grunting_5_ian.wav",
+        "Sounds/damage_1_sean.wav"
+    ];
     private bool _isSoundPlayed;
     public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
@@ -107,6 +112,9 @@ public class Player : Node2D
     {
         if (!IsInvul())
         {
+            string damageSound = _damageSounds[_random.Next(0, _damageSounds.Count)];
+            _mediaPlayer.Open(new Uri(Path.GetFullPath(damageSound)));
+            _mediaPlayer.Play();
             PlayerStats.CurrentHealth -= damage;
             Console.WriteLine("Damage taken");
             
