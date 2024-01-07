@@ -37,7 +37,7 @@ public class Player : Node2D
     {
         _body = new Body("Player body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
-        _body.MeshData.ApplyScale(0.02f, 0.08f);
+        _body.MeshData.ApplyScale(0.05f, 0.09f);
 
         _camera = new CharacterCamera("Main camera");
 
@@ -59,7 +59,7 @@ public class Player : Node2D
 
         if (!IsAlive())
         {
-
+            return;
         }
         
         InputHandle(delta);
