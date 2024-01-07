@@ -45,6 +45,9 @@
       <None Update="Textures\death.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Textures\pause.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Textures\zaika.jpg">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
