@@ -107,6 +107,7 @@ public class SlimeEnemy : Enemy
         public override int CurrentHealth { get; set; } = 10;
         public override int MaxHealth { get; set; } = 10;
         public override int Damage { get; set; } = 10;
+        public override uint Exp { get; set; } = 500;
     }
 }
 
@@ -126,6 +127,7 @@ public class HeadEnemy : Enemy
         public override int CurrentHealth { get; set; } = 10;
         public override int MaxHealth { get; set; } = 10;
         public override int Damage { get; set; } = 10;
+        public override uint Exp { get; set; } = 300;
     }
 }
 
@@ -150,6 +152,7 @@ public class GiantEnemy : Enemy
         public override int CurrentHealth { get; set; } = 200;
         public override int MaxHealth { get; set; } = 200;
         public override int Damage { get; set; } = 20;
+        public override uint Exp { get; set; } = 750;
     }
 }
 
@@ -174,5 +177,6 @@ public class BossEnemy : Enemy
         public override int CurrentHealth { get; set; } = 200;
         public override int MaxHealth { get; set; } = 200;
         public override int Damage { get; set; } = 20;
+        public override uint Exp { get; set; } = 1500;
     }
 }

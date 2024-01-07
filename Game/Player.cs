@@ -19,6 +19,7 @@ public class Player : Node2D
     private List<Weapon> _whip;
     private Fireball _fireball;
     private UIElement _ui;
+    private UIElement _uiExp;
     private MediaPlayer _mediaPlayer = new MediaPlayer();
     private Random _random = new Random();
     private List<string> _damageSounds = new List<string> {
@@ -26,6 +27,7 @@ public class Player : Node2D
         "Sounds/damage_1_sean.wav"
     };
     private bool _isSoundPlayed;
+    
     public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
     public MeshInstance2D BodyData => _body;
@@ -63,6 +65,18 @@ public class Player : Node2D
         InputHandle(delta);
     }
 
+    public bool CheckLevelUp()
+    {
+        if (PlayerStats.CurrentExp >= PlayerStats.ExpToLevel)
+        {
+            PlayerStats.CurrentExp -= PlayerStats.ExpToLevel;
+            PlayerStats.ExpToLevel += 500;
+            return true;
+        }
+
+        return false;
+    }
+
     private void InputHandle(float delta)
     {
         Vector3 direction = Vector3.Zero;
@@ -98,6 +112,7 @@ public class Player : Node2D
             _body.Translate(direction);
             _collision.Translate(direction);
             _ui.Translate(direction);
+            _uiExp.Translate(direction);
 
             for (int whipID = 0; whipID < _whip.Count; whipID++)
             {
@@ -166,6 +181,12 @@ public class Player : Node2D
     {
         _ui = kek;
         _ui.Transform.Position = GlobalTransform.Position + new Vector3(-0.38f, 0.4f, 0.0f);
+    }
+    
+    public void LoadEXPBar(UIElement kek)
+    {
+        _uiExp = kek;
+        _uiExp.Transform.Position = GlobalTransform.Position + new Vector3(-0.38f, 0.4f, 0.0f);
     }
 
     public sealed class Body : MeshInstance2D

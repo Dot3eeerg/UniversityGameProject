@@ -128,6 +128,7 @@ public class Scene : MainLoop
 
         if (!_isPaused)
         {
+            HandleLevelUp();
             CheckPlayerCollision();
             CheckWeaponCollision();
             CheckFireballCollision();
@@ -155,6 +156,11 @@ public class Scene : MainLoop
                 }
             }
         }
+    }
+
+    private void HandleLevelUp()
+    {
+        _mainCollision.CheckLevelUp();
     }
 
     private void CheckPlayerCollision()
@@ -198,6 +204,7 @@ public class Scene : MainLoop
                             _nodes.Remove(node);
                         }
 
+                        _mainCollision.PlayerStats.CurrentExp += _enemies[enemyID].EnemyStats.Exp;
                         _nodes.Remove(_enemies[enemyID]);
                         _numAliveEnemies--;
                         _toDelete.Add(enemyID);
@@ -246,6 +253,7 @@ public class Scene : MainLoop
                                 _nodes.Remove(node);
                             }
 
+                            _mainCollision.PlayerStats.CurrentExp += _enemies[enemyID].EnemyStats.Exp;
                             _nodes.Remove(_enemies[enemyID]);
                             _numAliveEnemies--;
                             _hittedEnemy.Remove(enemyID);
@@ -289,9 +297,15 @@ public class Scene : MainLoop
                 {
                     var viewport = _viewports[viewportID];
                     
-                    if (node is UIElement.Body)
+                    if (node is UIElement.Body && node.Parent.Name == "PlayerHPBar")
                     {
                         _renderServer.Render(viewport, (IRenderable) node, (float) _mainCollision.PlayerStats.CurrentHealth / 100);
+                    }
+                    else if (node is UIElement.Body && node.Parent.Name == "PlayerEXPBar")
+                    {
+                        _renderServer.Render(viewport, (IRenderable)node,
+                            (float)_mainCollision.PlayerStats.CurrentExp * 100 / _mainCollision.PlayerStats.ExpToLevel /
+                            100);
                     }
                     else
                     {

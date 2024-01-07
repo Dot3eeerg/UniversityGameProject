@@ -17,4 +17,5 @@ public abstract class EntityPlayer : Entity
 public abstract class EntityEnemy : Entity
 {
     public abstract int Damage { get; set; }
+    public abstract uint Exp { get; set; }
 }

@@ -9,6 +9,7 @@ public enum ShaderType
     TextureShader,
     GroundShader,
     HealthBarShader,
+    ExpBarShader,
 }
 
 public class StandardMaterial : Material, IDisposable
@@ -35,6 +36,10 @@ public class StandardMaterial : Material, IDisposable
             
             case ShaderType.HealthBarShader:
                 _shaderProgram = ShaderLibrary.HealthBarShader(context);
+                break;
+            
+            case ShaderType.ExpBarShader:
+                _shaderProgram = ShaderLibrary.ExpBarShader(context);
                 break;
         }
         
@@ -80,6 +85,14 @@ public class StandardMaterial : Material, IDisposable
         switch (_type)
         {  
             case ShaderType.HealthBarShader:
+                _context.SetUniform(_shaderDescriptor, "uFilled", offset);
+                
+                _context.SetUniform(_shaderDescriptor, "model", view);
+                _context.SetUniform(_shaderDescriptor, "view", viewport.Camera.View);
+                _context.SetUniform(_shaderDescriptor, "projection", viewport.GetProjection());
+                break;
+            
+            case ShaderType.ExpBarShader:
                 _context.SetUniform(_shaderDescriptor, "uFilled", offset);
                 
                 _context.SetUniform(_shaderDescriptor, "model", view);
