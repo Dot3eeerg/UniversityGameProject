@@ -1,3 +1,6 @@
+using System.Media;
+using System.Numerics;
+using System.Windows.Media;
 using UniversityGameProject.Game;
 using UniversityGameProject.GUI;
 using UniversityGameProject.Input;
@@ -20,9 +23,17 @@ public class Scene : MainLoop
     private List<Node> _ground = new List<Node>();
     private List<Enemy> _enemies = new List<Enemy>();
     private List<Weapon> _colliders = new List<Weapon>();
-    private List<HashSet<int>>_hittedEnemy = new List<HashSet<int>>();
+    private HashSet<int>_hittedEnemy = new HashSet<int>();
     private Player _mainCollision;
+    private Enemy _enemy;
     private Spawner _spawner;
+    private Fireball _fireball;
+    private HashSet<int> _fireballHitted = new HashSet<int>();
+    private List<int> _toDelete = new List<int>();
+
+    private Random _randomGenerator = new Random();
+
+    private MediaPlayer _mediaPlayer = new MediaPlayer();
 
     private WindowServer _window;
     private RenderServer _renderServer;
@@ -44,7 +55,7 @@ public class Scene : MainLoop
 
     private bool _isPaused = false;
 
-    public int MaxAliveEnemies { get => 100; }
+    public int MaxAliveEnemies => 100;
 
     public Node Root { get; init; }
 
@@ -65,52 +76,36 @@ public class Scene : MainLoop
         _inputServer.OnInputEmited += Input;
         _timer = new Timer.Timer("Timer");
 
-        Start();
+        _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/farting.wav")));
+        _mediaPlayer.MediaEnded += new EventHandler(Repeat);
     }
    
-    private void Start()
-    {
-        var weaponList = new List<Weapon>();
-
-        var weapon1 = new Weapon("Weapon", "Textures/swing2.png");
-       this.Root.AddChild(weapon1, "Textures/swing2.png", ShaderType.TextureShader);
-
-        var weapon2 = new Weapon("Weapon", "Textures/swing2_left.png");
-        this.Root.AddChild(weapon2, "Textures/swing2_left.png", ShaderType.TextureShader);
-
-        var weapon3 = new Weapon("Weapon", "Textures/swing2.png");
-        this.Root.AddChild(weapon3, "Textures/swing2.png", ShaderType.TextureShader);
-
-        var weapon4 = new Weapon("Weapon", "Textures/swing2_left.png");
-        this.Root.AddChild(weapon4, "Textures/swing2_left.png", ShaderType.TextureShader);
-
-        weaponList.Add(weapon1);
-        weaponList.Add(weapon2);
-        weaponList.Add(weapon3);
-        weaponList.Add(weapon4);
-
-        var player = new Player("Player", "Textures/character.png", weaponList);
-        this.Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
-
-        var ground = new Ground("Ground tile", "Textures/grass3.png");
-        this.Root.AddChild(ground, "Textures/grass3.png", ShaderType.GroundShader);
-
-
-        this.AttachViewport(player.Camera);
-        _spawner = new Spawner(this);
-    }
-
     public void Run()
     {
-
+        _mediaPlayer.Play();
+        _spawner = new Spawner(this);
         _timer.Start();
         while (_window.Running)
         {
-            if (_mainCollision.IsAlive())
+            if (_mainCollision.PlayerStats.CurrentHealth > 0)
                 _spawner.SpawnEnemy();
             else if (IsPlayerAlive)
             {
-                PlayerDied();
+                foreach (var enemy in _enemies)
+                {
+                    if (enemy != null)
+                    {
+                        foreach (var child in enemy.Childs)
+                        {
+                            _nodes.Remove(child);
+                        }
+                        _nodes.Remove(enemy);
+                    }
+                }
+
+                _enemies.Clear();
+                IsPlayerAlive = false;
+                _mediaPlayer.Stop();
             }
             _window.Render();
         }
@@ -118,7 +113,7 @@ public class Scene : MainLoop
     
     protected override void Process(float delta)
     {
-        if (!_isPaused && IsPlayerAlive)
+        if (!_isPaused)
         {
             base.Process(delta);
 
@@ -131,20 +126,36 @@ public class Scene : MainLoop
         
         _renderServer.ChangeContextSize(_window.WindowSize);
 
-        if (!_isPaused && IsPlayerAlive)
+        if (!_isPaused)
         {
             CheckPlayerCollision();
             CheckWeaponCollision();
+            CheckFireballCollision();
+            HandleCollidingEnemies(delta);
         }
 
-        ApplyViewports(delta);
+        ApplyViewports();
         
         RenderNodes(delta);
         
         _guiServer.RenderFrame();
     }
-    
-    
+
+    private void HandleCollidingEnemies(float delta)
+    {
+        for (int enemy1 = 0; enemy1 < _enemies.Count; enemy1++)
+        {
+            for (int enemy2 = enemy1 + 1; enemy2 < _enemies.Count; enemy2++)
+            {
+                if (_enemies[enemy1].Circle.CheckCollision(_enemies[enemy2].Circle))
+                {
+                    Vector3 kek = -Vector3.Normalize(_enemies[enemy2].GlobalTransform.Position -
+                                                     _enemies[enemy1].GlobalTransform.Position);
+                    _enemies[enemy1].ChangePosition(kek, delta);
+                }
+            }
+        }
+    }
 
     private void CheckPlayerCollision()
     {
@@ -158,6 +169,58 @@ public class Scene : MainLoop
         }
     }
 
+    private void CheckFireballCollision()
+    {
+        if (_fireball.IsAttacking())
+        {
+            if (!_fireball.DirectionPicked && _enemies.Count > 0)
+            {
+                _fireball.GiveDirection(_enemies[_randomGenerator.Next(0, _enemies.Count)].GlobalTransform.Position);
+            }
+            
+            for (int enemyID = 0; enemyID < _enemies.Count; enemyID++)
+            {
+                if (_fireballHitted.Contains(enemyID))
+                {
+                    continue;
+                }
+
+                if (_fireball.Circle.CheckCollision((Circle)_enemies[enemyID].Circle))
+                {
+                    _fireballHitted.Add(enemyID);
+                    _enemies[enemyID].InflictDamage(_fireball.WeaponStats.Damage);
+                    _fireball.PiercedEnemy();
+
+                    if (_enemies[enemyID].IsDead())
+                    {
+                        foreach (var node in _enemies[enemyID].Childs)
+                        {
+                            _nodes.Remove(node);
+                        }
+
+                        _nodes.Remove(_enemies[enemyID]);
+                        _numAliveEnemies--;
+                        _toDelete.Add(enemyID);
+                    }
+                }
+            }
+        }
+        
+        else if (!_fireball.IsAttacking() && _fireballHitted.Count > 0)
+        {
+            _fireballHitted.Clear();
+        }
+
+        if (_toDelete.Count > 0)
+        {
+            foreach (var kek in _toDelete)
+            {
+                _enemies.RemoveAt(kek);
+            }
+            _toDelete.Clear();
+        }
+    }
+
     private void CheckWeaponCollision()
     {
         for (int weaponID = 0; weaponID < _colliders.Count; weaponID++)
@@ -166,17 +229,16 @@ public class Scene : MainLoop
             {
                 for (int enemyID = 0; enemyID < _enemies.Count; enemyID++)
                 {
-                    if (_hittedEnemy[weaponID].Contains(enemyID))
+                    if (_hittedEnemy.Contains(enemyID))
                     {
                         continue;
                     }
                     
-                    if (_colliders[weaponID].Rectangle.CheckCollision((Circle) _enemies[enemyID].Circle))
+                    if (_colliders[weaponID].Rectangle.CheckCollision(_enemies[enemyID].Circle))
                     {
-                        Console.WriteLine("Collision inflicted");
-                        _hittedEnemy[weaponID].Add(enemyID);
+                        _hittedEnemy.Add(enemyID);
                         _enemies[enemyID].InflictDamage(_colliders[weaponID].WeaponStats.Damage);
-                        Console.WriteLine(_enemies[enemyID].IsDead());
+                        Console.WriteLine(enemyID);
                         if (_enemies[enemyID].IsDead())
                         {
                             foreach (var node in _enemies[enemyID].Childs)
@@ -186,14 +248,25 @@ public class Scene : MainLoop
 
                             _nodes.Remove(_enemies[enemyID]);
                             _numAliveEnemies--;
+                            _hittedEnemy.Remove(enemyID);
+                            _toDelete.Add(enemyID);
                         }
                     }
                 }
             }
             
-            else if (!_colliders[weaponID].IsAttacking() && _hittedEnemy[weaponID].Count > 0)
+            else if (!_colliders[weaponID].IsAttacking() && _hittedEnemy.Count > 0)
             {
-                _hittedEnemy[weaponID].Clear();
+                _hittedEnemy.Clear();
+            }
+            
+            if (_toDelete.Count > 0)
+            {
+                foreach (var kek in _toDelete)
+                {
+                    _enemies.RemoveAt(kek);
+                }
+                _toDelete.Clear();
             }
         }
     }
@@ -215,7 +288,15 @@ public class Scene : MainLoop
                 for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
                 {
                     var viewport = _viewports[viewportID];
-                    _renderServer.Render(viewport, (IRenderable) node);
+                    
+                    if (node is UIElement.Body)
+                    {
+                        _renderServer.Render(viewport, (IRenderable) node, (float) _mainCollision.PlayerStats.CurrentHealth / 100);
+                    }
+                    else
+                    {
+                        _renderServer.Render(viewport, (IRenderable) node);
+                    }
                 }
             }
         }
@@ -236,7 +317,7 @@ public class Scene : MainLoop
         }
     }
 
-    private void ApplyViewports(float delta)
+    private void ApplyViewports()
     {
         for (int viewportID = 0; viewportID < _viewports.Count; viewportID++)
         {
@@ -273,7 +354,11 @@ public class Scene : MainLoop
         if (node is Weapon)
         {
             _colliders.Add((Weapon) node);
-            _hittedEnemy.Add(new HashSet<int>());
+        }
+
+        if (node is Fireball)
+        {
+            _fireball = (Fireball) node;
         }
             
         foreach (var child in node.Childs)
@@ -360,54 +445,10 @@ public class Scene : MainLoop
             Console.WriteLine((_isPaused ? "" : "un") + "pause");
         }
 
-        if (!IsPlayerAlive)
-        {
-            if (_inputServer!.IsActionPressed("restart"))
-            {
-                Restart();
-            }
-        }
-
         foreach (var node in _nodes)
         {
             node.Input(input);
         }
-    }
-
-    private void Restart()
-    {
-        Root.Childs.Clear();
-        _ground.Clear();
-        _nodes.Clear();
-        _enemies.Clear();
-        _hittedEnemy.Clear();
-        _colliders.Clear();
-        _timer.Start();
-        Start();
-        NumAliveEnemies = 0;
-        IsPlayerAlive = true;
-    }
-
-    private void PlayerDied()
-    {
-        _timer.Stop();
-        foreach (var enemy in _enemies)
-        {
-            if (enemy != null)
-            {
-                foreach (var child in enemy.Childs)
-                {
-                    _nodes.Remove(child);
-                }
-                _nodes.Remove(enemy);
-            }
-        }
-        _nodes.Clear();
-        _enemies.Clear();
-
-        IsPlayerAlive = false;
-        
-        LoadNode(_mainCollision.BodyData, "Textures/death.png", ShaderType.TextureShader);
     }
 
     public void AttachViewport()
@@ -422,4 +463,11 @@ public class Scene : MainLoop
         var viewport = new Viewport(_window, camera);
         _viewports.Add(viewport);
     }
+
+    private void Repeat(object sender, EventArgs e)
+    {
+        _mediaPlayer.Position = TimeSpan.Zero;
+        _mediaPlayer.Play();
+    }
+
 }

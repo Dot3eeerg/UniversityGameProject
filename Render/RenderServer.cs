@@ -55,6 +55,27 @@ public class RenderServer
             }
         }
     }
+    
+    public void Render(Viewport.Viewport viewport, IRenderable renderable, float offset)
+    {
+        if ((viewport.Camera.VisualMask & renderable.VisualMask) > 0)
+        {
+            renderable.Vao!.Bind();
+            
+            renderable.Texture.Bind();
+            renderable.Material.Use(viewport, renderable.View, offset);
+            //renderable.Material.Attach(viewport.Camera);
+
+            unsafe
+            {
+                renderable.Ebo!.Update(renderable.Indices);
+                renderable.Vbo!.Update(renderable.Vertices);
+
+                _gl.DrawElements(PrimitiveType.Triangles, (uint)renderable.Indices.Length,
+                    DrawElementsType.UnsignedShort, null);
+            }
+        }
+    }
 
     public void ApplyEnvironment(Viewport.Viewport viewport)
     {

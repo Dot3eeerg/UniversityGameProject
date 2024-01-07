@@ -12,9 +12,9 @@ public abstract class Enemy : Node2D
     internal Body _body;
     private ICamera _camera;
     private MeshInstance2D _playerPosition;
-    internal CollisionShape _collision = new Circle("Collision", 0.04f);
+    internal Circle _collision = new Circle("Collision", 0.04f);
 
-    public CollisionShape Circle => _collision;
+    public Circle Circle => _collision;
 
     internal abstract EntityEnemy EnemyStats { get; set; }
     
@@ -53,7 +53,7 @@ public abstract class Enemy : Node2D
 
         if (EnemyStats.CurrentHealth <= 0)
         {
-            Console.WriteLine("Enemy is dead");
+            Console.Write("Enemy is dead ");
             // I can't do this, Dispose is killing me and breaking memory usage
             //Dispose();
         }
@@ -67,6 +67,12 @@ public abstract class Enemy : Node2D
         }
 
         return false;
+    }
+
+    public void ChangePosition(Vector3 direction, float delta)
+    {
+        Translate(direction * EnemyStats.Speed * delta);
+        _collision.GlobalTransform.Position = GlobalTransform.Position;
     }
 
     public virtual void DoScale()
