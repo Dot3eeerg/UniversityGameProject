@@ -212,7 +212,7 @@ public class Player : Node2D
 
     private class Stats : EntityPlayer
     {
-        public override float Speed { get; set; } = 0.1f;
+        public override float Speed { get; set; } = 0.3f;
         public override int MaxHealth { get; set; } = 100;
         public override int CurrentHealth { get; set; } = 100;
         public override long InvulTime { get; set; } = 2000;
