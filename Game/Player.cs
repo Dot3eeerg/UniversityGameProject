@@ -1,12 +1,9 @@
 ﻿using System.Numerics;
-using System.Media;
 using UniversityGameProject.Main._2d;
 using UniversityGameProject.Render.Material;
 using UniversityGameProject.Resources;
 using UniversityGameProject.Resources.Primitives;
 using Timer = UniversityGameProject.Main.Timer.Timer;
-using Microsoft.VisualBasic.ApplicationServices;
-using System.Windows.Media;
 
 namespace UniversityGameProject.Game;
 
@@ -14,29 +11,29 @@ public class Player : Node2D
 {
     private MeshInstance2D _body;
     private CharacterCamera _camera;
-    private Circle _collision = new Circle("Collision", 0.02f);
+    private Circle _collision = new Circle("Collision", 0.045f);
     private HitTimer _hitTime;
     private List<Weapon> _whip;
-    private Fireball _fireball;
-    private UIElement _ui;
-    private MediaPlayer _mediaPlayer = new MediaPlayer();
-    private bool _isSoundPlayed;
+    
     public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
     public MeshInstance2D BodyData => _body;
     public Circle Circle => _collision;
 
-    public Player(string name, string path) : base(name)
+    public Player(string name, string path, List<Weapon> weapon) : base(name)
     {
         _body = new Body("Player body", path);
         _body.MeshData = new RectanglePrimitiveTextured();
-        _body.MeshData.ApplyScale(0.02f, 0.08f);
+        _body.MeshData.ApplyScale(0.045f, 0.08f);
+        //_body.Transform.Scale = new Vector3(Transform.Scale.X, Transform.Scale.Y + 1.0f, Transform.Scale.Z);
+
+        _whip = weapon;
+        for (int i = 0; i < weapon.Count; i++)
+            _whip[i].SetPosition((Weapon.WeaponPositionType)(i % 4 + 1));
 
         _camera = new CharacterCamera("Main camera");
 
         _hitTime = new HitTimer("Hit timer");
-
-        _isSoundPlayed = false;
         
         AddChild(_body, path, ShaderType.TextureShader);
         AddChild(_camera);
@@ -52,7 +49,7 @@ public class Player : Node2D
 
         if (!IsAlive())
         {
-
+            return;
         }
         
         InputHandle(delta);
@@ -92,14 +89,17 @@ public class Player : Node2D
             _camera.Translate(direction);
             _body.Translate(direction);
             _collision.Translate(direction);
-            _ui.Translate(direction);
+
 
             for (int whipID = 0; whipID < _whip.Count; whipID++)
             {
-                _whip[whipID].Translate(direction);
-                _whip[whipID].Rectangle.Translate(direction);
+                
+                if (_whip[whipID].CanRender)
+                {
+                    _whip[whipID].Translate(direction);
+                    _whip[whipID].Rectangle.Translate(direction);
+                }
             }
-            
         }
     }
 
@@ -112,7 +112,6 @@ public class Player : Node2D
             
             if (PlayerStats.CurrentHealth <= 0)
             {
-                PlayerStats.CurrentHealth = 0;
                 Console.WriteLine("Player is dead");
             }
             
@@ -130,37 +129,16 @@ public class Player : Node2D
         return false;
     }
 
-    private bool IsAlive()
+    public bool IsAlive()
     {
         if (PlayerStats.CurrentHealth <= 0)
         {
-            if (!_isSoundPlayed)
-            {
-                _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/death_fart.wav")));
-                _mediaPlayer.Play();
-                _isSoundPlayed = true;
-            }
             return false;
         }
 
         return true;
     }
-
-    public void LoadWeapons(List<Weapon> weapon, Fireball fireball)
-    {
-        _whip = weapon;
-        for (int i = 0; i < weapon.Count; i++)
-            _whip[i].SetPosition((Weapon.WeaponPositionType)(i % 4 + 1));
-
-        _fireball = fireball;
-    }
-
-    public void LoadHPBar(UIElement kek)
-    {
-        _ui = kek;
-        _ui.Transform.Position = GlobalTransform.Position + new Vector3(-0.38f, 0.4f, 0.0f);
-    }
-
+    
     public sealed class Body : MeshInstance2D
     {
         public Body(string name, string path) : base(name) { }
@@ -170,7 +148,7 @@ public class Player : Node2D
     {
         public HitTimer(string name) : base(name) { }
     }
-    
+
     private sealed class CharacterCamera : Camera2D
     {
         private Camera2D _camera;

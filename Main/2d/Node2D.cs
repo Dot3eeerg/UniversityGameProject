@@ -59,11 +59,4 @@ public class Node2D : Node
 
        Transform = newTransform;
    }
-
-   public void SetTransform(Vector3 position)
-   {
-       var newTransform = Transform;
-       newTransform.Position = position;
-       Transform = newTransform;
-   }
 }
