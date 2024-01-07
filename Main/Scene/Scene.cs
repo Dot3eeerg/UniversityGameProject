@@ -28,7 +28,7 @@ public class Scene : MainLoop
     private Spawner _spawner;
     private Fireball _fireball;
     private HashSet<int> _fireballHitted = new HashSet<int>();
-    private List<int> _toDelete = new List<int>();
+    private List<Enemy> _toDelete = new List<Enemy>();
 
     private Random _randomGenerator = new Random();
 
@@ -228,7 +228,7 @@ public class Scene : MainLoop
 
                         _nodes.Remove(_enemies[enemyID]);
                         _numAliveEnemies--;
-                        _toDelete.Add(enemyID);
+                        _toDelete.Add(_enemies[enemyID]);
                     }
                 }
             }
@@ -243,7 +243,7 @@ public class Scene : MainLoop
         {
             foreach (var kek in _toDelete)
             {
-                _enemies.RemoveAt(kek);
+                _enemies.Remove(kek);
             }
             _toDelete.Clear();
         }
@@ -277,7 +277,7 @@ public class Scene : MainLoop
                             _nodes.Remove(_enemies[enemyID]);
                             _numAliveEnemies--;
                             _hittedEnemy.Remove(enemyID);
-                            _toDelete.Add(enemyID);
+                            _toDelete.Add(_enemies[enemyID]);
                         }
                     }
                 }
@@ -292,7 +292,7 @@ public class Scene : MainLoop
             {
                 foreach (var kek in _toDelete)
                 {
-                    _enemies.RemoveAt(kek);
+                    _enemies.Remove(kek);
                 }
                 _toDelete.Clear();
             }
