@@ -12,9 +12,10 @@ public abstract class Enemy : Node2D
     internal Body _body;
     private ICamera _camera;
     private MeshInstance2D _playerPosition;
-    internal Circle _collision = new Circle("Collision", 0.04f);
+    internal CollisionShape _collision;
 
-    public Circle Circle => _collision;
+    public CollisionShape Collision => _collision;
+
 
     internal abstract EntityEnemy EnemyStats { get; set; }
     
@@ -23,6 +24,7 @@ public abstract class Enemy : Node2D
         _body = new Body("Enemy body");
         _body.MeshData = new RectanglePrimitiveTextured();
         DoScale();
+        SetCollision();
 
         _playerPosition = playerPosition;
         
@@ -79,7 +81,12 @@ public abstract class Enemy : Node2D
     {
         _body.MeshData.ApplyScale(0.04f, 0.08f);
     }
-        
+
+    virtual internal void SetCollision()
+    {
+        _collision = new Circle("Collision", 0.04f);
+    }
+
     internal sealed class Body : MeshInstance2D
     {
         public Body(string name) : base(name) { }
@@ -94,12 +101,15 @@ public abstract class Enemy : Node2D
 public class SlimeEnemy : Enemy
 {
     public SlimeEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) {}
-    
-    private CollisionShape _collision = new Circle("Collision", 0.04f);
 
     internal override EntityEnemy EnemyStats { get; set; } = new Stats();
 
     public override string TexturePath => "Textures/slime.png";
+
+    internal override void SetCollision()
+    {
+        _collision = new Circle("Collision", 0.03f);
+    }
 
     private class Stats : EntityEnemy
     {
@@ -111,15 +121,18 @@ public class SlimeEnemy : Enemy
     }
 }
 
-public class HeadEnemy : Enemy
+public class GhostEnemy : Enemy
 {
-    public HeadEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
-
-    private CollisionShape _collision = new Circle("Collision", 0.04f);
+    public GhostEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
     
     internal override EntityEnemy EnemyStats { get; set; } = new Stats();
 
     public override string TexturePath => "Textures/ghost.png";
+
+    internal override void SetCollision()
+    {
+        _collision = new Circle("Collision", 0.03f);
+    }
 
     private class Stats : EntityEnemy
     {
@@ -135,8 +148,6 @@ public class GiantEnemy : Enemy
 {
     public GiantEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
 
-    private CollisionShape _collision = new Circle("Collision", 0.12f);
-    
     internal override EntityEnemy EnemyStats { get; set; } = new Stats();
 
     public override string TexturePath => "Textures/giant.png";
@@ -144,6 +155,11 @@ public class GiantEnemy : Enemy
     public override void DoScale()
     {
         _body.MeshData.ApplyScale(0.10f, 0.15f);
+    }
+
+    internal override void SetCollision()
+    {
+        _collision = new Circle("Collision", 0.04f);
     }
 
     private class Stats : EntityEnemy
@@ -160,15 +176,19 @@ public class BossEnemy : Enemy
 {
     public BossEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
     
-    private CollisionShape _collision = new Circle("Collision", 0.18f);
-
+    
     internal override EntityEnemy EnemyStats { get; set; } = new Stats();
 
     public override string TexturePath => "Textures/boss.png";
 
     public override void DoScale()
     {
-        _body.MeshData.ApplyScale(0.14f, 0.25f);
+        _body.MeshData.ApplyScale(0.14f, 0.19f);
+    }
+
+    internal override void SetCollision()
+    {
+        _collision = new Rectangle("Collision", 0.14f, 0.19f);
     }
 
     private class Stats : EntityEnemy
