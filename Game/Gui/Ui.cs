@@ -117,6 +117,10 @@ public class Ui : VisualInstanceControl
             ImGui.SetCursorPos(new Vector2(_window.WindowSize.X * 0.069f, _window.WindowSize.Y * 0.29f));
             if (ImGui.Button("Select"))
             {
+                if (_weaponNext == 0)
+                {
+                    _whipUpgrades++;
+                }
                 _player.UpgradePlayer((UpgradeType) _weaponNext);
                 _player.LevelUpIsHandled = true;
                 _state = AppState.Active;
@@ -188,7 +192,7 @@ public class Ui : VisualInstanceControl
                 else
                 {
                     _upgradeText.Add(
-                        $"Attack speed increased by 0.1 sec.: {_player.GetAttackCooldown() / 1000.0f} sec. -> {_player.GetAttackCooldown() / 1000.0f - 0.1f} sec.");
+                        $"Attack speed increased by 0.1 sec.: {(int) (_player.GetAttackCooldown() / 1000.0f)} sec. -> {(int) (_player.GetAttackCooldown() / 1000.0f - 0.1f)} sec.");
                 }
                 break;
                 
