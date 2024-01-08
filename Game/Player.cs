@@ -10,6 +10,15 @@ using System.Windows.Media;
 
 namespace UniversityGameProject.Game;
 
+public enum UpgradeType
+{
+    WeaponUpgrade,
+    FireballUpgrade,
+    HpRegenUpgrade,
+    SpeedUpgrade,
+    DamageReductionUpgrade
+}
+
 public class Player : Node2D
 {
     private MeshInstance2D _body;
@@ -190,16 +199,31 @@ public class Player : Node2D
         _fireball = fireball;
     }
 
-    public void ActivateWeapon()
+    private void UpgradeWeapon()
     {
-        for (int whipID = 1; whipID < _whip.Count; whipID++)
+        if (!_whip[^1].IsActive)
         {
-            if (!_whip[whipID].IsActive)
+            for (int whipID = 1; whipID < _whip.Count; whipID++)
             {
-                _whip[whipID].IsActive = true;
-                return;
+                if (!_whip[whipID].IsActive)
+                {
+                    _whip[whipID].IsActive = true;
+                    return;
+                }
             }
         }
+        else
+        {
+            foreach (var whip in _whip)
+            {
+                whip.WeaponStats.TimeCooldown -= 100;
+            }
+        }
+    }
+
+    private void UpgradeFireball()
+    {
+        _fireball.WeaponStats.Damage += 3;
     }
 
     public void LoadHPBar(UIElement kek)
@@ -212,6 +236,32 @@ public class Player : Node2D
     {
         _uiExp = kek;
         _uiExp.Transform.Position = GlobalTransform.Position + new Vector3(-0.38f, 0.4f, 0.0f);
+    }
+
+    public void UpgradePlayer(UpgradeType upgradeNumber)
+    {
+        switch (upgradeNumber)
+        {
+            case UpgradeType.WeaponUpgrade:
+                UpgradeWeapon();
+                break;
+            
+            case UpgradeType.FireballUpgrade:
+                UpgradeFireball();
+                break;
+            
+            case UpgradeType.HpRegenUpgrade:
+                PlayerStats.HpRegen += 0.2f;
+                break;
+            
+            case UpgradeType.SpeedUpgrade:
+                PlayerStats.Speed += 0.01f;
+                break;
+            
+            case UpgradeType.DamageReductionUpgrade:
+                PlayerStats.DamageReduction += 0.07f;
+                break;
+        }
     }
 
     public sealed class Body : MeshInstance2D
@@ -244,5 +294,6 @@ public class Player : Node2D
         public override uint ExpToLevel { get; set; } = 200;
         public override uint CurrentExp { get; set; } = 0;
         public override float DamageReduction { get; set; } = 0.0f;
+        public override float HpRegen { get; set; } = 0.0f;
     }
 }

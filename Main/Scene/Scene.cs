@@ -57,6 +57,7 @@ public class Scene : MainLoop
     public bool IsPlayerAlive { get; set; } = true;
 
     private bool _isPaused = false;
+    private bool _isInputPaused = false;
 
     public int MaxAliveEnemies => 100;
 
@@ -329,11 +330,15 @@ public class Scene : MainLoop
     {
         foreach (var node in _nodes)
         {
-            if (!_isPaused && _mainCollision.LevelUpIsHandled)
+            if (!_isPaused && _mainCollision.LevelUpIsHandled && !_isInputPaused)
             {
                 node.Process(delta);
             }
             else if (_isPaused && node is Ui)
+            {
+                node.Process(delta);
+            }
+            else if (_isInputPaused && node is Ui)
             {
                 node.Process(delta);
             }
@@ -511,8 +516,8 @@ public class Scene : MainLoop
 
         if (_inputServer!.IsActionPressed("pause"))
         {
-            _isPaused = !_isPaused;
-            Console.WriteLine((_isPaused ? "" : "un") + "pause");
+            _isInputPaused = !_isInputPaused;
+            Console.WriteLine((_isInputPaused ? "" : "un") + "pause");
         }
 
         if (!IsPlayerAlive)

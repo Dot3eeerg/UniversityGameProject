@@ -48,9 +48,16 @@ public class Ui : VisualInstanceControl
             _state = AppState.Restart;
         }
 
-        if (_state != AppState.Paused)
+        else if (_state != AppState.Paused)
         {
-            _state = !_player.LevelUpIsHandled ? AppState.LevelUp : AppState.Active;
+            if (!_player.LevelUpIsHandled && _state != AppState.LevelUp)
+            {
+                _state = AppState.LevelUp;
+            }
+            else if (_state != AppState.LevelUp)
+            {
+                _state = AppState.Active;
+            }
         }
 
         switch (_state)
@@ -102,8 +109,9 @@ public class Ui : VisualInstanceControl
             
             if (ImGui.Button("Select"))
             {
-                _player.ActivateWeapon();
+                _player.UpgradePlayer(UpgradeType.WeaponUpgrade);
                 _player.LevelUpIsHandled = true;
+                _state = AppState.Active;
             }
         }
         
@@ -116,6 +124,12 @@ public class Ui : VisualInstanceControl
             
             ImGui.Text("Upgrade2");
             ImGui.Text("kek");
+
+            if (ImGui.Button("Select"))
+            {
+                _player.LevelUpIsHandled = true;
+                _state = AppState.Active;
+            }
         }
         
         ImGui.SetNextWindowBgAlpha(0.8f);
@@ -132,6 +146,7 @@ public class Ui : VisualInstanceControl
             if (ImGui.Button("Select"))
             {
                 _player.LevelUpIsHandled = true;
+                _state = AppState.Active;
             }
         }
     }

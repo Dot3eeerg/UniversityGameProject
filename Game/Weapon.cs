@@ -124,7 +124,7 @@ public class Weapon : Node2D
     {
         public int Damage { get; set; } = 5;
         public long TimeAttack { get; set; } = 250;
-        public long TimeCooldown { get; set; } = 1250;
+        public long TimeCooldown { get; set; } = 1500;
     }
 
     public enum WeaponPositionType
