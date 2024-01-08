@@ -21,6 +21,9 @@
       <None Update="Render\Shader\ShaderResources\Texture\shaderTexture.vert">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Sounds\background.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Sounds\damage_1_sean.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

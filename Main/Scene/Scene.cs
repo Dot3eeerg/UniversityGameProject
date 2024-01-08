@@ -80,7 +80,7 @@ public class Scene : MainLoop
         _inputServer.OnInputEmited += Input;
         _timer = new Timer.Timer("Timer");
 
-        _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/farting.wav")));
+        _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/background.wav")));
         _mediaPlayer.MediaEnded += new EventHandler(Repeat);
 
         Start();
