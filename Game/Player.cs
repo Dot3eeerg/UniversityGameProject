@@ -32,8 +32,8 @@ public class Player : Node2D
     private MediaPlayer _mediaPlayer = new MediaPlayer();
     private Random _random = new Random();
     private List<string> _damageSounds = new List<string> {
-        "Sounds/grunting_5_ian.wav",
-        "Sounds/damage_1_sean.wav"
+        "Sounds/damage1.wav",
+        "Sounds/damage2.wav"
     };
     private bool _isSoundPlayed;
 

@@ -24,7 +24,7 @@
       <None Update="Sounds\background.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Sounds\damage_1_sean.wav">
+      <None Update="Sounds\damage1.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Sounds\death.wav">
@@ -33,13 +33,13 @@
       <None Update="Sounds\death_fart.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Sounds\farting.wav">
+      <None Update="Sounds\background_fart.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Sounds\fireball.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Sounds\grunting_5_ian.wav">
+      <None Update="Sounds\damage2.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Sounds\levelup.wav">
