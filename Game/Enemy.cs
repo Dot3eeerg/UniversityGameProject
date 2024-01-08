@@ -17,7 +17,7 @@ public abstract class Enemy : Node2D
     public CollisionShape Collision => _collision;
 
 
-    internal abstract EntityEnemy EnemyStats { get; set; }
+    public abstract EntityEnemy EnemyStats { get; set; }
     
     public Enemy(string name, MeshInstance2D playerPosition) : base(name)
     {
@@ -55,7 +55,7 @@ public abstract class Enemy : Node2D
 
         if (EnemyStats.CurrentHealth <= 0)
         {
-            Console.Write("Enemy is dead ");
+            //Console.Write("Enemy is dead ");
             // I can't do this, Dispose is killing me and breaking memory usage
             //Dispose();
         }
@@ -102,7 +102,7 @@ public class SlimeEnemy : Enemy
 {
     public SlimeEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) {}
 
-    internal override EntityEnemy EnemyStats { get; set; } = new Stats();
+    public override EntityEnemy EnemyStats { get; set; } = new Stats();
 
     public override string TexturePath => "Textures/slime.png";
 
@@ -125,7 +125,7 @@ public class GhostEnemy : Enemy
 {
     public GhostEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
     
-    internal override EntityEnemy EnemyStats { get; set; } = new Stats();
+    public override EntityEnemy EnemyStats { get; set; } = new Stats();
 
     public override string TexturePath => "Textures/ghost.png";
 
@@ -148,7 +148,7 @@ public class GiantEnemy : Enemy
 {
     public GiantEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
 
-    internal override EntityEnemy EnemyStats { get; set; } = new Stats();
+    public override EntityEnemy EnemyStats { get; set; } = new Stats();
 
     public override string TexturePath => "Textures/giant.png";
 
@@ -177,7 +177,7 @@ public class BossEnemy : Enemy
     public BossEnemy(string name, MeshInstance2D playerPosition) : base(name, playerPosition) { }
     
     
-    internal override EntityEnemy EnemyStats { get; set; } = new Stats();
+    public override EntityEnemy EnemyStats { get; set; } = new Stats();
 
     public override string TexturePath => "Textures/boss.png";
 
