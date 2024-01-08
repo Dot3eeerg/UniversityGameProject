@@ -35,5 +35,15 @@ public abstract class InputEvent
 
         return false;
     }
+
+    public bool CheckAction(string actionName)
+    {
+        if (_server.Actions.ContainsKey(actionName))
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
 

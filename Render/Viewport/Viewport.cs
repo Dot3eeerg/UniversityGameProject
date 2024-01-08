@@ -29,4 +29,6 @@ public record struct Viewport
     {
         return _windowServer.WindowSize.Y / _windowServer.WindowSize.X;
     }
+
+    public Vector2 GetViewportSize() => _windowServer.WindowSize;
 }

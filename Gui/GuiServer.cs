@@ -1,4 +1,5 @@
-﻿using Silk.NET.Input;
+﻿using ImGuiNET;
+using Silk.NET.Input;
 using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
@@ -21,7 +22,8 @@ public class GuiServer
         _input = input;
 
         _controller = new ImGuiController(gl, window, input);
-        _viewport = new ImGuiNET.ImGuiViewport();
+        _viewport = new ImGuiViewport();
+
     }
 
     public void SetupFrame(float delta)
