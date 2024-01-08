@@ -81,6 +81,7 @@ public class StandardMaterial : Material, IDisposable
     internal override void Use(Viewport.Viewport viewport, Matrix4x4 view, float offset)
     {
         _context.Use(_shaderDescriptor);
+        offset = (float)System.Math.Round(offset, 1);
         
         switch (_type)
         {  
