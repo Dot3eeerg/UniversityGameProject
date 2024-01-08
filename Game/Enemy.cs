@@ -194,8 +194,8 @@ public class BossEnemy : Enemy
     private class Stats : EntityEnemy
     {
         public override float Speed { get; set; } = 0.06f;
-        public override int CurrentHealth { get; set; } = 200;
-        public override int MaxHealth { get; set; } = 200;
+        public override int CurrentHealth { get; set; } = 500;
+        public override int MaxHealth { get; set; } = 500;
         public override int Damage { get; set; } = 20;
         public override uint Exp { get; set; } = 1500;
     }
