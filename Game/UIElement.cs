@@ -1,4 +1,5 @@
-﻿using UniversityGameProject.Main._2d;
+﻿using System.Numerics;
+using UniversityGameProject.Main._2d;
 using UniversityGameProject.Resources.Primitives;
 
 namespace UniversityGameProject.Game;
@@ -11,8 +12,8 @@ public class UIElement : Node2D
     {
         _body = new Body("UI element", path);
         _body.MeshData = new RectanglePrimitiveTextured();
-        _body.MeshData.ApplyScale(0.2f, 0.08f);
-        
+        _body.MeshData.ApplyScale(0.25f, 0.1f);
+
         AddChild(_body);
     }
     

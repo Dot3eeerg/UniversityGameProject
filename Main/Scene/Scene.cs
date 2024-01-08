@@ -1,7 +1,9 @@
 using System.Media;
 using System.Numerics;
 using System.Windows.Media;
+using Silk.NET.Input;
 using UniversityGameProject.Game;
+using UniversityGameProject.Game.Gui;
 using UniversityGameProject.GUI;
 using UniversityGameProject.Input;
 using UniversityGameProject.Main._2d;
@@ -38,6 +40,8 @@ public class Scene : MainLoop
     private RenderServer _renderServer;
     private InputServer _inputServer;
     private GuiServer _guiServer;
+
+    private AppState _state = AppState.Active;
     
     private Timer.Timer _timer;
     public long TotalTime => _timer.Time;
@@ -53,6 +57,7 @@ public class Scene : MainLoop
     public bool IsPlayerAlive { get; set; } = true;
 
     private bool _isPaused = false;
+    private bool _isInputPaused = false;
 
     public int MaxAliveEnemies => 100;
 
@@ -75,7 +80,7 @@ public class Scene : MainLoop
         _inputServer.OnInputEmited += Input;
         _timer = new Timer.Timer("Timer");
 
-        _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/farting.wav")));
+        _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/background.wav")));
         _mediaPlayer.MediaEnded += new EventHandler(Repeat);
 
         Start();
@@ -85,16 +90,16 @@ public class Scene : MainLoop
     {
         var weaponList = new List<Weapon>();
         var weapon1 = new Weapon("Weapon", "Textures/swing2.png");
-        this.Root.AddChild(weapon1, "Textures/swing2.png", ShaderType.TextureShader);
+        Root.AddChild(weapon1, "Textures/swing2.png", ShaderType.TextureShader);
 
         var weapon2 = new Weapon("Weapon", "Textures/swing2_left.png");
-        this.Root.AddChild(weapon2, "Textures/swing2_left.png", ShaderType.TextureShader);
+        Root.AddChild(weapon2, "Textures/swing2_left.png", ShaderType.TextureShader);
 
         var weapon3 = new Weapon("Weapon", "Textures/swing2.png");
-        this.Root.AddChild(weapon3, "Textures/swing2.png", ShaderType.TextureShader);
+        Root.AddChild(weapon3, "Textures/swing2.png", ShaderType.TextureShader);
 
         var weapon4 = new Weapon("Weapon", "Textures/swing2_left.png");
-        this.Root.AddChild(weapon4, "Textures/swing2_left.png", ShaderType.TextureShader);
+        Root.AddChild(weapon4, "Textures/swing2_left.png", ShaderType.TextureShader);
 
         weaponList.Add(weapon1);
         weaponList.Add(weapon2);
@@ -104,24 +109,27 @@ public class Scene : MainLoop
         var player = new Player("Player", "Textures/character.png");
 
         var fireball = new Fireball("Fireball", "Textures/fireball.png", player.BodyData);
-        this.Root.AddChild(fireball, "Textures/fireball.png", ShaderType.TextureShader);
+        Root.AddChild(fireball, "Textures/fireball.png", ShaderType.TextureShader);
 
         var ui = new UIElement("PlayerHPBar", "Textures/health_new.png");
-        this.Root.AddChild(ui, "Textures/health_new.png", ShaderType.HealthBarShader);
+        Root.AddChild(ui, "Textures/health_new.png", ShaderType.HealthBarShader);
 
         var xp = new UIElement("PlayerEXPBar", "Textures/xp.png");
-        this.Root.AddChild(xp, "Textures/xp.png", ShaderType.ExpBarShader);
+        Root.AddChild(xp, "Textures/xp.png", ShaderType.ExpBarShader);
 
         player.LoadWeapons(weaponList, fireball);
         player.LoadHPBar(ui);
         player.LoadEXPBar(xp);
 
-        this.Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
+        Root.AddChild(player, "Textures/character.png", ShaderType.TextureShader);
 
         var ground = new Ground("Ground tile", "Textures/grass3.png");
-        this.Root.AddChild(ground, "Textures/grass3.png", ShaderType.GroundShader);
+        Root.AddChild(ground, "Textures/grass3.png", ShaderType.GroundShader);
 
-        this.AttachViewport(player.Camera);
+        var gui = new Ui("UI", _window, player);
+        Root.AddChild(gui);
+
+        AttachViewport(player.Camera);
         _spawner = new Spawner(this);
         SpawnTimer = 0;
         _mediaPlayer.Play();
@@ -155,18 +163,18 @@ public class Scene : MainLoop
         }
         
         _guiServer.SetupFrame(delta);
-        
+
         _renderServer.ChangeContextSize(_window.WindowSize);
 
+        HandleLevelUp();
         if (!_isPaused && IsPlayerAlive)
         {
-            HandleLevelUp();
             CheckPlayerCollision();
             CheckWeaponCollision();
             CheckFireballCollision();
             HandleCollidingEnemies(delta);
         }
-
+        
         ApplyViewports();
         
         RenderNodes(delta);
@@ -193,6 +201,15 @@ public class Scene : MainLoop
     private void HandleLevelUp()
     {
         _mainCollision.CheckLevelUp();
+        _inputServer.SetCursorMode(!_mainCollision.LevelUpIsHandled ? CursorMode.Normal : CursorMode.Disabled);
+        if (!_isPaused)
+        {
+            _isPaused = !_mainCollision.LevelUpIsHandled;
+        }
+        else if (_mainCollision.LevelUpIsHandled)
+        {
+            _isPaused = false;
+        }
     }
 
     private void CheckPlayerCollision()
@@ -277,7 +294,6 @@ public class Scene : MainLoop
                     {
                         _hittedEnemy.Add(enemyID);
                         _enemies[enemyID].InflictDamage(_colliders[weaponID].WeaponStats.Damage);
-                        Console.WriteLine(enemyID);
                         if (_enemies[enemyID].IsDead())
                         {
                             foreach (var node in _enemies[enemyID].Childs)
@@ -315,9 +331,23 @@ public class Scene : MainLoop
     {
         foreach (var node in _nodes)
         {
-            if (!_isPaused)
+            if (!_isPaused && _mainCollision.LevelUpIsHandled && !_isInputPaused)
+            {
                 node.Process(delta);
-
+            }
+            else if (_isPaused && node is Ui)
+            {
+                node.Process(delta);
+            }
+            else if (_isInputPaused && node is Ui)
+            {
+                node.Process(delta);
+            }
+            else if (IsPlayerAlive == false && node is Ui)
+            {
+                node.Process(delta);
+            }
+                
             if (node is IRenderable)
             {
                 if (node is MeshInstance2D && node.CanRender == false)
@@ -487,8 +517,8 @@ public class Scene : MainLoop
 
         if (_inputServer!.IsActionPressed("pause"))
         {
-            _isPaused = !_isPaused;
-            Console.WriteLine((_isPaused ? "" : "un") + "pause");
+            _isInputPaused = !_isInputPaused;
+            Console.WriteLine((_isInputPaused ? "" : "un") + "pause");
         }
 
         if (!IsPlayerAlive)
@@ -508,6 +538,7 @@ public class Scene : MainLoop
 
     private void Restart()
     {
+        _nodes.Clear();
         Root.Childs.Clear();
         _ground.Clear();
         _nodes.Clear();
@@ -523,15 +554,21 @@ public class Scene : MainLoop
     private void PlayerDied()
     {
         _timer.Stop();
+
+        foreach (var node in _nodes)
+        {
+            if (node is not Ui)
+            {
+                _nodes.Remove(node);
+            }
+        }
        
-        _nodes.Clear();
         _enemies.Clear();
 
         IsPlayerAlive = false;
 
         LoadNode(_mainCollision.BodyData, "Textures/death.png", ShaderType.TextureShader);
 
-        IsPlayerAlive = false;
         _mediaPlayer.Stop();
     }
 

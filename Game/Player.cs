@@ -10,6 +10,15 @@ using System.Windows.Media;
 
 namespace UniversityGameProject.Game;
 
+public enum UpgradeType
+{
+    WeaponUpgrade,
+    FireballUpgrade,
+    HpRegenUpgrade,
+    SpeedUpgrade,
+    DamageReductionUpgrade
+}
+
 public class Player : Node2D
 {
     private MeshInstance2D _body;
@@ -23,11 +32,12 @@ public class Player : Node2D
     private MediaPlayer _mediaPlayer = new MediaPlayer();
     private Random _random = new Random();
     private List<string> _damageSounds = new List<string> {
-        "Sounds/grunting_5_ian.wav",
-        "Sounds/damage_1_sean.wav"
+        "Sounds/damage1.wav",
+        "Sounds/damage2.wav"
     };
     private bool _isSoundPlayed;
-    
+
+    public bool LevelUpIsHandled = true;
     public EntityPlayer PlayerStats = new Stats();
     public Camera2D Camera => _camera;
     public MeshInstance2D BodyData => _body;
@@ -71,6 +81,9 @@ public class Player : Node2D
         {
             PlayerStats.CurrentExp -= PlayerStats.ExpToLevel;
             PlayerStats.ExpToLevel += 500;
+            LevelUpIsHandled = false;
+            _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/levelup.wav")));
+            _mediaPlayer.Play();
             return true;
         }
 
@@ -129,7 +142,7 @@ public class Player : Node2D
             string damageSound = _damageSounds[_random.Next(0, _damageSounds.Count)];
             _mediaPlayer.Open(new Uri(Path.GetFullPath(damageSound)));
             _mediaPlayer.Play();
-            PlayerStats.CurrentHealth -= damage;
+            PlayerStats.CurrentHealth -= (int) (damage * (100 - PlayerStats.DamageReduction) / 100);
             Console.WriteLine("Damage taken");
             
             if (PlayerStats.CurrentHealth <= 0)
@@ -168,26 +181,94 @@ public class Player : Node2D
         return true;
     }
 
+    public bool IsPlayerAlive()
+    {
+        if (PlayerStats.CurrentHealth <= 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public void LoadWeapons(List<Weapon> weapon, Fireball fireball)
     {
         _whip = weapon;
         for (int i = 0; i < weapon.Count; i++)
             _whip[i].SetPosition((Weapon.WeaponPositionType)(i % 4 + 1));
+        _whip[0].IsActive = true;
 
         _fireball = fireball;
+    }
+
+    private void UpgradeWeapon()
+    {
+        if (!_whip[^1].IsActive)
+        {
+            for (int whipID = 1; whipID < _whip.Count; whipID++)
+            {
+                if (!_whip[whipID].IsActive)
+                {
+                    _whip[whipID].IsActive = true;
+                    return;
+                }
+            }
+        }
+        else
+        {
+            foreach (var whip in _whip)
+            {
+                whip.WeaponStats.TimeCooldown -= 100;
+            }
+        }
+    }
+
+    private void UpgradeFireball()
+    {
+        _fireball.WeaponStats.Damage += 3;
     }
 
     public void LoadHPBar(UIElement kek)
     {
         _ui = kek;
-        _ui.Transform.Position = GlobalTransform.Position + new Vector3(-0.38f, 0.4f, 0.0f);
+        _ui.Transform.Position = GlobalTransform.Position + new Vector3(-0.35f, 0.4f, 0.0f);
     }
     
     public void LoadEXPBar(UIElement kek)
     {
         _uiExp = kek;
-        _uiExp.Transform.Position = GlobalTransform.Position + new Vector3(-0.38f, 0.4f, 0.0f);
+        _uiExp.Transform.Position = GlobalTransform.Position + new Vector3(-0.35f, 0.4f, 0.0f);
     }
+
+    public void UpgradePlayer(UpgradeType upgradeNumber)
+    {
+        switch (upgradeNumber)
+        {
+            case UpgradeType.WeaponUpgrade:
+                UpgradeWeapon();
+                break;
+            
+            case UpgradeType.FireballUpgrade:
+                UpgradeFireball();
+                break;
+            
+            case UpgradeType.HpRegenUpgrade:
+                PlayerStats.HpRegen += 0.2f;
+                break;
+            
+            case UpgradeType.SpeedUpgrade:
+                PlayerStats.Speed += 0.03f;
+                break;
+            
+            case UpgradeType.DamageReductionUpgrade:
+                PlayerStats.DamageReduction += 0.07f;
+                break;
+        }
+    }
+
+    public long GetAttackCooldown() => _whip[0].WeaponStats.TimeCooldown;
+    
+    public long GetFireballDamage() => _fireball.WeaponStats.Damage;
 
     public sealed class Body : MeshInstance2D
     {
@@ -216,7 +297,9 @@ public class Player : Node2D
         public override int MaxHealth { get; set; } = 100;
         public override int CurrentHealth { get; set; } = 100;
         public override long InvulTime { get; set; } = 2000;
-        public override uint ExpToLevel { get; set; } = 2000;
+        public override uint ExpToLevel { get; set; } = 200;
         public override uint CurrentExp { get; set; } = 0;
+        public override float DamageReduction { get; set; } = 0.0f;
+        public override float HpRegen { get; set; } = 0.0f;
     }
 }
