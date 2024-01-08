@@ -161,7 +161,7 @@ public class Scene : MainLoop
 
             SpawnTimer += (long)(delta * 1000);
 
-            Console.WriteLine($"{(double)TotalTime/1000}  {_mainCollision.PlayerStats.CurrentHealth}");
+            Console.WriteLine($"{(double)TotalTime / 1000}  {_mainCollision.PlayerStats.CurrentHealth}");
         }
         
         _guiServer.SetupFrame(delta);

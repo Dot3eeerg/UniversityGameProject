@@ -85,6 +85,7 @@ public class Player : Node2D
         }
         
         InputHandle(delta);
+        //Console.WriteLine(PlayerStats.CurrentHealth);
     }
 
     public bool CheckLevelUp()
@@ -154,8 +155,9 @@ public class Player : Node2D
             string damageSound = _damageSounds[_random.Next(0, _damageSounds.Count)];
             _mediaPlayer.Open(new Uri(Path.GetFullPath(damageSound)));
             _mediaPlayer.Play();
-            PlayerStats.CurrentHealth -= (int) (damage * (100 - PlayerStats.DamageReduction) / 100);
-            Console.WriteLine("Damage taken");
+            var realDamage = (damage * (1 - PlayerStats.DamageReduction));
+            PlayerStats.CurrentHealth -= (int)realDamage;
+            Console.WriteLine($"Damage {realDamage} taken");
             
             if (PlayerStats.CurrentHealth <= 0)
             {
