@@ -35,25 +35,28 @@ public class Spawner
     private SpawnData[] _spawnRates =
     {
         new (0, 500, EnemyType.HeadEnemy),
-        new (10, 1000, EnemyType.SlimeEnemy),
-        new (20, 2000, EnemyType.GiantEnemy),
-        new (30, 500, EnemyType.BossEnemy)
+        new (15, 1000, EnemyType.SlimeEnemy),
+        new (30, 2500, EnemyType.GiantEnemy),
+        new (50, 1000, EnemyType.BossEnemy)
     };
 
-    private int spawnRate = 1;
 
+    private int _spawnRateIdx = 0;
 
     public void SpawnEnemy()
     {
         bool spawned = false;
-        var spawnRateType = getSpawnRateIdx();
+        getSpawnRateIdx();
 
-        if (!_bossSpawned && spawnRateType == EnemyType.BossEnemy)
+        var spawnRateType = _spawnRates[_spawnRateIdx].Type;
+        var _spawnRate = _spawnRates[_spawnRateIdx].SpawnRate;
+
+        if (!_bossSpawned && _spawnRates[_spawnRateIdx].Type == EnemyType.BossEnemy)
         {
             SpawnBoss();
         }
 
-        while (_scene.SpawnTimer > spawnRate)
+        while (_scene.SpawnTimer > _spawnRate)
         {
             if (_scene.NumAliveEnemies >= _scene.MaxAliveEnemies)
             {
@@ -90,7 +93,7 @@ public class Spawner
             enemy.Translate(pos);
             _scene.NumAliveEnemies++;
 
-            _scene.SpawnTimer -= spawnRate;
+            _scene.SpawnTimer -= _spawnRate;
             spawned = true;
         }
 
@@ -112,19 +115,13 @@ public class Spawner
         _bossSpawned = true;
     }
 
-    private EnemyType getSpawnRateIdx()
+    private void getSpawnRateIdx()
     {
-        for (int i = 0; i < _spawnRates.Length; i++)
-        {
-            if (_spawnRates[i].Time > _scene.TotalTime / 1000)
+        if (_spawnRateIdx < _spawnRates.Count() - 1)
+            if (_scene.TotalTime >= _spawnRates[_spawnRateIdx + 1].Time * 1000)
             {
-                spawnRate = _spawnRates[i - 1].SpawnRate;
-                return _spawnRates[i - 1].Type;
+                _spawnRateIdx++;
             }
-        }
-
-        spawnRate = _spawnRates[^1].SpawnRate;
-        return _spawnRates[^1].Type;
     }
 
     private enum EnemyType

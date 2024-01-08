@@ -12,9 +12,9 @@ public abstract class Enemy : Node2D
     internal Body _body;
     private ICamera _camera;
     private MeshInstance2D _playerPosition;
-    internal Circle _collision;
+    internal CollisionShape _collision;
 
-    public Circle Circle => _collision;
+    public CollisionShape Collision => _collision;
 
 
     internal abstract EntityEnemy EnemyStats { get; set; }
@@ -188,7 +188,7 @@ public class BossEnemy : Enemy
 
     internal override void SetCollision()
     {
-        _collision = new Circle("Collision", 0.07f);
+        _collision = new Rectangle("Collision", 0.14f, 0.19f);
     }
 
     private class Stats : EntityEnemy

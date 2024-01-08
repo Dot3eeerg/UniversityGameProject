@@ -180,7 +180,7 @@ public class Scene : MainLoop
         {
             for (int enemy2 = enemy1 + 1; enemy2 < _enemies.Count; enemy2++)
             {
-                if (_enemies[enemy1].Circle.CheckCollision(_enemies[enemy2].Circle))
+                if (_enemies[enemy1].Collision.CheckCollision(_enemies[enemy2].Collision))
                 {
                     Vector3 kek = -Vector3.Normalize(_enemies[enemy2].GlobalTransform.Position -
                                                      _enemies[enemy1].GlobalTransform.Position);
@@ -199,7 +199,7 @@ public class Scene : MainLoop
     {
         for (int enemyID = 0; enemyID < _enemies.Count; enemyID++)
         {
-            if (_mainCollision.Rect.CheckCollision( _enemies[enemyID].Circle))
+            if (_mainCollision.Rect.CheckCollision( _enemies[enemyID].Collision))
             {
                 _mainCollision.InflictDamage(_enemies[enemyID].EnemyStats.Damage);
                 break;
@@ -223,7 +223,7 @@ public class Scene : MainLoop
                     continue;
                 }
 
-                if (_fireball.Circle.CheckCollision((Circle)_enemies[enemyID].Circle))
+                if (_fireball.Circle.CheckCollision(_enemies[enemyID].Collision))
                 {
                     _fireballHitted.Add(enemyID);
                     _enemies[enemyID].InflictDamage(_fireball.WeaponStats.Damage);
@@ -273,7 +273,7 @@ public class Scene : MainLoop
                         continue;
                     }
                     
-                    if (_colliders[weaponID].Rectangle.CheckCollision(_enemies[enemyID].Circle))
+                    if (_colliders[weaponID].Rectangle.CheckCollision(_enemies[enemyID].Collision))
                     {
                         _hittedEnemy.Add(enemyID);
                         _enemies[enemyID].InflictDamage(_colliders[weaponID].WeaponStats.Damage);

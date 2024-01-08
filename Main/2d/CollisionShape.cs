@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Windows.Media.Media3D;
 using Silk.NET.Maths;
 using Silk.NET.Vulkan;
 
@@ -14,6 +15,15 @@ public abstract class CollisionShape : Node2D
             new Vector2(circle.GlobalTransform.Position.X, circle.GlobalTransform.Position.Y) - point;
         float lengthSquared = LengthSquared(pointToOrigin);
         return lengthSquared <= circle.Radius * circle.Radius;
+    }
+
+    public bool CheckCollision(CollisionShape collisionShape)
+    {
+        if (collisionShape is Circle) { return CheckCollision((Circle) collisionShape); }
+
+        if (collisionShape is Rectangle) { return CheckCollision((Rectangle)collisionShape); }
+
+        throw new NotImplementedException();
     }
 
     abstract public bool CheckCollision(Circle circle);
@@ -49,9 +59,24 @@ public class Circle : CollisionShape
         return false;
     }
 
-    public override bool CheckCollision(Rectangle rectangle)
+    public override bool CheckCollision(Rectangle rect)
     {
-        throw new NotImplementedException();
+        //Vector2 bottomLeft =
+        //    new Vector2(GlobalTransform.Position.X - Width / 2, GlobalTransform.Position.Y - Height / 2);
+
+        Vector2 topLeft = new Vector2(rect.GlobalTransform.Position.X - rect.Width / 2,
+            rect.GlobalTransform.Position.Y + rect.Height / 2);
+
+        Vector2 bottomRight = new Vector2(rect.GlobalTransform.Position.X + rect.Width / 2,
+            rect.GlobalTransform.Position.Y - rect.Height / 2);
+
+        //Vector2 topRight = new Vector2(GlobalTransform.Position.X + Width / 2, GlobalTransform.Position.Y + Height / 2);
+
+        Vector2 projectedPos = new Vector2(0.0f);
+        projectedPos.Y = Single.Clamp(GlobalTransform.Position.Y, bottomRight.Y, topLeft.Y);
+        projectedPos.X = Single.Clamp(GlobalTransform.Position.X, topLeft.X, bottomRight.X);
+
+        return PointInCircle(projectedPos, this);
     }
 }
 
