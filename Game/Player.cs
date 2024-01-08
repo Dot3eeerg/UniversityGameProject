@@ -231,13 +231,13 @@ public class Player : Node2D
     public void LoadHPBar(UIElement kek)
     {
         _ui = kek;
-        _ui.Transform.Position = GlobalTransform.Position + new Vector3(-0.38f, 0.4f, 0.0f);
+        _ui.Transform.Position = GlobalTransform.Position + new Vector3(-0.35f, 0.4f, 0.0f);
     }
     
     public void LoadEXPBar(UIElement kek)
     {
         _uiExp = kek;
-        _uiExp.Transform.Position = GlobalTransform.Position + new Vector3(-0.38f, 0.4f, 0.0f);
+        _uiExp.Transform.Position = GlobalTransform.Position + new Vector3(-0.35f, 0.4f, 0.0f);
     }
 
     public void UpgradePlayer(UpgradeType upgradeNumber)
