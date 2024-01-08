@@ -39,6 +39,7 @@ public class Fireball : Node2D
         
         _cooldown.Start();
         AddChild(_body);
+        AddChild(_collision);
     }
 
     public override void Process(float delta)
@@ -56,7 +57,6 @@ public class Fireball : Node2D
     private void CastHandle(float delta)
     {
         Translate(_direction * delta);
-        _collision.GlobalTransform.Position = GlobalTransform.Position;
     }
 
     public void GiveDirection(Vector3 position)
@@ -131,7 +131,6 @@ public class Fireball : Node2D
     private void SetPosition()
     {
         SetTransform(_playerPosition.GlobalTransform.Position);
-        _collision.SetTransform(_playerPosition.GlobalTransform.Position);
     }
     
     public sealed class Body : MeshInstance2D

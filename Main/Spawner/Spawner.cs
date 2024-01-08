@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Silk.NET.Vulkan;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -23,85 +24,77 @@ public class Spawner
 
     private bool _bossSpawned = false;
 
+    private int _enemyID = 0;
+
+    private SpawnData[] _spawnRates;
+
+    private int[] _rateTimings;
+
+    private int _spawnRateIdx = 0;
+
+    private long _lastSpawnTime = 0;
+
+    private long[] _spawnTimers = { 100000, 0, 0 };
+    private int _numRates;
+
     public Spawner(Scene.Scene scene)
     {
         _scene = scene;
         _player = (Player)_scene.Root.Childs[7];
+
+        _rateTimings = [ 0, 9000, 40, 70, 105, 140, 180 ];
+        int[] ghostRates = { 100000, 400, 1000, 2000, 3000, 3000, 800 };
+        int[] slimeRates = { 0,    0,   1500, 1000, 1500, 3000, 1600 };
+        int[] giantRates = { 0,    0,   0,    0,    4000, 2000, 0 };
+
+        _spawnRates =
+        [
+            new(ghostRates, EnemyType.GhostEnemy),
+            new(slimeRates, EnemyType.SlimeEnemy),
+            new(giantRates, EnemyType.GiantEnemy)
+        ];
+
+        _numRates = _rateTimings.Count();
     }
 
-    private int _enemyID = 0;
-
-
-    private SpawnData[] _spawnRates =
-    {
-        new (0, 500, EnemyType.HeadEnemy),
-        new (15, 1000, EnemyType.SlimeEnemy),
-        new (30, 2500, EnemyType.GiantEnemy),
-        new (50, 1000, EnemyType.BossEnemy)
-    };
-
-
-    private int _spawnRateIdx = 0;
 
     public void SpawnEnemy()
     {
+        long delta = _scene.TotalTime - _lastSpawnTime;
+        _lastSpawnTime = _scene.TotalTime;
         bool spawned = false;
-        getSpawnRateIdx();
 
-        var spawnRateType = _spawnRates[_spawnRateIdx].Type;
-        var _spawnRate = _spawnRates[_spawnRateIdx].SpawnRate;
+        UpgradeTimers(delta);
 
-        if (!_bossSpawned && _spawnRates[_spawnRateIdx].Type == EnemyType.BossEnemy)
+        GetSpawnRateIdx();
+
+        if (!_bossSpawned && _spawnRateIdx == _numRates - 1)
         {
             SpawnBoss();
             spawned = true;
         }
 
-        while (_scene.SpawnTimer > _spawnRate)
+        if (_scene.NumAliveEnemies < _scene.MaxAliveEnemies)
         {
-            if (_scene.NumAliveEnemies >= _scene.MaxAliveEnemies)
+            for (int i = 0; i < 3; i++)
             {
-                break;
+                int spawnRate = _spawnRates[i].SpawnRates[_spawnRateIdx];
+                var enemyType = _spawnRates[i].Type;
+                while (_spawnTimers[i] >= spawnRate && spawnRate != 0)
+                {
+
+                    SpawnEnemy(enemyType);
+
+                    _spawnTimers[i] -= spawnRate;
+                    spawned = true;
+
+                }
             }
-
-            float randomAngle = _random.NextSingle() * 2.0f * 3.14f;
-            float distX = _screenDist * (float)System.Math.Cos(randomAngle);
-            float distY = _screenDist * (float)System.Math.Sin(randomAngle);
-            var pos = _player.BodyData.GlobalTransform.Position + new Vector3(distX > 0.55f ? 0.55f : distX, distY > 0.55f ? 0.55f : distY, 0);
-
-            var name = $"Enemy{_enemyID++}";
-
-            Enemy enemy;
-
-            switch (spawnRateType)
-            {
-                case EnemyType.HeadEnemy:
-                    enemy = new GhostEnemy(name, _player.BodyData);
-                    break;
-                case EnemyType.SlimeEnemy:
-                    enemy = new SlimeEnemy(name, _player.BodyData);
-                    break;
-                case EnemyType.GiantEnemy:
-                    enemy = new GiantEnemy(name, _player.BodyData);
-                    break;
-                default:
-                    enemy = new GhostEnemy(name, _player.BodyData);
-                    break;
-            }
-
-
-            _scene.Root.AddChild(enemy, enemy.TexturePath, ShaderType.TextureShader);
-            enemy.Translate(pos);
-            _scene.NumAliveEnemies++;
-
-            _scene.SpawnTimer -= _spawnRate;
-            spawned = true;
         }
 
         if (spawned)
         {
-            var ground = new Ground("Ground tile", "Textures/grass1.png");
-            _scene.Root.AddChild(ground, "Textures/grass1.png", ShaderType.GroundShader);
+            _scene.Root.AddChild(new Ground("G", "Textures/grass1.png"), "Textures/grass1.png", ShaderType.GroundShader);
         }
     }
 
@@ -116,18 +109,68 @@ public class Spawner
         _bossSpawned = true;
     }
 
-    private void getSpawnRateIdx()
+    private void SpawnEnemy(EnemyType type)
+    {
+        float randomAngle = _random.NextSingle() * 2.0f * 3.14f;
+        float distX = _screenDist * (float)System.Math.Cos(randomAngle);
+        float distY = _screenDist * (float)System.Math.Sin(randomAngle);
+        var pos = _player.BodyData.GlobalTransform.Position + new Vector3(distX > 0.55f ? 0.55f : distX, distY > 0.55f ? 0.55f : distY, 0);
+
+        var name = $"Enemy{_enemyID++}";
+
+        Enemy enemy;
+
+        switch (type)
+        {
+            case EnemyType.GhostEnemy:
+                enemy = new GhostEnemy(name, _player.BodyData);
+                break;
+            case EnemyType.SlimeEnemy:
+                enemy = new SlimeEnemy(name, _player.BodyData);
+                break;
+            case EnemyType.GiantEnemy:
+                enemy = new GiantEnemy(name, _player.BodyData);
+                break;
+            default:
+                enemy = new GhostEnemy(name, _player.BodyData);
+                break;
+        }
+
+
+        _scene.Root.AddChild(enemy, enemy.TexturePath, ShaderType.TextureShader);
+        enemy.Translate(pos);
+        _scene.NumAliveEnemies++;
+    }
+
+    private void GetSpawnRateIdx()
     {
         if (_spawnRateIdx < _spawnRates.Count() - 1)
-            if (_scene.TotalTime >= _spawnRates[_spawnRateIdx + 1].Time * 1000)
+            if (_lastSpawnTime >= _rateTimings[_spawnRateIdx + 1] * 1000)
             {
                 _spawnRateIdx++;
+                ResetTimers();
             }
+    }
+
+    private void UpgradeTimers(long delta)
+    {
+        for (int i = 0; i < _spawnTimers.Length; i++)
+        {
+            _spawnTimers[i] += delta;
+        }
+    }
+
+    private void ResetTimers()
+    {
+        for (int i = 0; i < _spawnTimers.Length; i++)
+        {
+            _spawnTimers[i] = 0;
+        }
     }
 
     private enum EnemyType
     {
-        HeadEnemy,
+        GhostEnemy,
         SlimeEnemy,
         GiantEnemy,
         BossEnemy
@@ -135,14 +178,12 @@ public class Spawner
 
     private struct SpawnData
     {
-        public int Time;
-        public int SpawnRate;
+        public int[] SpawnRates;
         public EnemyType Type;
 
-        public SpawnData(int time, int spawnRate, EnemyType type)
+        public SpawnData(int[] spawnRates, EnemyType type)
         {
-            Time = time;
-            SpawnRate = spawnRate;
+            SpawnRates = spawnRates;
             Type = type;
         }
     }
