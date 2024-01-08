@@ -34,7 +34,7 @@ public class Spawner
 
     private long _lastSpawnTime = 0;
 
-    private long[] _spawnTimers = { 100000, 0, 0 };
+    private long[] _spawnTimers = { 0, 0, 0 };
     private int _numRates;
 
     public Spawner(Scene.Scene scene)
@@ -42,8 +42,8 @@ public class Spawner
         _scene = scene;
         _player = (Player)_scene.Root.Childs[7];
 
-        _rateTimings = [ 0, 9000, 40, 70, 105, 140, 180 ];
-        int[] ghostRates = { 100000, 400, 1000, 2000, 3000, 3000, 800 };
+        _rateTimings = [ 0, 15, 40, 70, 105, 140, 180 ];
+        int[] ghostRates = { 0, 400, 1000, 2000, 3000, 3000, 800 };
         int[] slimeRates = { 0,    0,   1500, 1000, 1500, 3000, 1600 };
         int[] giantRates = { 0,    0,   0,    0,    4000, 2000, 0 };
 
