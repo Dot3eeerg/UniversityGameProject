@@ -39,6 +39,9 @@
       <None Update="Sounds\grunting_5_ian.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Sounds\levelup.wav">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Sounds\whip.wav">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

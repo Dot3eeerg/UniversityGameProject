@@ -82,6 +82,8 @@ public class Player : Node2D
             PlayerStats.CurrentExp -= PlayerStats.ExpToLevel;
             PlayerStats.ExpToLevel += 500;
             LevelUpIsHandled = false;
+            _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/levelup.wav")));
+            _mediaPlayer.Play();
             return true;
         }
 
