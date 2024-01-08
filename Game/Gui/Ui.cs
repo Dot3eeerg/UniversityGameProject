@@ -192,7 +192,7 @@ public class Ui : VisualInstanceControl
                 else
                 {
                     _upgradeText.Add(
-                        $"Attack speed increased by 0.1 sec.: {(int) (_player.GetAttackCooldown() / 1000.0f)} sec. -> {(int) (_player.GetAttackCooldown() / 1000.0f - 0.1f)} sec.");
+                        $"Attack speed increased by 0.1 sec.: {System.Math.Round(_player.GetAttackCooldown() / 1000.0f, 1)} sec. -> {System.Math.Round(_player.GetAttackCooldown() / 1000.0f - 0.1f, 1)} sec.");
                 }
                 break;
                 
@@ -221,7 +221,7 @@ public class Ui : VisualInstanceControl
             
             case 4:
                 _upgradeText.Add(
-                    $"Increase player damage reduction by 7%%: {_player.PlayerStats.DamageReduction * 100}%% --> {(_player.PlayerStats.DamageReduction + 0.07f) * 100}%%");
+                    $"Increase player damage reduction by 7%%: {System.Math.Round(_player.PlayerStats.DamageReduction * 100, 1)}%% --> {System.Math.Round((_player.PlayerStats.DamageReduction + 0.07f) * 100, 1)}%%");
                 break;
         }
     }
