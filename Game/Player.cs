@@ -255,7 +255,7 @@ public class Player : Node2D
                 break;
             
             case UpgradeType.SpeedUpgrade:
-                PlayerStats.Speed += 0.01f;
+                PlayerStats.Speed += 0.03f;
                 break;
             
             case UpgradeType.DamageReductionUpgrade:
@@ -263,6 +263,10 @@ public class Player : Node2D
                 break;
         }
     }
+
+    public long GetAttackCooldown() => _whip[0].WeaponStats.TimeCooldown;
+    
+    public long GetFireballDamage() => _fireball.WeaponStats.Damage;
 
     public sealed class Body : MeshInstance2D
     {
