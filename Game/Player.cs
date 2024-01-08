@@ -42,6 +42,7 @@ public class Player : Node2D
     public Camera2D Camera => _camera;
     public MeshInstance2D BodyData => _body;
     public Rectangle Rect => _collision;
+    private int _regenTime = 0;
 
     public Player(string name, string path) : base(name)
     {
@@ -66,6 +67,17 @@ public class Player : Node2D
         base.Process(delta);
         
         _hitTime.Update((long) (delta * 1000));
+
+        if (PlayerStats.CurrentHealth < PlayerStats.MaxHealth)
+            _regenTime += (int)(delta * 1000);
+        if (_regenTime >= 1000)
+        {
+            PlayerStats.CurrentHealth += PlayerStats.HpRegen;
+            if (PlayerStats.CurrentHealth > PlayerStats.MaxHealth)
+                PlayerStats.CurrentHealth = PlayerStats.MaxHealth;
+            _regenTime -= 1000;
+        }
+
 
         if (!IsAlive())
         {
@@ -253,7 +265,7 @@ public class Player : Node2D
                 break;
             
             case UpgradeType.HpRegenUpgrade:
-                PlayerStats.HpRegen += 0.2f;
+                PlayerStats.HpRegen += 1;
                 break;
             
             case UpgradeType.SpeedUpgrade:
@@ -300,6 +312,6 @@ public class Player : Node2D
         public override uint ExpToLevel { get; set; } = 200;
         public override uint CurrentExp { get; set; } = 0;
         public override float DamageReduction { get; set; } = 0.0f;
-        public override float HpRegen { get; set; } = 0.0f;
+        public override int HpRegen { get; set; } = 0;
     }
 }

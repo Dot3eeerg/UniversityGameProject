@@ -13,7 +13,7 @@ public abstract class EntityPlayer : Entity
     public abstract uint ExpToLevel { get; set; }
     public abstract uint CurrentExp { get; set; }
     public abstract float DamageReduction { get; set; }
-    public abstract float HpRegen { get; set; }
+    public abstract int HpRegen { get; set; }
 }
 
 public abstract class EntityEnemy : Entity

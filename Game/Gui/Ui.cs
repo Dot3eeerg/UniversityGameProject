@@ -211,7 +211,7 @@ public class Ui : VisualInstanceControl
         {
             case 2:
                 _upgradeText.Add(
-                    $"Increase HP regeneration by 0.2 HP/sec.: {_player.PlayerStats.HpRegen} HP/sec. --> {_player.PlayerStats.HpRegen + 0.2f} HP/sec.");
+                    $"Increase HP regeneration by 0.2 HP/sec.: {_player.PlayerStats.HpRegen} HP/sec. --> {_player.PlayerStats.HpRegen + 1} HP/sec.");
                 break;
             
             case 3:
