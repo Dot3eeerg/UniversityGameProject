@@ -54,6 +54,7 @@ public class Spawner
         if (!_bossSpawned && _spawnRates[_spawnRateIdx].Type == EnemyType.BossEnemy)
         {
             SpawnBoss();
+            spawned = true;
         }
 
         while (_scene.SpawnTimer > _spawnRate)
