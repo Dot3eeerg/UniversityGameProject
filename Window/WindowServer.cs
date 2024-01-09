@@ -22,7 +22,7 @@ public class WindowServer
     public event WindowResized? OnWindowResized;
     public event WindowClosed? OnWindowClosed;
 
-    public Vector2 WindowSize { get; private set; } = new Vector2(1600, 900);
+    public Vector2 WindowSize { get; private set; } = new Vector2(1920, 1080);
 
     public bool Running { get => !_window.IsClosing; }
 
@@ -31,8 +31,9 @@ public class WindowServer
         var options = WindowOptions.Default;
 
         options.Title = "VS clone";
-        options.Size = new Vector2D<int>(1600, 900);
+        options.Size = new Vector2D<int>(1920, 1080);
         options.PreferredDepthBufferBits = 32;
+        options.WindowState = WindowState.Fullscreen;
 
 
         _window = Silk.NET.Windowing.Window.Create(options);
