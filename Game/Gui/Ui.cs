@@ -40,11 +40,23 @@ public class Ui : VisualInstanceControl
 
     private List<string> _upgradeText = new List<string>();
 
+    private Main.Timer.Timer _timer;
+    
     public Ui(string name, WindowServer window, Player player) : base(name)
     {
         _window = window;
         _pauseSize = _window.WindowSize;
         _player = player;
+
+        //_font = ImGui.GetIO().Fonts.AddFontFromFileTTF("Gui/Fonts/AnonymousPro-Regular.ttf", 30.0f);
+    }
+
+    public Ui(string name, WindowServer window, Player player, Main.Timer.Timer timer) : base(name)
+    {
+        _window = window;
+        _pauseSize = _window.WindowSize;
+        _player = player;
+        _timer = timer;
 
         //_font = ImGui.GetIO().Fonts.AddFontFromFileTTF("Gui/Fonts/AnonymousPro-Regular.ttf", 30.0f);
     }
@@ -69,6 +81,7 @@ public class Ui : VisualInstanceControl
             }
         }
 
+
         switch (_state)
         {
             case AppState.Paused:
@@ -86,6 +99,8 @@ public class Ui : VisualInstanceControl
                 RestartMenu();
                 break;
         }
+
+        ShowTimer();
     }
 
     private void LevelUpMenu()
@@ -254,6 +269,22 @@ public class Ui : VisualInstanceControl
             ImGui.SetWindowFontScale(2.0f);
             var calc = ImGui.CalcTextSize(text);
             ImGui.SetCursorPos((_window.WindowSize - calc) * 0.5f);
+            ImGui.Text(text);
+        }
+    }
+
+    private void ShowTimer()
+    {
+        var text = System.Math.Round((double)_timer.Time / 1000, 2).ToString("F2");
+        ImGui.SetNextWindowBgAlpha(0f);
+        ImGui.SetNextWindowPos(Vector2.Zero);
+        ImGui.SetNextWindowSize(_window.WindowSize);
+
+        ImGui.Begin("Text", _windowFlags | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoInputs);
+        {
+            ImGui.SetWindowFontScale(2.0f);
+            var calc = ImGui.CalcTextSize(text);
+            ImGui.SetCursorPos(new Vector2((_window.WindowSize.X - calc.X) * 0.5f, calc.Y));
             ImGui.Text(text);
         }
     }
