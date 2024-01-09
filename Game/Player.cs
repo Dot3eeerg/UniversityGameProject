@@ -310,7 +310,7 @@ public class Player : Node2D
         public override float Speed { get; set; } = 0.3f;
         public override int MaxHealth { get; set; } = 100;
         public override int CurrentHealth { get; set; } = 100;
-        public override long InvulTime { get; set; } = 2000;
+        public override long InvulTime { get; set; } = 500;
         public override uint ExpToLevel { get; set; } = 200;
         public override uint CurrentExp { get; set; } = 0;
         public override float DamageReduction { get; set; } = 0.0f;
