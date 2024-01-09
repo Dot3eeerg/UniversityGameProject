@@ -59,7 +59,7 @@ public class Scene : MainLoop
     private bool _isPaused = false;
     private bool _isInputPaused = false;
 
-    public int MaxAliveEnemies => 100;
+    public int MaxAliveEnemies { get; set; } = 100;
 
     public Node Root { get; init; }
 
@@ -253,6 +253,9 @@ public class Scene : MainLoop
 
                     if (_enemies[enemyID].IsDead())
                     {
+                        if (_enemies[enemyID] is BossEnemy)
+                            _spawner.KillBoss();
+
                         foreach (var node in _enemies[enemyID].Childs)
                         {
                             _nodes.Remove(node);
@@ -301,6 +304,9 @@ public class Scene : MainLoop
                         _enemies[enemyID].InflictDamage(_colliders[weaponID].WeaponStats.Damage);
                         if (_enemies[enemyID].IsDead())
                         {
+                            if (_enemies[enemyID] is BossEnemy)
+                                _spawner.KillBoss();
+
                             foreach (var node in _enemies[enemyID].Childs)
                             {
                                 _nodes.Remove(node);
