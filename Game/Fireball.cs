@@ -10,7 +10,7 @@ namespace UniversityGameProject.Game;
 public class Fireball : Node2D
 {
     private MeshInstance2D _body;
-    private Circle _collision = new Circle( "Fireball", 0.07f);
+    private Circle _collision = new Circle( "Fireball", 0.01f);
     private Timer _attack;
     private Timer _cooldown;
     private int _numPierced = 0;
@@ -28,7 +28,7 @@ public class Fireball : Node2D
 
         _body = new Body(name, path);
         _body.MeshData = new RectanglePrimitiveTextured();
-        _body.MeshData.ApplyScale(0.08f, 0.1f);
+        _body.MeshData.ApplyScale(0.05f, 0.071f);
         _body.CanRender = false;
 
 
