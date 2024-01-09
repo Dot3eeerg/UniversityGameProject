@@ -183,12 +183,12 @@ public class BossEnemy : Enemy
 
     public override void DoScale()
     {
-        _body.MeshData.ApplyScale(0.14f, 0.19f);
+        _body.MeshData.ApplyScale(0.12f, 0.26f);
     }
 
     internal override void SetCollision()
     {
-        _collision = new Rectangle("Collision", 0.14f, 0.19f);
+        _collision = new Rectangle("Collision", 0.12f, 0.26f);
     }
 
     private class Stats : EntityEnemy
