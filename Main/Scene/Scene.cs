@@ -70,6 +70,7 @@ public class Scene : MainLoop
         _window = new WindowServer();
         _renderServer = new RenderServer(_window.GetGlContext());
         _inputServer = new InputServer(_window.GetInputContext());
+        _timer = new Timer.Timer("Timer");
         _guiServer = new GuiServer(
             _window.GetGlContext(),
             _window.GetViewContext(),
@@ -78,7 +79,6 @@ public class Scene : MainLoop
 
         _window.OnWindowStartsRender += Process;
         _inputServer.OnInputEmited += Input;
-        _timer = new Timer.Timer("Timer");
 
         _mediaPlayer.Open(new Uri(Path.GetFullPath("Sounds/background.wav")));
         _mediaPlayer.MediaEnded += new EventHandler(Repeat);
@@ -126,7 +126,7 @@ public class Scene : MainLoop
         var ground = new Ground("Ground tile", "Textures/grass3.png");
         Root.AddChild(ground, "Textures/grass3.png", ShaderType.GroundShader);
 
-        var gui = new Ui("UI", _window, player);
+        var gui = new Ui("UI", _window, player, _timer);
         Root.AddChild(gui);
 
         AttachViewport(player.Camera);
@@ -141,11 +141,14 @@ public class Scene : MainLoop
 
         while (_window.Running)
         {
-            if (_mainCollision.PlayerStats.CurrentHealth > 0)
-                _spawner.SpawnEnemy();
-            else if (IsPlayerAlive)
+            if (!_isPaused && IsPlayerAlive && !_isInputPaused)
             {
-                PlayerDied();
+                if (_mainCollision.PlayerStats.CurrentHealth > 0)
+                    _spawner.SpawnEnemy();
+                else
+                {
+                    PlayerDied();
+                }
             }
             _window.Render();
         }
@@ -153,7 +156,7 @@ public class Scene : MainLoop
     
     protected override void Process(float delta)
     {
-        if (!_isPaused && IsPlayerAlive)
+        if (!_isPaused && IsPlayerAlive && !_isInputPaused)
         {
             base.Process(delta);
 
@@ -169,7 +172,7 @@ public class Scene : MainLoop
         _renderServer.ChangeContextSize(_window.WindowSize);
 
         HandleLevelUp();
-        if (!_isPaused && IsPlayerAlive)
+        if (!_isPaused && IsPlayerAlive && !_isInputPaused)
         {
             CheckPlayerCollision();
             CheckWeaponCollision();
