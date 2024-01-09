@@ -126,7 +126,7 @@ public class Scene : MainLoop
         var ground = new Ground("Ground tile", "Textures/grass3.png");
         Root.AddChild(ground, "Textures/grass3.png", ShaderType.GroundShader);
 
-        var gui = new Ui("UI", _window, player, _timer);
+        var gui = new Ui("UI", _window, player);
         Root.AddChild(gui);
 
         AttachViewport(player.Camera);

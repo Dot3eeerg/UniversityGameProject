@@ -39,24 +39,12 @@ public class Ui : VisualInstanceControl
     private int _whipUpgrades = 0;
 
     private List<string> _upgradeText = new List<string>();
-
-    private Main.Timer.Timer _timer;
     
     public Ui(string name, WindowServer window, Player player) : base(name)
     {
         _window = window;
         _pauseSize = _window.WindowSize;
         _player = player;
-
-        //_font = ImGui.GetIO().Fonts.AddFontFromFileTTF("Gui/Fonts/AnonymousPro-Regular.ttf", 30.0f);
-    }
-
-    public Ui(string name, WindowServer window, Player player, Main.Timer.Timer timer) : base(name)
-    {
-        _window = window;
-        _pauseSize = _window.WindowSize;
-        _player = player;
-        _timer = timer;
 
         //_font = ImGui.GetIO().Fonts.AddFontFromFileTTF("Gui/Fonts/AnonymousPro-Regular.ttf", 30.0f);
     }
@@ -275,7 +263,7 @@ public class Ui : VisualInstanceControl
 
     private void ShowTimer()
     {
-        var text = System.Math.Round((double)_timer.Time / 1000, 2).ToString("F2");
+        var text = System.Math.Round((double)_player.Scene.TotalTime / 1000, 2).ToString("F2");
         ImGui.SetNextWindowBgAlpha(0f);
         ImGui.SetNextWindowPos(Vector2.Zero);
         ImGui.SetNextWindowSize(_window.WindowSize);
